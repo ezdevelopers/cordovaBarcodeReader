@@ -10,7 +10,7 @@
         "spec": ">=1.0.0 <2.0.0",
         "type": "range"
       },
-      "C:\\Users\\zee\\Desktop\\BarcodeReader\\node_modules"
+      "C:\\Users\\zee\\Desktop\\BarcodeReader\\BarcodeReader\\node_modules"
     ]
   ],
   "_from": "cordova-plugin-whitelist@>=1.0.0 <2.0.0",
@@ -45,7 +45,7 @@
   "_shasum": "5b6335feb9f5301f3c013b9096cb8885bdbd5076",
   "_shrinkwrap": null,
   "_spec": "cordova-plugin-whitelist@1",
-  "_where": "C:\\Users\\zee\\Desktop\\BarcodeReader\\node_modules",
+  "_where": "C:\\Users\\zee\\Desktop\\BarcodeReader\\BarcodeReader\\node_modules",
   "author": {
     "name": "Apache Software Foundation"
   },

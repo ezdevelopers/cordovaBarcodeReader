@@ -10,5 +10,9 @@
     font-size: 15px;
 }
 .card-image img{
-    width:50px;
+    width:120px !important;
+    height:auto !important;
+}
+ .fa-bars:before{
+    font-size: 15px;
 }

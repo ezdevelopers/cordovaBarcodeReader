@@ -9,3 +9,6 @@
 .card .btn-floating > i{
     font-size: 15px;
 }
+.card-image img{
+    width:50px;
+}

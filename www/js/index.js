@@ -1,10 +1,17 @@
 function barcodescanner(){
      cordova.plugins.barcodeScanner.scan(
       function (result) {
+          if(result.text == 9780684852867){
+             localStorage.setItem('img', 'http://covers.openlibrary.org/b/isbn/9780684852867-L.jpg');
+             localStorage.setItem('Title', 'FIRST, BREAK ALL THE RULES');
+             location.href ="result.html";
+          }else{
+           
           alert("We got a barcode\n" +
                 "Result: " + result.text + "\n" +
                 "Format: " + result.format + "\n" +
                 "Cancelled: " + result.cancelled);
+              }
       },
       function (error) {
           alert("Scanning failed: " + error);

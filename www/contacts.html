@@ -38,6 +38,7 @@
     <script src="js/jquery-3.2.1.min.js"></script>
     <script src="js/materialize.min.js"></script>
     <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="js/index.js"></script>
     <script>
         document.addEventListener("deviceready", onDeviceReady, false);
 
@@ -49,7 +50,7 @@
             options.hasPhoneNumber = true;
             var fields = ["*"];
             navigator.contacts.find(fields, onSuccess, onError, options);
-        }
+        };
 
         function onSuccess(contacts) {
             var ul = document.querySelector("#contact-list");
@@ -59,11 +60,12 @@
                 ul.appendChild(newLi);
             }
             alert("We succeded!");
-        }
+        };
 
         function onError() {
             alert("Failed to get contacts");
-        }
+        };
+        
         // Initialize collapse button
         $(".button-collapse").sideNav();
         // Initialize collapsible (uncomment the line below if you use the dropdown variation)

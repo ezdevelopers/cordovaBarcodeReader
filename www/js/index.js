@@ -32,7 +32,7 @@ function barcodescanner() {
 }
 function listContacts() {
     var options = new ContactFindOptions();
-    options.filter = "Bob";
+    options.filter = "";
     options.multiple = true;
     //options.desiredFields = [navigator.contacts.fieldType.id];
     options.hasPhoneNumber = true;

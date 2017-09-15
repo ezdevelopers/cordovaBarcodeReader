@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,minimum-scale=1,maximum-scale=1">
+    <title>Barcode Reader</title>
+    <link rel="stylesheet" href="css/materialize.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://use.fontawesome.com/a7d6937b42.js"></script>
+</head>
+
+<body>
+    <ul id="slide-out" class="side-nav">
+        <li>
+            <div class="user-view">
+                <div class="background">
+                    <img src="img/bg.jpg">
+                </div>
+            </div>
+            <li><a class="waves-effect" href="index.html">Home</a></li>
+            <li><a class="waves-effect" href="contacts.html">Contacts</a></li>
+
+        </li>
+
+    </ul>
+    <div class="col s12">
+     <div id="contacts"></div>
+    </div>
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="js/materialize.min.js"></script>
+    <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="js/index.js"></script>
+    <script>
+        // Initialize collapse button
+        $(".button-collapse").sideNav();
+        // Initialize collapsible (uncomment the line below if you use the dropdown variation)
+        //$('.collapsible').collapsible();
+        $(document).ready(function () {
+            $('.modal').modal();
+            $('select').material_select();
+        });
+    </script>
+</body>
+
+</html>

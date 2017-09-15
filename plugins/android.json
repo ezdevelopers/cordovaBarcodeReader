@@ -12,6 +12,9 @@
         },
         "phonegap-plugin-barcodescanner": {
             "PACKAGE_NAME": "com.example.com"
+        },
+        "cordova-plugin-contacts": {
+            "PACKAGE_NAME": "com.example.com"
         }
     },
     "dependent_plugins": {

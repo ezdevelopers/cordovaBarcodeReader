@@ -53,6 +53,7 @@ function onSuccess(contacts) {
 function onError() {
     alert("Failed to get contacts");
 }
+
 var app = {
     // Application Constructor
     initialize: function () {
@@ -65,6 +66,8 @@ var app = {
     // 'pause', 'resume', etc.
     onDeviceReady: function () {
         this.receivedEvent('deviceready');
+        listContacts();
+        console.log(navigator.contacts);
     },
 
     // Update DOM on a Received Event
@@ -77,7 +80,6 @@ var app = {
         receivedElement.setAttribute('style', 'display:block;');
 
         console.log('Received Event: ' + id);
-        listContacts();
     }
 };
 

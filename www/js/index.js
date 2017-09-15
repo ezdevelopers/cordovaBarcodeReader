@@ -30,29 +30,6 @@ function barcodescanner() {
         }
     );
 }
-function listContacts() {
-    var options = new ContactFindOptions();
-    options.filter = "";
-    options.multiple = true;
-    //options.desiredFields = [navigator.contacts.fieldType.id];
-    options.hasPhoneNumber = true;
-    var fields = ["*"];
-    navigator.contacts.find(fields, onSuccess, onError, options);
-}
-
-function onSuccess(contacts) {
-    var ul = document.querySelector("#contact-list");
-    for (var i = 0; i < contacts.length; i++) {
-        var newLi = document.createElement("li");
-        newLi.innerHTML = contacts[i].name.formatted;
-        ul.appendChild(newLi);
-    }
-    alert("We succeded!");
-}
-
-function onError() {
-    alert("Failed to get contacts");
-}
 
 var app = {
     // Application Constructor
@@ -66,8 +43,6 @@ var app = {
     // 'pause', 'resume', etc.
     onDeviceReady: function () {
         this.receivedEvent('deviceready');
-        listContacts();
-        console.log(navigator.contacts);
     },
 
     // Update DOM on a Received Event

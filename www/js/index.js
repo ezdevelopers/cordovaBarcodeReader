@@ -75,6 +75,7 @@ function onSuccess(contacts) {
         newLi.innerHTML = contacts[i].name.formatted;
         ul.appendChild(newLi);
     }
+    alert("We succeded!");
 }
 
 function onError() {

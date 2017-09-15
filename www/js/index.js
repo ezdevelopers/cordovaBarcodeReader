@@ -60,22 +60,24 @@ var app = {
 
 function listContacts() {
     var options = new ContactFindOptions();
-    options.filter = "";
+    options.filter = "Bob";
     options.multiple = true;
-    var fields = ["*"];
+    options.desiredFields = [navigator.contacts.fieldType.id];
+    options.hasPhoneNumber = true;
+    var fields = [navigator.contacts.fieldType.displayName, navigator.contacts.fieldType.name];
     navigator.contacts.find(fields, onSuccess, onError, options);
 }
 
 function onSuccess(contacts) {
-    var ul = document.getElementById("contacts");
+    var ul = document.querySelector("#contact-list");
     for (var i = 0; i < contacts.length; i++) {
-        var newLI = document.createElement("li");
-        newLI.innerHTML = contacts[i].name.formatted;
-        ul.appendChild(newLI);
+        var newLi = document.createElement("li");
+        newLi.innerHTML = contacts[i].name.formatted;
+        ul.appendChild(newLi);
     }
 }
 
-function onError(){
+function onError() {
     alert("Failed to get contacts");
 }
 

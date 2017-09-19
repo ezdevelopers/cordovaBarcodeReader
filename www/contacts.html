@@ -39,40 +39,19 @@
     <script src="js/materialize.min.js"></script>
     <script type="text/javascript" src="cordova.js"></script>
     <script>
-        document.addEventListener("deviceready", onDeviceReady, false);
-
-        function onDeviceReady() {
-            var options = new ContactFindOptions();
-            options.filter = "";
-            options.multiple = true;
-            //options.desiredFields = [navigator.contacts.fieldType.id];
-            options.hasPhoneNumber = true;
-            var fields = ["*"];
-            navigator.contacts.find(fields, onSuccess, onError, options);
-        };
-
-        function onSuccess(contacts) {
-            var ul = document.querySelector("#contact-list");
-            for (var i = 0; i < contacts.length; i++) {
-                var newLi = document.createElement("li");
-                newLi.innerHTML = contacts[i].name.formatted;
-                ul.appendChild(newLi);
-            }
-            alert("We succeded!");
-        };
-
-        function onError() {
-            alert("Failed to get contacts");
-        };
-        
         // Initialize collapse button
         $(".button-collapse").sideNav();
         // Initialize collapsible (uncomment the line below if you use the dropdown variation)
         //$('.collapsible').collapsible();
-        $(document).ready(function () {
-            $('.modal').modal();
-            $('select').material_select();
-        });
+
+        var contactList = document.getElementById("contact-list");
+        if (typeof localStorage.getItem("contacts") != "string") {
+            var contacts = "No contacts";
+        } else {
+            var contacts = localStorage.getItem("contacts");
+        }
+
+        contactList.innerHTML = contacts;
     </script>
 </body>
 

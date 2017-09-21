@@ -14,7 +14,7 @@
      var ul = document.createElement("ul");
      for (var i = 0; i < contacts.length; i++) {
          var newLi = document.createElement("li");
-         var contactItem = contacts[i].name.formatted;
+         var contactItem = contacts[i].name.formatted + "\n" + contacts[i].phoneNumbers;
          newLi.innerHTML = contactItem ;
          ul.appendChild(newLi);
      }

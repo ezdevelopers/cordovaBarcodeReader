@@ -49,10 +49,14 @@
         if (typeof localStorage.getItem("contacts") != "string") {
             var contacts = "No contacts";
         } else {
-            var contacts = allContacts;
+            for(i = 0; i < allContacts.length; i++ ){
+                var contacts = allContacts;
+                contactList.append(contacts);
+            }
+            
         }
 
-        contactList.append(contacts);
+
     </script>
 </body>
 

@@ -140,22 +140,41 @@
     <script src="js/materialize.min.js"></script>
     <script type="text/javascript" src="cordova.js"></script>
     <script>
+        Storage.prototype.setObj = function (key, obj) {
+                return this.setItem(key, JSON.stringify(obj))
+            };
+        Storage.prototype.getObj = function (key) {
+                return JSON.parse(this.getItem(key))
+            }
+
         var barcode = {
             firstBarcode: {
                 ISBN: 9780684852867,
                 title: "FIRST, BREAK ALL THE RULES",
                 image: "http://covers.openlibrary.org/b/isbn/9780684852867-L.jpg",
                 description: " Lorem Ipsum sit amet.",
-                tags: "Power, Life"
+                author_first:"Aniebo",
+                author_last:"Ijeoma",
+                publish_date:"05/06/2017",
+                publisher:"Mcmillan",
+                pages:200,
+                categories: "Power, Life"
             },
             secondBarcode: {
                 ISBN: 1234567891011,
                 title: "HOW TO BE PERFECT",
                 image: "https://spark.adobe.com/images/landing/examples/how-to-book-cover.jpg",
                 description: "How to be perfect  by kathian brands",
-                tags: "Culture"
+                author_first:"Ojukwu",
+                author_last:"Frank",
+                publish_date:"17/06/2017",
+                publisher:"Relserve",
+                pages:270,
+                categories: "Culture"
             }
         }
+
+        
 
         function barcodescanner() {
             cordova.plugins.barcodeScanner.scan(
@@ -163,9 +182,9 @@
                     for (var elm in barcode) {
                         for (var elem in barcode[elm]) {
                             if (result.text == barcode[elm].ISBN) {
-                                localStorage.setItem('Image', barcode[elm].image);
-                                localStorage.setItem('Title', barcode[elm].title);
-                                localStorage.setItem('Description', barcode[elm].description);
+                                localStorage.setObj(elm,barcode[elm])
+                                var searchValue =   barcode[elm].ISBN;
+                                localStorage.setItem('ISBN', searchValue);
                                 location.href = "result.html";
                             } else {
                                 alert("We got a barcode\n" +
@@ -194,15 +213,14 @@
                 }
             );
         }
-
+     //Search function for when the search searches for an ISBN 
         $("#search-button").click(function () {
             var searchValue = $("input#search-modal").val();
             for (var elm in barcode) {
                 for (var elem in barcode[elm]) {
                     if (searchValue == barcode[elm].ISBN) {
-                        localStorage.setItem('Image', barcode[elm].image);
-                        localStorage.setItem('Title', barcode[elm].title);
-                        localStorage.setItem('Description', barcode[elm].description);
+                        localStorage.setObj('element', barcode);
+                        localStorage.setItem('ISBN', searchValue);
                         location.href = "result.html";
                     }
                 }
@@ -210,22 +228,32 @@
         });
 
 
-        if (typeof localStorage.getItem("Title") == "string") {
-            var appendTitle = localStorage.getItem("Title");
-            var appendImg = localStorage.getItem("Image");
-            var appendDescription = localStorage.getItem("Description");
-            var booklist = '<div class="row"><div class="col s12"><div class="card horizontal"><div class="card-image"><img src="' + appendImg +'\"></div><div class="card-stacked"><div class="card-content"><span class="card-title activator grey-text text-darken-4">' + appendTitle + '</span><p>' + appendDescription +'</p></div></div></div></div></div>';
-            $("#booklist").prepend(booklist);
+        if (typeof localStorage.getItem("element") == "string") {
+            var barcodeAppend = JSON.parse(localStorage.getItem("element"));
+            var ISBNAppend = localStorage.getItem("ISBN");
+            for (var elm in barcodeAppend) {
+                    for (var elem in barcodeAppend[elm]) {
+                     var booklist = '<div class="row"><div class="col s12"><div class="card horizontal"><div class="card-image"><img src="' + barcodeAppend[elm].image + '\"></div><div class="card-stacked"><div class="card-content"><span class="card-title activator grey-text text-darken-4">' + barcodeAppend[elm].title + '<a id="' + barcodeAppend[elm].ISBN +'" class="redirect"><i class="fa fa-edit"style="float:right" aria-hidden="true"></i></a></span><p>Author:'+ barcodeAppend[elm].author_first + " " + barcodeAppend[elm].author_last +'</p><p>Description: ' + barcodeAppend[elm].description + '</p><p class="ISBN"> ISBN:'+ barcodeAppend[elm].ISBN +'</p><p>Pages: '+ barcodeAppend[elm].pages +' </p></div></div></div></div></div>';
+                    }
+                   $("#booklist").prepend(booklist);
+                }
+                
         }
+        //redirect function to grab ISBN and store in localhost
+        $(".redirect").click(function(event){
+            var contentPanelId = $(this).attr("id");
+            localStorage.setItem("editId",contentPanelId);
+            location.href = "edit.html"
+        });
+      
         // Initialize collapse button
         $(".button-collapse").sideNav();
         // Initialize collapsible (uncomment the line below if you use the dropdown variation)
         //$('.collapsible').collapsible();
+
         $(document).ready(function () {
             $('.modal').modal();
             $('select').material_select();
         });
     </script>
 </body>
-
-</html>

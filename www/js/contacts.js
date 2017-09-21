@@ -14,10 +14,10 @@
      var ul = document.createElement("ul");
      for (var i = 0; i < contacts.length; i++) {
          var newLi = document.createElement("li");
-         newLi.innerHTML = contacts[i].name.formatted + " " + contact[i].phoneNumbers;
+         newLi.innerHTML = contacts[i].name.formatted;
          ul.appendChild(newLi);
      }
-     localStorage.setItem("contacts", ul);
+     localStorage.setItem("contacts", JSON.strigify(ul));
      alert("Contacts are ready!");
  };
 

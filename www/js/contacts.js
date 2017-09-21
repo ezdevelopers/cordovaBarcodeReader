@@ -17,7 +17,7 @@
          newLi.innerHTML = contacts[i].name.formatted;
          ul.appendChild(newLi);
      }
-     localStorage.setItem("contacts", JSON.strigify(ul));
+     localStorage.setItem("contacts", JSON.stringify(ul));
      alert("Contacts are ready!");
  };
 

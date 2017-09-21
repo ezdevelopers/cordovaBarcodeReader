@@ -150,9 +150,9 @@
             },
             secondBarcode: {
                 ISBN: 1234567891011,
-                title: "THINGS FALL APART",
-                image: "http://covers.openlibrary.org/b/isbn/9780684852867-L.jpg",
-                description: "Things fall apart by Chinua Achebe",
+                title: "HOW TO BE PERFECT",
+                image: "https://spark.adobe.com/images/landing/examples/how-to-book-cover.jpg",
+                description: "How to be perfect  by kathian brands",
                 tags: "Culture"
             }
         }
@@ -214,7 +214,7 @@
             var appendTitle = localStorage.getItem("Title");
             var appendImg = localStorage.getItem("Image");
             var appendDescription = localStorage.getItem("Description");
-            var booklist = '<div class="col s12 m7"><h5 class="header">' + appendTitle +'</h5><div class="card horizontal"><div class="card-image"><img src="' + appendImg +'\"></div><div class="card-stacked"><div class="card-content"><p>' + appendDescription +'</p></div></div></div></div>';
+            var booklist = '<div class="row"><div class="col s12"><div class="card horizontal"><div class="card-image"><img src="' + appendImg +'\"></div><div class="card-stacked"><div class="card-content"><span class="card-title activator grey-text text-darken-4">' + appendTitle + '</span><p>' + appendDescription +'</p></div></div></div></div></div>';
             $("#booklist").prepend(booklist);
         }
         // Initialize collapse button

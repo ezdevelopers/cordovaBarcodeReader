@@ -45,8 +45,14 @@
                             <input id="title" type="text" class="validate">
                             <label for="title">Title</label>
                         </div>
-                        <img id="image">   
-                         <a id="add" class="waves-effect waves-light btn">Add</a>
+                        <img id="image" width="200px" height="auto">
+                        <div class="input-field col s12">
+                            <textarea id="desc" class="materialize-textarea"></textarea>
+                            <label for="desc">Textarea</label>
+                        </div>
+                        <a id="add" class="waves-effect waves-light btn">Add</a>
+
+
                     </div>
                 </div>
             </div>
@@ -63,17 +69,24 @@
     <script type="text/javascript" src="cordova.js"></script>
     <script type="text/javascript" src="js/index.js"></script>
     <script>
-        var title = localStorage.getItem("title");
-        var img = localStorage.getItem("img");
-        $("#title").attr("value",title);
-        $("#image").attr("src",img);
-        
-        $("#add").click(function(){
-            localStorage.setItem('card',
-                                 '<div class="card horizontal"><div class="card-image"><img src="http://covers.openlibrary.org/b/isbn/9780684852867-L.jpg"></div><div class="card-stacked"><div class="card-action"><a href="#">FIRST, BREAK ALL THE RULES</a></div><div class="card-content"><p>I am a very simple card. I am good at containing small bits of information.</p><p>437 pages</p></div></div></div>');
-            location.href="index.html";
+        var title = localStorage.getItem("Title");
+        var img = localStorage.getItem("Image");
+        var description = localStorage.getItem("Description");
+
+        $("#title").attr("value", title);
+        $("#image").attr("src", img);
+        $("#desc").attr("value", description);
+
+        $("#add").click(function () {
+            var addTitle = $("#title").val();
+            var addImg = $("#image").val();
+            var addDesc = $("#desc").val();
+            localStorage.setItem('Image', addImg);
+            localStorage.setItem('Title', addTitle);
+            localStorage.setItem('Description', addDesc);
+            location.href = "index.html";
         });
-        
+
         // Initialize collapse button
         $(".button-collapse").sideNav();
         // Initialize collapsible (uncomment the line below if you use the dropdown variation)

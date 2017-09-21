@@ -48,7 +48,7 @@
         if (typeof localStorage.getItem("contacts") != "string") {
             var contacts = "No contacts";
         } else {
-            var contacts = JSON.parse(localStorage.getItem("contacts"));
+            var contacts = localStorage.getItem("contacts");
         }
 
         contactList.append(contacts);

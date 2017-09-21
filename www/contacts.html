@@ -43,12 +43,12 @@
         $(".button-collapse").sideNav();
         // Initialize collapsible (uncomment the line below if you use the dropdown variation)
         //$('.collapsible').collapsible();
-
+       var allContacts = localStorage.getItem("contacts");
         var contactList = document.getElementById("contact-list");
         if (typeof localStorage.getItem("contacts") != "string") {
             var contacts = "No contacts";
         } else {
-            var contacts = localStorage.getItem("contacts");
+            var contacts = allContacts;
         }
 
         contactList.append(contacts);

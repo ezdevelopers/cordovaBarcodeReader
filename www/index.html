@@ -162,10 +162,10 @@
                 function (result) {
                     for (var elm in barcode) {
                         for (var elem in barcode[elm]) {
-                            if (result.text == barcode[elem].ISBN) {
-                                localStorage.setItem('Image', barcode[elem].image);
-                                localStorage.setItem('Title', barcode[elem].title);
-                                localStorage.setItem('Description', barcode[elem].description);
+                            if (result.text == barcode[elm].ISBN) {
+                                localStorage.setItem('Image', barcode[elm].image);
+                                localStorage.setItem('Title', barcode[elm].title);
+                                localStorage.setItem('Description', barcode[elm].description);
                                 location.href = "result.html";
                             } else {
                                 alert("We got a barcode\n" +
@@ -199,10 +199,10 @@
             var searchValue = $("input#search-modal").val();
             for (var elm in barcode) {
                 for (var elem in barcode[elm]) {
-                    if (searchValue == barcode[elem].ISBN) {
-                        localStorage.setItem('Image', barcode[elem].image);
-                        localStorage.setItem('Title', barcode[elem].title);
-                        localStorage.setItem('Description', barcode[elem].description);
+                    if (searchValue == barcode[elm].ISBN) {
+                        localStorage.setItem('Image', barcode[elm].image);
+                        localStorage.setItem('Title', barcode[elm].title);
+                        localStorage.setItem('Description', barcode[elm].description);
                         location.href = "result.html";
                     }
                 }
@@ -214,7 +214,7 @@
             var appendTitle = localStorage.getItem("Title");
             var appendImg = localStorage.getItem("Image");
             var appendDescription = localStorage.getItem("Description");
-            var booklist = " <div class=\"col s12 m7\">< h2 class=\"header\">"+ appendTitle +"</h2 ><div class=\"card horizontal\"><div class=\"card-image\"><img src=\""+appendImg+"\"></div><div class=\"card-stacked\"><div class=\"card-content\"><p>"+ appendDescription +"</p></div></div></div></div>"
+            var booklist = '<div class="col s12 m7"><h5 class="header">' + appendTitle +'</h5><div class="card horizontal"><div class="card-image"><img src="' + appendImg +'\"></div><div class="card-stacked"><div class="card-content"><p>' + appendDescription +'</p></div></div></div></div>';
             $("#booklist").prepend(booklist);
         }
         // Initialize collapse button

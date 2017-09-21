@@ -45,13 +45,12 @@
                             <input id="title" type="text" class="validate">
                             <label for="title">Title</label>
                         </div>
-                        <img id="image" width="200px" height="auto">
-                        <div class="input-field col s12">
+                        <div class="col s4"><img id="image" width="100px" height="auto"></div>
+                        <div class="input-field col s8">
                             <textarea id="desc" class="materialize-textarea"></textarea>
                             <label for="desc">Textarea</label>
                         </div>
-                        <a id="add" class="waves-effect waves-light btn">Add</a>
-
+                        <div class="col s12"><a id="add" class="waves-effect waves-light btn">Add</a></div>
 
                     </div>
                 </div>
@@ -75,13 +74,11 @@
 
         $("#title").attr("value", title);
         $("#image").attr("src", img);
-        $("#desc").attr("value", description);
+        document.getElementById("desc").value = description;
 
         $("#add").click(function () {
             var addTitle = $("#title").val();
-            var addImg = $("#image").val();
             var addDesc = $("#desc").val();
-            localStorage.setItem('Image', addImg);
             localStorage.setItem('Title', addTitle);
             localStorage.setItem('Description', addDesc);
             location.href = "index.html";

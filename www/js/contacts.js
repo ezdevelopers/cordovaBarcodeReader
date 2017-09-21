@@ -14,7 +14,8 @@
      var ul = document.createElement("ul");
      for (var i = 0; i < contacts.length; i++) {
          var newLi = document.createElement("li");
-         newLi.innerHTML = contacts[i].name.formatted + " " + contacts[i].phoneNumbers ;
+         var contactItem = contacts[i].name.formatted;
+         newLi.innerHTML = contactItem ;
          ul.appendChild(newLi);
      }
      localStorage.setItem("contacts", JSON.stringify(ul));

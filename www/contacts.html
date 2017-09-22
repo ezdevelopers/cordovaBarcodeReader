@@ -64,13 +64,15 @@
                 var newLi = document.createElement("li");
                 for(var j = 0; j < contacts[i].phoneNumbers; j++){
                     var phone =  contacts[i].phoneNumbers[j].value;
+                   // var phoneNo = contacts[i].phoneNumbers[j].value;
+                    newLi.innerHTML = phone;
                 };
-                //var contactName = contacts[i].phoneNumbers;
-                newLi.innerHTML = phone;
-                newLi.classList.add("collection-item");
+                 newLi.classList.add("collection-item");
+                //var contactName = contacts[i].name.formatted;
+
 
                 ul.appendChild(newLi);
-                total.innerHTML = "Total contacts are: " + i;
+                total.innerHTML = "Total contacts are: " + i ;
             }
             alert("Contacts are ready!");
         };

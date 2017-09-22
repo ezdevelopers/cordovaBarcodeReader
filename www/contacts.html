@@ -32,9 +32,9 @@
         </div>
     </nav>
     <div class="col s12">
-        <div id="contact-list" class="collection">
+        <ul id="contact-list" class="collection">
            <p id="total" class="filter-p">Please wait</p>
-        </div>
+        </ul>
     </div>
     <script src="js/jquery-3.2.1.min.js"></script>
     <script src="js/materialize.min.js"></script>
@@ -61,14 +61,14 @@
                 var total = document.getElementById("total");
 
                 for (var i = 0; i < contacts.length; i++) {
-                    var newLi = document.createElement("li");
-                    var phoneNumbers = " ";
-                    for (var j = 0; j < contacts[i].phoneNumbers.length; j++) {
-                        phoneNumbers += contacts[i].phoneNumbers[j].value + "\n";
-                    }
-                    var contactPhoneNumber = phoneNumbers;
-                    var contactName = contacts[i].name.formatted;
-                    newLi.innerHTML = contactName +" "+ contactPhoneNumber;
+                    // var newLi = document.createElement("li");
+                    // var phoneNumbers = " ";
+                    // for (var j = 0; j < contacts[i].phoneNumbers.length; j++) {
+                    //     phoneNumbers += contacts[i].phoneNumbers[j].value + "\n";
+                    // }
+                    // var contactPhoneNumber = phoneNumbers;
+                    var contactName = contacts[i].phoneNumbers;
+                    newLi.innerHTML = contactName;
                     newLi.classList.add("collection-item");
 
                     ul.appendChild(newLi); 

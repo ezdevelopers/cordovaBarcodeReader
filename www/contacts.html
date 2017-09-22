@@ -61,14 +61,14 @@
                 var total = document.getElementById("total");
 
                 for (var i = 0; i < contacts.length; i++) {
-                    var newLi = document.createElement("li");
+                     var newLi = document.createElement("li");
 
-                    var phoneNumber = contacts[i].phoneNumbers;
-                    for (var j = 0; j < phoneNumber.length; j++) {
-                         alert(phoneNumber[j].value);
-                    }
-                    //var contactPhoneNumber = phoneNumbers;
-                    var contactName = contacts[i].name.formatted;
+                    // for (var j = 0; j < contacts[i].phoneNumbers.length; j++) {
+                    //     phoneNumbers += contacts[i].phoneNumbers[j].value;
+                    // }
+
+                    // var contactPhoneNumber = phoneNumbers;
+                    var contactName = contacts[i].phoneNumbers[i].value;
                     newLi.innerHTML = contactName;
                     newLi.classList.add("collection-item");
 

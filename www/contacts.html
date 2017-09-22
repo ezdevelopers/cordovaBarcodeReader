@@ -58,7 +58,7 @@
             var options = new ContactFindOptions();
             options.filter = "";
             options.multiple = true;
-            var filter = ["*"];
+            var filter = ["name", "phoneNumber"];
             navigator.contacts.find(filter, onSuccess, onError, options);
         };
 
@@ -69,24 +69,24 @@
             alert("Your contacts" + JSON.stringify(contacts));
 
             for (var i = 0; i < contacts.length; i++) {
-                //var newLi = document.createElement("li");
-                var cPhoneNumbersSectionContent = "";
+                var newLi = document.createElement("li");
 
-                if (contacts[i].phoneNumbers) {
-                    contacts[i].phoneNumbers.forEach(function (elem) {
-                     alert(elem.value);
-                     cPhoneNumbersSectionContent += "<li class='collection-item'>" + elem.value + "</li>";
-                    });
-                   
-                }
+                //var cPhoneNumbersSectionContent = "";
+                // if (contacts[i].phoneNumbers) {
+                //     contacts[i].phoneNumbers.forEach(function (elem) {
+                //      alert(elem.value);
+                //      cPhoneNumbersSectionContent += "<li class='collection-item'>" + elem.value + "</li>";
+                //     });   
+                // }
 
-                // var contactName = contacts[i].name.formatted;
-                //newLi.innerHTML = contactName;
-                //newLi.classList.add("collection-item");
-                //ul.appendChild(cPhoneNumbersSectionContent);
+                var contactName = contacts[i].name.formatted;
+                newLi.innerHTML = contactName;
+                newLi.classList.add("collection-item");
+                ul.appendChild(newLi);
                 total.innerHTML = "Total contacts are: " + i;
             }
             alert("Contacts are ready!");
+
         };
 
         function onError() {

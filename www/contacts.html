@@ -44,7 +44,7 @@
         $(".button-collapse").sideNav();
         // Initialize collapsible (uncomment the line below if you use the dropdown variation)
         //$('.collapsible').collapsible();
-       // var arry = [081,090]
+
         document.addEventListener("deviceready", onDeviceReady, false);
 
         function onDeviceReady() {
@@ -62,18 +62,16 @@
 
             for (var i = 0; i < contacts.length; i++) {
                 var newLi = document.createElement("li");
-                var span = document.createElement("span");
 
-                var contactPhone = contacts[i].phoneNumbers;
-                contactPhone.forEach(function (elem, indx) {
-                        span.appendChild(contactPhone[indx].value);
-                });
-
+                for(var j = 0; j < contacts[i].phoneNumbers; j++){
+                    //var span = document.createElement("span");
+                    var phone =  contacts[i].phoneNumbers[j].value ;
+                    alert(phone);
+                };
                 var contactName = contacts[i].name.formatted;
                 newLi.innerHTML = contactName;
                 newLi.classList.add("collection-item");
 
-                newLi.appendChild(span);
                 ul.appendChild(newLi);
                 total.innerHTML = "Total contacts are: " + i;
             }

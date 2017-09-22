@@ -51,7 +51,7 @@
             var options = new ContactFindOptions();
             options.filter = "";
             options.multiple = true;
-            var filter = ["name"];
+            var filter = ["*"];
             navigator.contacts.find(filter, onSuccess, onError, options);
         };
 
@@ -67,7 +67,7 @@
                 alert(JSON.stringify(phoneNumber));
                 for (var j = 0; j < phoneNumber.length; j++) {
                     if (phoneNumber[j].type = "mobile") {
-                        var phone = contacts[i].phoneNumbers[j].value;
+                        var phone = phoneNumbers[j].value;
                         var contactName = contacts[i].name.formatted;
                         newLi.innerHTML = contactName +" "+ phone;
                     }

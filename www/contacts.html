@@ -33,7 +33,7 @@
     </nav>
     <div class="col s12">
         <ul id="contact-list" class="collection">
-           <p id="total" class="filter-p">Please wait</p>
+            <p id="total" class="filter-p">Please wait</p>
         </ul>
     </div>
     <script src="js/jquery-3.2.1.min.js"></script>
@@ -45,35 +45,38 @@
         // Initialize collapsible (uncomment the line below if you use the dropdown variation)
         //$('.collapsible').collapsible();
 
-         document.addEventListener("deviceready", onDeviceReady, false);
+        document.addEventListener("deviceready", onDeviceReady, false);
 
-             function onDeviceReady() {
-                    var options = new ContactFindOptions();
-                    options.filter = "";
-                    options.multiple = false;
-                    var filter = ["*"];
-                    navigator.contacts.find(filter, onSuccess, onError, options);
-                };
+        function onDeviceReady() {
+            var options = new ContactFindOptions();
+            options.filter = "";
+            options.multiple = false;
+            var filter = ["*"];
+            navigator.contacts.find(filter, onSuccess, onError, options);
+        };
 
 
-            function onSuccess(contacts) {
-                var ul = document.getElementById("contact-list");
-                var total = document.getElementById("total");
-                alert("Your contacts" + JSON.stringify(contacts));
-                // for (var i = 0; i < contacts.length; i++) {
-                //      var newLi = document.createElement("li");
+        function onSuccess(contacts) {
+            var ul = document.getElementById("contact-list");
+            var total = document.getElementById("total");
+            alert("Your contacts" + JSON.stringify(contacts));
 
-                //     for (var j = 0; j < contacts[i].phoneNumbers.length; j++) {
-                //         alert("Value: " + contacts[i].phoneNumbers[j].value);
-                //     };
+            for (var i = 0; i < contacts.length; i++) {
+                //var newLi = document.createElement("li");
+                var cPhoneNumbersSectionContent = "";
+                for (var j = 0; j < contacts[i].phoneNumbers.length; j++) {
+                    if (contacts[i].phoneNumbers[j] && !isEmptyOrBlank(contacts[i].phoneNumbers[j].value)) {
+                        cPhoneNumbersSectionContent += "<li class='collection-item'>" + contacts[i].phoneNumbers[j].value + "</li>";
+                    }
+                }
 
-                //     var contactName = contacts[i].name.formatted;
-                //     newLi.innerHTML = contactName;
-                //     newLi.classList.add("collection-item");
-                //     ul.appendChild(newLi); 
-                //     total.innerHTML = "Total contacts are: " + i; 
-                // }
-                //  alert("Contacts are ready!");
+                     // var contactName = contacts[i].name.formatted;
+                    //newLi.innerHTML = contactName;
+                    //newLi.classList.add("collection-item");
+                    ul.appendChild(cPhoneNumbersSectionContent);
+                    total.innerHTML = "Total contacts are: " + i;
+                }
+                alert("Contacts are ready!");
             };
 
             function onError() {

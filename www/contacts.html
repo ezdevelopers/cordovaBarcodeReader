@@ -63,15 +63,13 @@
                 for (var i = 0; i < contacts.length; i++) {
                      var newLi = document.createElement("li");
 
-                    // for (var j = 0; j < contacts[i].phoneNumbers.length; j++) {
-                    //     phoneNumbers += contacts[i].phoneNumbers[j].value;
-                    // }
-
-                    // var contactPhoneNumber = phoneNumbers;
+                    for (var j = 0; j < contacts[i].phoneNumbers.length; j++) {
+                        alert("Pref: " + contacts[i].phoneNumbers[j].pref);
+                    };
+                    
                     var contactName = contacts[i].name.formatted;
                     newLi.innerHTML = contactName;
                     newLi.classList.add("collection-item");
-
                     ul.appendChild(newLi); 
                     total.innerHTML = "Total contacts are: " + i; 
                 }

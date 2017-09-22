@@ -58,7 +58,7 @@
             var options = new ContactFindOptions();
             options.filter = "";
             options.multiple = true;
-            var filter = ["name", "phoneNumber"];
+            var filter = [navigator.contacts.fieldType.phoneNumbers, navigator.contacts.fieldType.name];
             navigator.contacts.find(filter, onSuccess, onError, options);
         };
 

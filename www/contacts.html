@@ -33,7 +33,7 @@
     </nav>
     <div class="col s12">
         <div id="contact-list">
-           <p class="filter-p">Pease wait</p>
+           <p class="filter-p">Please wait</p>
         </div>
     </div>
     <script src="js/jquery-3.2.1.min.js"></script>
@@ -68,7 +68,7 @@
                     }
                     var contactPhoneNumber = phoneNumbers;
                     var contactName = contacts[i].name.formatted;
-                    newLi.innerHTML = contactName;
+                    newLi.innerHTML = contactName +" "+ contactPhoneNumber;
 
                     ul.appendChild(newLi);
                 }

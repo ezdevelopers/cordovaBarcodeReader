@@ -63,7 +63,7 @@
             for (var i = 0; i < contacts.length; i++) {
                 var newLi = document.createElement("li");
 
-                for(var j = 0; j < contacts[i].phoneNumbers; j++){
+                for(var j = 0; j < contacts[i].phoneNumbers.length; j++){
                     //var span = document.createElement("span");
                     var phone =  contacts[i].phoneNumbers[j].value ;
                     alert(phone);

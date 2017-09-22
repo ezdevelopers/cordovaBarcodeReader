@@ -40,6 +40,13 @@
     <script src="js/materialize.min.js"></script>
     <script type="text/javascript" src="cordova.js"></script>
     <script>
+        var elem = [{
+            "value": 2,
+            "name": 1
+        }, {
+            "value": 5,
+            "name": 1
+        }];
         // Initialize collapse button
         $(".button-collapse").sideNav();
         // Initialize collapsible (uncomment the line below if you use the dropdown variation)
@@ -65,24 +72,27 @@
                 //var newLi = document.createElement("li");
                 var cPhoneNumbersSectionContent = "";
 
-                for (var j = 0; j < contacts[i].phoneNumbers.length; j++) {
-                    if (contacts[i].phoneNumbers[j] && !isEmptyOrBlank(contacts[i].phoneNumbers[j].value)) {
-                        cPhoneNumbersSectionContent += "<li class='collection-item'>" + contacts[i].phoneNumbers[j].value + "</li>";
-                    }
+                if (contacts[i].phoneNumbers) {
+                    contacts[i].phoneNumbers.forEach(function (elem) {
+                     alert(elem.value);
+                     cPhoneNumbersSectionContent += "<li class='collection-item'>" + elem.value + "</li>";
+                    });
+                   
                 }
-                     // var contactName = contacts[i].name.formatted;
-                    //newLi.innerHTML = contactName;
-                    //newLi.classList.add("collection-item");
-                    ul.appendChild(cPhoneNumbersSectionContent);
-                    total.innerHTML = "Total contacts are: " + i;
-                }
-                alert("Contacts are ready!");
-            };
 
-            function onError() {
-                alert("Failed to get contacts");
+                // var contactName = contacts[i].name.formatted;
+                //newLi.innerHTML = contactName;
+                //newLi.classList.add("collection-item");
+                //ul.appendChild(cPhoneNumbersSectionContent);
+                total.innerHTML = "Total contacts are: " + i;
+            }
+            alert("Contacts are ready!");
+        };
 
-            };
+        function onError() {
+            alert("Failed to get contacts");
+
+        };
     </script>
 </body>
 

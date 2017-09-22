@@ -33,7 +33,7 @@
     </nav>
     <div class="col s12">
         <div id="contact-list">
-           <p class="filter-p">Please wait</p>
+           <ul class="collection"><li class="collection-item">Please wait...</li></ul>
         </div>
     </div>
     <script src="js/jquery-3.2.1.min.js"></script>
@@ -57,21 +57,22 @@
 
 
             function onSuccess(contacts) {
-                var list = document.getElementById("contact-list");
-                var ul = document.createElement("ul");
+                var ul = document.getElementsByClassName("collection");
 
                 for (var i = 0; i < contacts.length; i++) {
                     var newLi = document.createElement("li");
-                    // var phoneNumbers = " ";
-                    // for (var j = 0; j < contacts[i].phoneNumbers.length; j++) {
-                    //     phoneNumbers += contacts[i].phoneNumbers[j].value + "\n";
-                    // }
-                    // var contactPhoneNumber = phoneNumbers;
+                    newLi.classList.add("collection-item");
+                    var phoneNumbers = " ";
+                    for (var j = 0; j < contacts[i].phoneNumbers.length; j++) {
+                        phoneNumbers += contacts[i].phoneNumbers[j].value + "\n";
+                    }
+                    var contactPhoneNumber = phoneNumbers;
                     var contactName = contacts[i].name.formatted;
-                    newLi.innerHTML = contactName;
+                    newLi.innerHTML = contactName +" "+ contactPhoneNumber;
 
+                    ul.innerHTML = ""; 
                     ul.appendChild(newLi); 
-                    list.innerHTML = ul; 
+                    
                 }
                  alert("Contacts are ready!");
             };

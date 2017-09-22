@@ -62,17 +62,16 @@
 
             for (var i = 0; i < contacts.length; i++) {
                 var newLi = document.createElement("li");
+                var phone = "";
                 for(var j = 0; j < contacts[i].phoneNumbers; j++){
-                    var phone =  contacts[i].phoneNumbers[j].value;
-                   // var phoneNo = contacts[i].phoneNumbers[j].value;
-                    newLi.innerHTML = phone;
+                    phone +=  contacts[i].phoneNumbers[j].value + "\n";
                 };
-                 newLi.classList.add("collection-item");
-                //var contactName = contacts[i].name.formatted;
-
+                var contactName = contacts[i].name.formatted;
+                newLi.innerHTML = contactName +" "+ phone;
+                newLi.classList.add("collection-item");
 
                 ul.appendChild(newLi);
-                total.innerHTML = "Total contacts are: " + i ;
+                total.innerHTML = "Total contacts are: " + i;
             }
             alert("Contacts are ready!");
         };

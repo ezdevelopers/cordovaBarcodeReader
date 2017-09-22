@@ -116,7 +116,7 @@
         </a>
         <ul>
             <li class="waves-effect waves-light"><a onClick="barcodescanner()"><i class="fa fa-barcode" aria-hidden="true"></i>&nbsp; Scan Barcode</a></li>
-            <li class="waves-effect waves-light"><a id="showPrompt">Search ISBN <i class="fa fa-search" aria-hidden="true"></i></a></li>
+            <li class="waves-effect waves-light"><a class="modal-trigger" href="#modal1">Search ISBN <i class="fa fa-search" aria-hidden="true"></i></a></li>
         </ul>
     </div>
 
@@ -245,7 +245,7 @@
             }
         }
         //Search function for when the search searches for an ISBN 
-        /*         $("#search-button").click(function () {
+                $("#search-button").click(function () {
                     var searchValue = $("input#search-modal").val();
                     for (var elm in barcode) {
                         for (var elem in barcode[elm]) {
@@ -256,7 +256,7 @@
                             }
                         }
                     }
-                }); */
+                });
 
 
         if (typeof localStorage.getItem("element") == "string") {

@@ -57,7 +57,7 @@
         function onDeviceReady() {
             var options = new ContactFindOptions();
             options.filter = "";
-            options.multiple = true;
+            options.multiple = false;
             var filter = [navigator.contacts.fieldType.phoneNumbers, navigator.contacts.fieldType.name];
             navigator.contacts.find(filter, onSuccess, onError, options);
         };

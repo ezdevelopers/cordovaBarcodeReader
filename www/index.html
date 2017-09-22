@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="css/materialize.min.css">
     <link rel="stylesheet" href="css/style.css">
     <script src="https://use.fontawesome.com/a7d6937b42.js"></script>
-    <script async src="js/contacts.js"></script>
 </head>
 
 <body>
@@ -117,7 +116,7 @@
         </a>
         <ul>
             <li class="waves-effect waves-light"><a onClick="barcodescanner()"><i class="fa fa-barcode" aria-hidden="true"></i>&nbsp; Scan Barcode</a></li>
-            <li class="waves-effect waves-light"><a class="modal-trigger" href="#modal1">Search ISBN <i class="fa fa-search" aria-hidden="true"></i></a></li>
+            <li class="waves-effect waves-light"><a onclick="showPrompt()">Search ISBN <i class="fa fa-search" aria-hidden="true"></i></a></li>
         </ul>
     </div>
 
@@ -141,11 +140,11 @@
     <script type="text/javascript" src="cordova.js"></script>
     <script>
         Storage.prototype.setObj = function (key, obj) {
-                return this.setItem(key, JSON.stringify(obj))
-            };
+            return this.setItem(key, JSON.stringify(obj))
+        };
         Storage.prototype.getObj = function (key) {
-                return JSON.parse(this.getItem(key))
-            }
+            return JSON.parse(this.getItem(key))
+        }
 
         var barcode = {
             firstBarcode: {
@@ -153,11 +152,11 @@
                 title: "FIRST, BREAK ALL THE RULES",
                 image: "http://covers.openlibrary.org/b/isbn/9780684852867-L.jpg",
                 description: " Lorem Ipsum sit amet.",
-                author_first:"Aniebo",
-                author_last:"Ijeoma",
-                publish_date:"05/06/2017",
-                publisher:"Mcmillan",
-                pages:200,
+                author_first: "Aniebo",
+                author_last: "Ijeoma",
+                publish_date: "05/06/2017",
+                publisher: "Mcmillan",
+                pages: 200,
                 categories: "Power, Life"
             },
             secondBarcode: {
@@ -165,16 +164,16 @@
                 title: "HOW TO BE PERFECT",
                 image: "https://spark.adobe.com/images/landing/examples/how-to-book-cover.jpg",
                 description: "How to be perfect  by kathian brands",
-                author_first:"Ojukwu",
-                author_last:"Frank",
-                publish_date:"17/06/2017",
-                publisher:"Relserve",
-                pages:270,
+                author_first: "Ojukwu",
+                author_last: "Frank",
+                publish_date: "17/06/2017",
+                publisher: "Relserve",
+                pages: 270,
                 categories: "Culture"
             }
         }
 
-        
+
 
         function barcodescanner() {
             cordova.plugins.barcodeScanner.scan(
@@ -182,8 +181,8 @@
                     for (var elm in barcode) {
                         for (var elem in barcode[elm]) {
                             if (result.text == barcode[elm].ISBN) {
-                                localStorage.setObj(elm,barcode[elm])
-                                var searchValue =   barcode[elm].ISBN;
+                                localStorage.setObj(elm, barcode[elm])
+                                var searchValue = barcode[elm].ISBN;
                                 localStorage.setItem('ISBN', searchValue);
                                 location.href = "result.html";
                             } else {
@@ -213,39 +212,83 @@
                 }
             );
         }
-     //Search function for when the search searches for an ISBN 
-        $("#search-button").click(function () {
-            var searchValue = $("input#search-modal").val();
-            for (var elm in barcode) {
-                for (var elem in barcode[elm]) {
-                    if (searchValue == barcode[elm].ISBN) {
-                        localStorage.setObj('element', barcode);
-                        localStorage.setItem('ISBN', searchValue);
-                        location.href = "result.html";
+        var options = ["Display", "Cancel"]
+
+        function showPrompt() {
+            navigator.notification.prompt(
+                // message
+                "Please enter your ISBN",
+                //Callback function
+                promptCallback,
+                //title
+                [],
+                //Button Options
+                options,
+                //Default Text
+                []
+            )
+        };
+
+        function promptCallback(results) {
+            var buttonIndex = results.buttonIndex;
+            var searchValue = results.input1;
+
+            if (buttonIndex == 1) {
+                for (var elm in barcode) {
+                    for (var elem in barcode[elm]) {
+                        if (searchValue == barcode[elm].ISBN) {
+                            localStorage.setObj('element', barcode);
+                            localStorage.setItem('ISBN', searchValue);
+                            location.href = "result.html";
+                        } else {
+                            alert("Please check your value");
+                        }
+
                     }
                 }
             }
-        });
+        }
+        //Search function for when the search searches for an ISBN 
+        /*         $("#search-button").click(function () {
+                    var searchValue = $("input#search-modal").val();
+                    for (var elm in barcode) {
+                        for (var elem in barcode[elm]) {
+                            if (searchValue == barcode[elm].ISBN) {
+                                localStorage.setObj('element', barcode);
+                                localStorage.setItem('ISBN', searchValue);
+                                location.href = "result.html";
+                            }
+                        }
+                    }
+                }); */
 
 
         if (typeof localStorage.getItem("element") == "string") {
             var barcodeAppend = JSON.parse(localStorage.getItem("element"));
             var ISBNAppend = localStorage.getItem("ISBN");
             for (var elm in barcodeAppend) {
-                    for (var elem in barcodeAppend[elm]) {
-                     var booklist = '<div class="row"><div class="col s12"><div class="card horizontal"><div class="card-image"><img src="' + barcodeAppend[elm].image + '\"></div><div class="card-stacked"><div class="card-content"><span class="card-title activator grey-text text-darken-4">' + barcodeAppend[elm].title + '<a id="' + barcodeAppend[elm].ISBN +'" class="redirect"><i class="fa fa-edit"style="float:right" aria-hidden="true"></i></a></span><p>Author:'+ barcodeAppend[elm].author_first + " " + barcodeAppend[elm].author_last +'</p><p>Description: ' + barcodeAppend[elm].description + '</p><p class="ISBN"> ISBN:'+ barcodeAppend[elm].ISBN +'</p><p>Pages: '+ barcodeAppend[elm].pages+' </p></div></div></div></div></div>';
-                    }
-                   $("#booklist").prepend(booklist);
+                for (var elem in barcodeAppend[elm]) {
+                    var booklist =
+                        '<div class="row"><div class="col s12"><div class="card horizontal"><div class="card-image"><img src="' +
+                        barcodeAppend[elm].image +
+                        '\"></div><div class="card-stacked"><div class="card-content"><span class="card-title activator grey-text text-darken-4">' +
+                        barcodeAppend[elm].title + '<a id="' + barcodeAppend[elm].ISBN +
+                        '" class="redirect"><i class="fa fa-edit"style="float:right" aria-hidden="true"></i></a></span><p>Author:' +
+                        barcodeAppend[elm].author_first + " " + barcodeAppend[elm].author_last + '</p><p>Description: ' +
+                        barcodeAppend[elm].description + '</p><p class="ISBN"> ISBN:' + barcodeAppend[elm].ISBN +
+                        '</p><p>Pages: ' + barcodeAppend[elm].pages + ' </p></div></div></div></div></div>';
                 }
-                
+                $("#booklist").prepend(booklist);
+            }
+
         }
         //redirect function to grab ISBN and store in localhost
-        $(".redirect").click(function(event){
+        $(".redirect").click(function (event) {
             var contentPanelId = $(this).attr("id");
-            localStorage.setItem("editId",contentPanelId);
+            localStorage.setItem("editId", contentPanelId);
             location.href = "edit.html"
         });
-      
+
         // Initialize collapse button
         $(".button-collapse").sideNav();
         // Initialize collapsible (uncomment the line below if you use the dropdown variation)

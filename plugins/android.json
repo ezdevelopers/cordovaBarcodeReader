@@ -15,6 +15,9 @@
         },
         "cordova-plugin-contacts": {
             "PACKAGE_NAME": "com.example.com"
+        },
+        "cordova-plugin-dialogs": {
+            "PACKAGE_NAME": "com.example.com"
         }
     },
     "dependent_plugins": {

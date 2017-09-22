@@ -51,16 +51,15 @@
                     var options = new ContactFindOptions();
                     options.filter = "";
                     options.multiple = true;
-                    var filter = ["displayName"];
+                    var filter = ["*"];
                     navigator.contacts.find(filter, onSuccess, onError, options);
                 };
 
 
             function onSuccess(contacts) {
-                var ul = document.createElement("ul");
+                var ul = document.getElementById("contact-list");
                 for (var i = 0; i < contacts.length; i++) {
                     var newLi = document.createElement("li");
-
                     // var phoneNumbers = " ";
                     // for (var j = 0; j < contacts[i].phoneNumbers.length; j++) {
                     //     phoneNumbers += contacts[i].phoneNumbers[j].value + "\n";
@@ -69,12 +68,20 @@
                     var contactName = contacts[i].name.formatted;
                     newLi.innerHTML = contactName;
 
-                    ul.appendChild(newLi);
-                   
+                    ul.appendChild(newLi);  
                 }
                  alert("Contacts are ready!");
-                var contactList = document.getElementById("contact-list");
-                contactList.html(ul);
+                 function alertDismissed() {
+                     // do something
+                 }
+
+                 navigator.notification.alert(
+                     'Contacts are ready!!',  // message
+                     alertDismissed,         // callback
+                     'Contacts are ready',            // title
+                     'Done'                  // buttonName
+                 );
+
                 
             };
 

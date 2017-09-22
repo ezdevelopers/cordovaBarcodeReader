@@ -139,6 +139,7 @@
     <script src="js/materialize.min.js"></script>
     <script type="text/javascript" src="cordova.js"></script>
     <script>
+
         Storage.prototype.setObj = function (key, obj) {
             return this.setItem(key, JSON.stringify(obj))
         };
@@ -212,18 +213,21 @@
                 }
             );
         }
-
-        function showPrompt() {
-            alert("Working");
-            navigator.notification.prompt(
-                'Please enter your ISBN', // message
-                onPrompt, // callback to invoke
-                'ISBN Number', // title
-                ['Ok', 'Exit'], // buttonLabels
-                'Hi' // defaultText
-            );
-            alert("Show something");
-        };
+        document.addEventListener("deviceready", onDeviceReady, false);
+        function onDeviceReady() {
+            function showPrompt() {
+                alert("Working");
+                navigator.notification.prompt(
+                    'Please enter your ISBN', // message
+                    onPrompt, // callback to invoke
+                    'ISBN Number', // title
+                    ['Ok', 'Exit'], // buttonLabels
+                    'Hi' // defaultText
+                );
+                alert("Show something");
+            };
+        }
+        
 
         function onPrompt(results) {
             alert("You selected button number " + results.buttonIndex + " and entered " + results.input1);

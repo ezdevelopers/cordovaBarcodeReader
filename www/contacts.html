@@ -50,7 +50,7 @@
              function onDeviceReady() {
                     var options = new ContactFindOptions();
                     options.filter = "";
-                    options.multiple = true;
+                    options.multiple = false;
                     var filter = ["*"];
                     navigator.contacts.find(filter, onSuccess, onError, options);
                 };
@@ -59,20 +59,20 @@
             function onSuccess(contacts) {
                 var ul = document.getElementById("contact-list");
                 var total = document.getElementById("total");
-                alert("Your contacts" +JSON.stringify(contacts));
-                // for (var i = 0; i < contacts.length; i++) {
-                //      var newLi = document.createElement("li");
+                //alert("Your contacts" +JSON.stringify(contacts));
+                for (var i = 0; i < contacts.length; i++) {
+                     var newLi = document.createElement("li");
 
-                //     // for (var j = 0; j < contacts[i].phoneNumbers.length; j++) {
-                //     //     alert("Pref: " + contacts[i].phoneNumbers[j].pref);
-                //     // };
+                    for (var j = 0; j < contacts[i].phoneNumbers.length; j++) {
+                        alert("Value: " + contacts[i].phoneNumbers[j].value);
+                    };
 
-                //     var contactName = contacts[i].name.formatted;
-                //     newLi.innerHTML = contactName;
-                //     newLi.classList.add("collection-item");
-                //     ul.appendChild(newLi); 
-                //     total.innerHTML = "Total contacts are: " + i; 
-                // }
+                    var contactName = contacts[i].name.formatted;
+                    newLi.innerHTML = contactName;
+                    newLi.classList.add("collection-item");
+                    ul.appendChild(newLi); 
+                    total.innerHTML = "Total contacts are: " + i; 
+                }
                  alert("Contacts are ready!");
             };
 

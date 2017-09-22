@@ -33,7 +33,7 @@
     </nav>
     <div class="col s12">
         <ul id="contact-list" class="collection">
-            <p id="total" class="filter-p">Please wait</p>
+           <p id="total" class="filter-p">Please wait</p>
         </ul>
     </div>
     <script src="js/jquery-3.2.1.min.js"></script>
@@ -45,47 +45,43 @@
         // Initialize collapsible (uncomment the line below if you use the dropdown variation)
         //$('.collapsible').collapsible();
 
-        document.addEventListener("deviceready", onDeviceReady, false);
+         document.addEventListener("deviceready", onDeviceReady, false);
 
-        function onDeviceReady() {
-            var options = new ContactFindOptions();
-            options.filter = "";
-            options.multiple = true;
-            var filter = ["*"];
-            navigator.contacts.find(filter, onSuccess, onError, options);
-        };
-
-
-        function onSuccess(contacts) {
-            var ul = document.getElementById("contact-list");
-            var total = document.getElementById("total");
-
-            for (var i = 0; i < contacts.length; i++) {
-                var newLi = document.createElement("li");
-
-                var phoneNumber = contacts[i].phoneNumbers;
-                alert(JSON.stringify(phoneNumber));
-                for (var j = 0; j < phoneNumber.length; j++) {
-                    if (phoneNumber[j].type = "mobile") {
-                        var phone = phoneNumbers[j].value;
-                        var contactName = contacts[i].name.formatted;
-                        newLi.innerHTML = contactName +" "+ phone;
-                    }
-
+             function onDeviceReady() {
+                    var options = new ContactFindOptions();
+                    options.filter = "";
+                    options.multiple = true;
+                    var filter = ["*"];
+                    navigator.contacts.find(filter, onSuccess, onError, options);
                 };
 
-                newLi.classList.add("collection-item");
 
-                ul.appendChild(newLi);
-                total.innerHTML = "Total contacts are: " + i;
-            }
-            alert("Contacts are ready!");
-        };
+            function onSuccess(contacts) {
+                var ul = document.getElementById("contact-list");
+                var total = document.getElementById("total");
 
-        function onError() {
-            alert("Failed to get contacts");
+                for (var i = 0; i < contacts.length; i++) {
+                    var newLi = document.createElement("li");
 
-        };
+                    var phoneNumber = contacts[i].phoneNumbers;
+                    for (var j = 0; j < phoneNumber.length; j++) {
+                         alert(phoneNumber[j].value);
+                    }
+                    //var contactPhoneNumber = phoneNumbers;
+                    var contactName = contacts[i].name.formatted;
+                    newLi.innerHTML = contactName;
+                    newLi.classList.add("collection-item");
+
+                    ul.appendChild(newLi); 
+                    total.innerHTML = "Total contacts are: " + i; 
+                }
+                 alert("Contacts are ready!");
+            };
+
+            function onError() {
+                alert("Failed to get contacts");
+
+            };
     </script>
 </body>
 

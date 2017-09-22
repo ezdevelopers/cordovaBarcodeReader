@@ -50,7 +50,7 @@
         function onDeviceReady() {
             var options = new ContactFindOptions();
             options.filter = "";
-            options.multiple = false;
+            options.multiple = true;
             var filter = ["*"];
             navigator.contacts.find(filter, onSuccess, onError, options);
         };
@@ -64,12 +64,12 @@
             for (var i = 0; i < contacts.length; i++) {
                 //var newLi = document.createElement("li");
                 var cPhoneNumbersSectionContent = "";
+
                 for (var j = 0; j < contacts[i].phoneNumbers.length; j++) {
                     if (contacts[i].phoneNumbers[j] && !isEmptyOrBlank(contacts[i].phoneNumbers[j].value)) {
                         cPhoneNumbersSectionContent += "<li class='collection-item'>" + contacts[i].phoneNumbers[j].value + "</li>";
                     }
                 }
-
                      // var contactName = contacts[i].name.formatted;
                     //newLi.innerHTML = contactName;
                     //newLi.classList.add("collection-item");

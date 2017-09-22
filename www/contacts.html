@@ -51,7 +51,7 @@
             var options = new ContactFindOptions();
             options.filter = "";
             options.multiple = true;
-            var filter = ["*"];
+            var filter = ["name"];
             navigator.contacts.find(filter, onSuccess, onError, options);
         };
 
@@ -63,13 +63,17 @@
             for (var i = 0; i < contacts.length; i++) {
                 var newLi = document.createElement("li");
 
-                for(var j = 0; j < contacts[i].phoneNumbers.length; j++){
-                    //var span = document.createElement("span");
-                    var phone =  contacts[i].phoneNumbers[j].value ;
-                    alert(phone);
+                var phoneNumber = contacts[i].phoneNumbers;
+                alert(JSON.stringify(phoneNumber));
+                for (var j = 0; j < phoneNumber.length; j++) {
+                    if (phoneNumber[j].type = "mobile") {
+                        var phone = contacts[i].phoneNumbers[j].value;
+                        var contactName = contacts[i].name.formatted;
+                        newLi.innerHTML = contactName +" "+ phone;
+                    }
+
                 };
-                var contactName = contacts[i].name.formatted;
-                newLi.innerHTML = contactName;
+
                 newLi.classList.add("collection-item");
 
                 ul.appendChild(newLi);

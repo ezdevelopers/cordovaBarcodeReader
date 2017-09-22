@@ -47,34 +47,34 @@
 
          document.addEventListener("deviceready", onDeviceReady, false);
 
-            function onDeviceReady() {
-                var options = new ContactFindOptions();
-                options.filter = "";
-                options.multiple = true;
-                //options.desiredFields = [navigator.contacts.fieldType.id];
-                options.hasPhoneNumber = true;
-                var fields = ["*"];
-                navigator.contacts.find(fields, onSuccess, onError, options);
-            };
+             function onDeviceReady() {
+                    var options = new ContactFindOptions();
+                    options.filter = "";
+                    options.multiple = true;
+                    var filter = ["displayName"];
+                    navigator.contacts.find(filter, onSuccess, onError, options);
+                };
+
 
             function onSuccess(contacts) {
                 var ul = document.createElement("ul");
                 for (var i = 0; i < contacts.length; i++) {
                     var newLi = document.createElement("li");
 
-                    var phoneNumbers = " ";
-                    for (var j = 0; j < contacts[i].phoneNumbers.length; j++) {
-                        phoneNumbers += contacts[i].phoneNumbers[j].value + "\n";
-                    }
-                    var contactPhoneNumber = phoneNumbers;
+                    // var phoneNumbers = " ";
+                    // for (var j = 0; j < contacts[i].phoneNumbers.length; j++) {
+                    //     phoneNumbers += contacts[i].phoneNumbers[j].value + "\n";
+                    // }
+                    // var contactPhoneNumber = phoneNumbers;
                     var contactName = contacts[i].name.formatted;
-                    newLi.innerHTML = contactName +" "+ contactPhoneNumber;
+                    newLi.innerHTML = contactName;
 
                     ul.appendChild(newLi);
+                    alert("Contacts are ready!");
                 }
                 var contactList = document.getElementById("contact-list");
                 contactList.html(ul);
-                alert("Contacts are ready!");
+                
             };
 
             function onError() {

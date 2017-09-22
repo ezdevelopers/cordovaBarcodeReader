@@ -4,10 +4,8 @@
      var options = new ContactFindOptions();
      options.filter = "";
      options.multiple = true;
-     //options.desiredFields = [navigator.contacts.fieldType.id];
-     options.hasPhoneNumber = true;
-     var fields = ["*"];
-     navigator.contacts.find(fields, onSuccess, onError, options);
+     var filter = ["displayName", "addresses"];
+     navigator.contacts.find(filter, onSuccess, onError, options);
  };
 
  function onSuccess(contacts) {
@@ -17,12 +15,12 @@
 
          var phoneNumbers = " ";
          for (var j = 0; j < contacts[i].phoneNumbers.length; j++) {
-            phoneNumbers += contacts[i].phoneNumbers[j].value + "\n";
+             phoneNumbers += contacts[i].phoneNumbers[j].value + "\n";
          }
          var contactPhoneNumber = phoneNumbers;
          var contactName = contacts[i].name.formatted;
-         newLi.innerHTML = contactName ;
-         
+         newLi.innerHTML = contactName;
+
          ul.appendChild(newLi);
      }
      localStorage.setItem("contacts", JSON.stringify(ul));

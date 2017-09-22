@@ -214,22 +214,18 @@
         }
 
         function showPrompt() {
-            var options = ["Display", "Cancel"];
+            alert("Working");
             navigator.notification.prompt(
-                // message
-                "Please enter your ISBN",
-                //Callback function
-                promptCallback,
-                //title
-                [],
-                //Button Options
-                options,
-                //Default Text
-                []
-            )
+                'Please enter your ISBN', // message
+                onPrompt, // callback to invoke
+                'ISBN Number', // title
+                ['Ok', 'Exit'], // buttonLabels
+                '' // defaultText
+            );
         };
 
-        function promptCallback(results) {
+        function onPrompt(results) {
+            alert("You selected button number " + results.buttonIndex + " and entered " + results.input1);
             var buttonIndex = results.buttonIndex;
             var searchValue = results.input1;
 

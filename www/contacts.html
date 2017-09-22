@@ -32,8 +32,8 @@
         </div>
     </nav>
     <div class="col s12">
-        <div id="contact-list">
-           <ul class="collection"><li id="total" class="collection-item">Please wait...</li></ul>
+        <div id="contact-list" class="collection">
+           <p class="filter-p">Please wait</p>
         </div>
     </div>
     <script src="js/jquery-3.2.1.min.js"></script>
@@ -57,10 +57,8 @@
 
 
             function onSuccess(contacts) {
-                var ul = document.getElementsByClassName("collection");
-                var total = document.getElementById("total");
-
-
+                var ul = document.getElementById("contact-list");
+                
                 for (var i = 0; i < contacts.length; i++) {
                     var newLi = document.createElement("li");
                     // var phoneNumbers = " ";
@@ -70,11 +68,8 @@
                     // var contactPhoneNumber = phoneNumbers;
                     var contactName = contacts[i].name.formatted;
                     newLi.innerHTML = contactName;
-                    //newLi.classList.add("collection-item");
 
-                    ul.appendChild(newLi);
-                    //total.innerHTML = "Total Contacts are: " + i;
-                    
+                    ul.appendChild(newLi);  
                 }
                  alert("Contacts are ready!");
             };

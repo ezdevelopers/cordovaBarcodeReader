@@ -73,6 +73,7 @@
                 var cPhoneNumbersSection = "";
                 for(var j = 0; j < contacts[i].phoneNumbers.length; j++){
                 cPhoneNumbersSection += "<li class='collection-item'>" + contacts[i].phoneNumbers[j].value + "</li>";
+                
                 };
             
 
@@ -80,7 +81,8 @@
                 newLi.innerHTML = contactName;
                 newLi.classList.add("collection-item");
                 ul.appendChild(newLi);
-                ul.appendChild(cPhoneNumbersSection);
+                alert("Contact number: " + cPhoneNumbersSection);
+                //ul.appendChild();
                 total.innerHTML = "Total contacts are: " + contacts.length;
             }
             alert("Contacts are ready!");

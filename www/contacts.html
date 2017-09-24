@@ -64,7 +64,7 @@
 
 
         function onSuccess(contacts) {
-            var ul = document.getElementById("contact-list");
+            //var ul = document.getElementById("contact-list");
             var total = document.getElementById("total");
             alert("Your contacts" + JSON.stringify(contacts));
 
@@ -82,7 +82,7 @@
                 //newLi.classList.add("collection-item");
                 //ul.appendChild(newLi);
                 alert(cPhoneNumbersSection);
-                ul.append(cPhoneNumbersSection);
+                $("#contact-list").append(cPhoneNumbersSection);
                 total.innerHTML = "Total contacts are: " + contacts.length;
             }
             alert("Contacts are ready!");

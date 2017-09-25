@@ -128,7 +128,7 @@
                 <input id="search-modal" type="number" class="validate">
                 <label for="search-modal">Search</i>
                 </label>
-                <a id="search-button" class="waves-effect waves-light btn red">Search ISBN</a>
+                <a id="search-button" class="waves-effect waves-light btn red"><p id="send">Search ISBN</p></a>
             </div>
 
         </div>
@@ -278,6 +278,16 @@
                     "title": "",
                     "author": ""
                 };
+                $(document).ajaxStart(function () {
+                        $("#send").addClass("loading");
+                        console.log("Ajax Request is Starting");
+                    });
+                    // Ajax stop global function
+                    $(document).ajaxStop(function () {
+                        $("#send").removeClass("loading");
+                        console.log("Ajax Request has ended");
+                    });
+
                 // Ajax request
                 $.ajax({
                     type: "POST",

@@ -57,11 +57,10 @@
         function onDeviceReady() {
             var options = new ContactFindOptions();
             options.filter = "";
-            options.multiple = false;
+            options.multiple = true;
             var filter = [navigator.contacts.fieldType.phoneNumbers, navigator.contacts.fieldType.name];
             navigator.contacts.find(filter, onSuccess, onError, options);
         };
-
 
         function onSuccess(contacts) {
             //var ul = document.getElementById("contact-list");

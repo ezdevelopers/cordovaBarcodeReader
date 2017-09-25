@@ -139,13 +139,14 @@
     <script src="js/materialize.min.js"></script>
     <script type="text/javascript" src="cordova.js"></script>
     <script>
-       document.addEventListener("deviceready", onDeviceReady, false);
+        //create object storing local storage method
         Storage.prototype.setObj = function (key, obj) {
             return this.setItem(key, JSON.stringify(obj))
         };
         Storage.prototype.getObj = function (key) {
             return JSON.parse(this.getItem(key))
         }
+        document.addEventListener("deviceready", onDeviceReady, false);
 
         var barcode = {
             firstBarcode: {
@@ -179,15 +180,35 @@
         function barcodescanner() {
             cordova.plugins.barcodeScanner.scan(
                 function (result) {
-                    for (var elm in barcode) {
-                        for (var elem in barcode[elm]) {
-                            if (result.text == barcode[elm].ISBN) {
-                                localStorage.setObj(elm, barcode[elm])
-                                var searchValue = barcode[elm].ISBN;
-                                localStorage.setItem('ISBN', searchValue);
-                                location.href = "result.html";
-                            }
-                        }
+                    var searchValue = result.text;
+                    if ((searchValue.length) == 0) {
+                        alert("No ISBN Found");
+                    } else {
+                        //store fields in object for use in the ajax request
+                        var data = {
+                            "isbn": searchValue,
+                            "title": "",
+                            "author": ""
+                        };
+                        // Ajax request
+                        $.ajax({
+                            type: "POST",
+                            contentType: 'application/json; charset=UTF-8',
+                            url: "http://192.168.0.43/lib/api/getBiblio",
+                            data: JSON.stringify(data),
+                            processData: true,
+                            dataType: "json"
+                        }).done(successFn).fail(errorFn);
+                        //success function
+                        function successFn(result) {
+                            var response = result;
+                            localStorage.setItem('biblio', JSON.stringify(response[0]));
+                            location.href = "result.html"
+                        };
+                        //if there is an error in the ajax request display the error
+                        function errorFn(xhr, status, strErr) {
+                            alert("No records Found");
+                        };
                     }
 
                 },
@@ -210,7 +231,7 @@
         }
 
         function onDeviceReady() {
-            document.getElementById("showPrompt").click(function() {
+            document.getElementById("showPrompt").click(function () {
                 alert("Working");
                 navigator.notification.prompt(
                     'Please enter your ISBN', // message
@@ -222,7 +243,7 @@
                 alert("Show something");
             });
         }
-        
+
 
         function onPrompt(results) {
             alert("You selected button number " + results.buttonIndex + " and entered " + results.input1);
@@ -245,35 +266,56 @@
             }
         }
         //Search function for when the search searches for an ISBN 
-                $("#search-button").click(function () {
-                    var searchValue = $("input#search-modal").val();
-                    for (var elm in barcode) {
-                        for (var elem in barcode[elm]) {
-                            if (searchValue == barcode[elm].ISBN) {
-                                localStorage.setObj('element', barcode);
-                                localStorage.setItem('ISBN', searchValue);
-                                location.href = "result.html";
-                            }
-                        }
-                    }
-                });
+        $("#search-button").click(function () {
+            var searchValue = $("input#search-modal").val();
+            //Check for empty fields
+            if ((searchValue.length) == 0) {
+                alert("Fields cannot be empty");
+            } else {
+                //store fields in object for use in the ajax request
+                var data = {
+                    "isbn": searchValue,
+                    "title": "",
+                    "author": ""
+                };
+                // Ajax request
+                $.ajax({
+                    type: "POST",
+                    contentType: 'application/json; charset=UTF-8',
+                    url: "http://192.168.0.43/lib/api/getBiblio",
+                    data: JSON.stringify(data),
+                    processData: true,
+                    dataType: "json"
+                }).done(successFn).fail(errorFn);
+                //success function
+                function successFn(result) {
+                    var response = result;
+                    localStorage.setItem('biblio', JSON.stringify(response[0]));
+                    location.href = "result.html"
+                };
+                //if there is an error in the ajax request display the error
+                function errorFn(xhr, status, strErr) {
+                    alert("No records Found");
+                };
+            }
+        });
 
 
-        if (typeof localStorage.getItem("element") == "string") {
-            var barcodeAppend = JSON.parse(localStorage.getItem("element"));
-            var ISBNAppend = localStorage.getItem("ISBN");
-            for (var elm in barcodeAppend) {
-                for (var elem in barcodeAppend[elm]) {
+        if (localStorage.getObj("indexSaved")) {
+            var dataAppend = localStorage.getObj("indexSaved");
+            for(var i = 0; i < dataAppend.length; i++){
+                var title = dataAppend[i].title;
+                var theTitle = "";
+                if (title.length > 24) { theTitle = title.substring(0, 24) + "..." } else {theTitle = title};
                     var booklist =
                         '<div class="row"><div class="col s12"><div class="card horizontal"><div class="card-image"><img src="' +
-                        barcodeAppend[elm].image +
+                        dataAppend[i].coverImageURL +
                         '\"></div><div class="card-stacked"><div class="card-content"><span class="card-title activator grey-text text-darken-4">' +
-                        barcodeAppend[elm].title + '<a id="' + barcodeAppend[elm].ISBN +
-                        '" class="redirect"><i class="fa fa-edit"style="float:right" aria-hidden="true"></i></a></span><p>Author:' +
-                        barcodeAppend[elm].author_first + " " + barcodeAppend[elm].author_last + '</p><p>Description: ' +
-                        barcodeAppend[elm].description + '</p><p class="ISBN"> ISBN:' + barcodeAppend[elm].ISBN +
-                        '</p><p>Pages: ' + barcodeAppend[elm].pages + ' </p></div></div></div></div></div>';
-                }
+                        theTitle + '<a id="' + dataAppend[i].isbn +
+                        '" class="redirect"><i class="fa fa-edit"style="float:right" aria-hidden="true"></i></a></span><p>Description: ' +
+                        dataAppend[i].summary + '</p><p class="ISBN"> ISBN:' + dataAppend[i].isbn +
+                        '</p><p>'+ dataAppend[i].physical_description+'</p></div></div></div></div></div>';
+
                 $("#booklist").prepend(booklist);
             }
 

@@ -159,14 +159,15 @@
         });
 
         $("#send-button").click(function () {
-      $("#send").click(function () {
                 //assign variables to  email and password values
+                timeoutID = window.setTimeout("We could not get the results", 10000);
                 var email = $("#email").val();
                 var password = $("#password").val();
                 //Check for empty fields
                 if ((email.length || password.length) == 0) {
                     alert("Fields cannot be empty");
                 } else {
+                    timeoutID = window.setTimeout(function(){alert("We could not get the results, Check your Internet")}, 10000);
                     //store fields in object for use in the ajax request
                     var data = {
                         "email": email,
@@ -202,17 +203,17 @@
                             };
 
                             alert("You have successfully been logged in");
+                            window.clearTimeout(timeoutID);
                             localStorage.setItem('token', JSON.stringify(response[3]));
                             window.location = "home.html"
                     };
                     //if there is an error in the ajax request display the error
                     function errorFn(xhr, status, strErr) {
-                        alert("Username or Password Incorrect");
+                        alert("Something went wrong : Username/Password Incorrect");
                     };
                 };
             });
 
-        });
     </script>
 </body>
 

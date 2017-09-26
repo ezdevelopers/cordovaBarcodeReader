@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,minimum-scale=1,maximum-scale=1">
+    <title>Barcode Reader</title>
+    <link rel="stylesheet" href="css/materialize.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://use.fontawesome.com/a7d6937b42.js"></script>
+</head>
+
+<body>
+    <ul id="slide-out" class="side-nav">
+        <li>
+            <div class="user-view">
+                <div class="background">
+                    <img src="img/bg.jpg">
+                </div>
+            </div>
+            <li><a class="waves-effect" href="home.html">Home</a></li>
+            <li><a class="waves-effect" href="contacts.html">Contacts</a></li>
+
+        </li>
+
+    </ul>
+    <nav class="nav-extended">
+        <div class="nav-wrapper">
+            <a href="#" data-activates="slide-out" class="button-collapse"><i class="fa fa-bars" aria-hidden="true"></i></a>
+            <a href="#" class="">Library</a>
+        </div>
+        <div class="nav-content">
+            <ul class="tabs tabs-transparent">
+                <li class="tab"><a href="#testa">Find Books</a></li>
+                <li class="tab"><a class="active" href="#testb">My library</a></li>
+                <li class="tab"><a href="#testc">Loans</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="col s12">
+        <form>
+            <div id="testa" class="col s12">
+                <p class="filter-p">Find Books</p>
+                <div class="row">
+                    <div class="row">
+                        <div class="input-field col s8">
+                            <input id="icon_prefix" type="text" class="validate">
+                            <label for="icon_prefix">Search <i class="fa fa-search" aria-hidden="true"></i></label>
+                        </div>
+                        <div class="input-field col s4">
+                            <select multiple>
+                                <option value="" disabled selected>Keyword</option>
+                                <option value="1">Author</option>
+                                <option value="2">Title</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <p class="filter-p">Corporate Libraries</p>
+                        <div class="col s12">
+                            <p>
+                                <input type="checkbox" class="filled-in" id="filled1" />
+                                <label for="filled1">FUTO Library</label>
+                            </p>
+                            <p>
+                                <input type="checkbox" class="filled-in" id="filled2" />
+                                <label for="filled2">FUTO Library</label>
+                            </p>
+                            <p>
+                                <input type="checkbox" class="filled-in" id="filled3" />
+                                <label for="filled3">FUTO Library</label>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div id="testb" class="col s12 test">
+                <p class="filter-p">Filter</p>
+                <div id="booklist" class="col s12 m7">
+                </div>
+            </div>
+            <div id="testc" class="col s12 test">
+                <div class="row">
+                    <ul class="collection">
+                        <li class="collection-item avatar">
+                            <img src="img/bg.jpg" alt="" class="circle">
+                            <span class="title">Title</span>
+                            <p>First Line
+                                <br> Second Line
+                            </p>
+                            <a href="#!" class="secondary-content"><i class="fa fa-star" aria-hidden="true"></i></a>
+                        </li>
+                        <li class="collection-item avatar">
+                            <img src="img/bg.jpg" alt="" class="circle">
+                            <span class="title">Title</span>
+                            <p>First Line
+                                <br> Second Line
+                            </p>
+                            <a href="#!" class="secondary-content"><i class="fa fa-star" aria-hidden="true"></i></a>
+                        </li>
+
+                    </ul>
+
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="fixed-action-btn toolbar">
+        <a class="btn-floating btn-large red">
+            <i class="fa fa-plus" aria-hidden="true"></i>
+        </a>
+        <ul>
+            <li class="waves-effect waves-light"><a onClick="barcodescanner()"><i class="fa fa-barcode" aria-hidden="true"></i>&nbsp; Scan Barcode</a></li>
+            <li class="waves-effect waves-light"><a class="modal-trigger" href="#modal1">Search ISBN <i class="fa fa-search" aria-hidden="true"></i></a></li>
+        </ul>
+    </div>
+
+    <!-- Modal Structure -->
+    <div id="modal1" class="modal">
+        <div class="modal-content">
+
+            <div class="input-field col s12 center">
+                <input id="search-modal" type="number" class="validate">
+                <label for="search-modal">Search</i>
+                </label>
+                <a id="search-button" class="waves-effect waves-light btn red"><p id="send">Search ISBN</p></a>
+            </div>
+
+        </div>
+    </div>
+
+
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="js/materialize.min.js"></script>
+    <script type="text/javascript" src="cordova.js"></script>
+    <script>
+        //create prototype method for storing objects in localStorage 
+        Storage.prototype.setObj = function (key, obj) {
+            return this.setItem(key, JSON.stringify(obj))
+        };
+        //create prototype method for retrieving objects in localStorage 
+        Storage.prototype.getObj = function (key) {
+            return JSON.parse(this.getItem(key))
+        }
+        document.addEventListener("deviceready", onDeviceReady, false);
+
+        function barcodescanner() {
+            cordova.plugins.barcodeScanner.scan(
+                function (result) {
+                    var searchValue = result.text;
+                    if ((searchValue.length) == 0) {
+                        alert("No ISBN Found");
+                    } else {
+                        //store fields in object for use in the ajax request
+                        var data = {
+                            "isbn": searchValue,
+                            "title": "",
+                            "author": ""
+                        };
+                        // Ajax request
+                        $.ajax({
+                            type: "POST",
+                            contentType: 'application/json; charset=UTF-8',
+                            url: "http://192.168.0.43/lib/api/getBiblio",
+                            data: JSON.stringify(data),
+                            processData: true,
+                            dataType: "json"
+                        }).done(successFn).fail(errorFn);
+                        //success function
+                        function successFn(result) {
+                            var response = result;
+                            localStorage.setItem('biblio', JSON.stringify(response[0]));
+                            location.href = "result.html"
+                        };
+                        //if there is an error in the ajax request display the error
+                        function errorFn(xhr, status, strErr) {
+                            alert("No records Found");
+                        };
+                    }
+
+                },
+                function (error) {
+                    alert("Scanning failed: " + error);
+                }, {
+                    preferFrontCamera: false, // iOS and Android
+                    showFlipCameraButton: false, // iOS and Android
+                    showTorchButton: true, // iOS and Android
+                    torchOn: false, // Android, launch with the torch switched on (if available)
+                    saveHistory: true, // Android, save scan history (default false)
+                    prompt: "Place a barcode inside the scan area", // Android
+                    resultDisplayDuration: 500, // Android, display scanned text for X ms. 0 suppresses it entirely, default 1500
+                    //formats : "QR_CODE,PDF_417", // default: all but PDF_417 and RSS_EXPANDED
+                    //orientation : "landscape", // Android only (portrait|landscape), default unset so it rotates with the device
+                    disableAnimations: true, // iOS
+                    disableSuccessBeep: false // iOS
+                }
+            );
+        }
+
+        function onDeviceReady() {
+            document.getElementById("showPrompt").click(function () {
+                alert("Working");
+                navigator.notification.prompt(
+                    'Please enter your ISBN', // message
+                    onPrompt, // callback to invoke
+                    'ISBN Number', // title
+                    ['Ok', 'Exit'], // buttonLabels
+                    'Hi' // defaultText
+                );
+                alert("Show something");
+            });
+        }
+
+
+        function onPrompt(results) {
+            alert("You selected button number " + results.buttonIndex + " and entered " + results.input1);
+            var buttonIndex = results.buttonIndex;
+            var searchValue = results.input1;
+
+            if (buttonIndex == 1) {
+                for (var elm in barcode) {
+                    for (var elem in barcode[elm]) {
+                        if (searchValue == barcode[elm].ISBN) {
+                            localStorage.setObj('element', barcode);
+                            localStorage.setItem('ISBN', searchValue);
+                            location.href = "result.html";
+                        } else {
+                            alert("Please check your value");
+                        }
+
+                    }
+                }
+            }
+        }
+        //Search function for when the search searches for an ISBN 
+        $("#search-button").click(function () {
+            var searchValue = $("input#search-modal").val();
+            //Check for empty fields
+            if ((searchValue.length) == 0) {
+                alert("Fields cannot be empty");
+            } else {
+                //store fields in object for use in the ajax request
+                var data = {
+                    "isbn": searchValue,
+                    "title": "",
+                    "author": ""
+                };
+                $(document).ajaxStart(function () {
+                        $("#send").addClass("loading");
+                        console.log("Ajax Request is Starting");
+                    });
+                    // Ajax stop global function
+                    $(document).ajaxStop(function () {
+                        $("#send").removeClass("loading");
+                        console.log("Ajax Request has ended");
+                    });
+
+                // Ajax request
+                $.ajax({
+                    type: "POST",
+                    contentType: 'application/json; charset=UTF-8',
+                    url: "http://192.168.0.43/lib/api/getBiblio",
+                    data: JSON.stringify(data),
+                    processData: true,
+                    dataType: "json"
+                }).done(successFn).fail(errorFn);
+                //success function
+                function successFn(result) {
+                    var response = result;
+                    localStorage.setItem('biblio', JSON.stringify(response[0]));
+                    location.href = "result.html"
+                };
+                //if there is an error in the ajax request display the error
+                function errorFn(xhr, status, strErr) {
+                    alert("No records Found");
+                };
+            }
+        });
+
+       //grab saved searches from the localStorage 'indexSaved' if it exists
+        if (localStorage.getObj("indexSaved")) {
+            var dataAppend = localStorage.getObj("indexSaved");
+            //store the values of the localStorage(an array of objects) in a variable
+            for(var i = 0; i < dataAppend.length; i++){
+                //iterate through the varriable and build a html section
+                var title = dataAppend[i].title;
+                var theTitle = "";
+                if (title.length > 24) { theTitle = title.substring(0, 24) + "..." } else {theTitle = title};
+                    var booklist =
+                        '<div class="row"><div class="col s12"><div class="card horizontal"><div class="card-image"><img src="' +
+                        dataAppend[i].coverImageURL +
+                        '\"></div><div class="card-stacked"><div class="card-content"><span class="card-title activator grey-text text-darken-4">' +
+                        theTitle + '<a id="' + dataAppend[i].isbn +
+                        '" class="redirect"><i class="fa fa-edit"style="float:right" aria-hidden="true"></i></a></span><p>Description: ' +
+                        dataAppend[i].summary + '</p><p class="ISBN"> ISBN:' + dataAppend[i].isbn +
+                        '</p><p>'+ dataAppend[i].physical_description+'</p></div></div></div></div></div>';
+               //The values to the page
+                $("#booklist").prepend(booklist);
+            }
+
+        }
+        //redirect function to grab ISBN and store in localhost
+        $(".redirect").click(function (event) {
+            var contentPanelId = $(this).attr("id");
+            localStorage.setItem("editId", contentPanelId);
+            location.href = "edit.html"
+        });
+
+        // Initialize collapse button
+        $(".button-collapse").sideNav();
+        // Initialize collapsible (uncomment the line below if you use the dropdown variation)
+        //$('.collapsible').collapsible();
+
+        $(document).ready(function () {
+            $('.modal').modal();
+            $('select').material_select();
+        });
+    </script>
+</body>

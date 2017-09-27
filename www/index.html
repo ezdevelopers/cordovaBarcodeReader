@@ -7,6 +7,11 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="css/style.css">
     <title>Login</title>
+    <script>
+    if (typeof localStorage.getItem("token") == "string") {
+            window.location = "home.html";
+        }
+    </script>
     <style>
         .login-page {
             width: 100%;
@@ -146,9 +151,7 @@
     </div>
     <script src="js/jquery-3.2.1.min.js"></script>
     <script>
-        if (typeof localStorage.getItem("token") == "string") {
-                window.location = "home.html";
-            }
+        
         var response = [];
         // Switch from login to register page
         $('.message a').click(function () {

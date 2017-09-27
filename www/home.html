@@ -29,6 +29,13 @@
         <div class="nav-wrapper">
             <a href="#" data-activates="slide-out" class="button-collapse"><i class="fa fa-bars" aria-hidden="true"></i></a>
             <a href="#" class="">Library</a>
+
+            <ul id="nav-mobile" class="right hide-on-med-and-down">
+                <li><a href="sass.html">Sass</a></li>
+                <li><a href="badges.html">Components</a></li>
+                <li><a href="collapsible.html">JavaScript</a></li>
+            </ul>
+
         </div>
         <div class="nav-content">
             <ul class="tabs tabs-transparent">
@@ -128,7 +135,9 @@
                 <input id="search-modal" type="number" class="validate">
                 <label for="search-modal">Search</i>
                 </label>
-                <a id="search-button" class="waves-effect waves-light btn red"><p id="send">Search ISBN</p></a>
+                <a id="search-button" class="waves-effect waves-light btn red">
+                    <p id="send">Search ISBN</p>
+                </a>
             </div>
 
         </div>
@@ -251,14 +260,14 @@
                     "author": ""
                 };
                 $(document).ajaxStart(function () {
-                        $("#send").addClass("loading");
-                        console.log("Ajax Request is Starting");
-                    });
-                    // Ajax stop global function
-                    $(document).ajaxStop(function () {
-                        $("#send").removeClass("loading");
-                        console.log("Ajax Request has ended");
-                    });
+                    $("#send").addClass("loading");
+                    console.log("Ajax Request is Starting");
+                });
+                // Ajax stop global function
+                $(document).ajaxStop(function () {
+                    $("#send").removeClass("loading");
+                    console.log("Ajax Request has ended");
+                });
 
                 // Ajax request
                 $.ajax({
@@ -282,24 +291,33 @@
             }
         });
 
-       //grab saved searches from the localStorage 'indexSaved' if it exists
+        //grab saved searches from the localStorage 'indexSaved' if it exists
         if (localStorage.getObj("indexSaved")) {
             var dataAppend = localStorage.getObj("indexSaved");
             //store the values of the localStorage(an array of objects) in a variable
-            for(var i = 0; i < dataAppend.length; i++){
+            for (var i = 0; i < dataAppend.length; i++) {
                 //iterate through the varriable and build a html section
+                var authors = "";
+                dataAppend[0].authors.forEach(function (element) {
+                    authors += element.name + ". "
+                });
                 var title = dataAppend[i].title;
                 var theTitle = "";
-                if (title.length > 24) { theTitle = title.substring(0, 24) + "..." } else {theTitle = title};
-                    var booklist =
-                        '<div class="row"><div class="col s12"><div class="card horizontal"><div class="card-image"><img src="' +
-                        dataAppend[i].coverImageURL +
-                        '\"></div><div class="card-stacked"><div class="card-content"><span class="card-title activator grey-text text-darken-4">' +
-                        theTitle + '<a id="' + dataAppend[i].isbn +
-                        '" class="redirect"><i class="fa fa-edit"style="float:right" aria-hidden="true"></i></a></span><p>Description: ' +
-                        dataAppend[i].summary + '</p><p class="ISBN"> ISBN:' + dataAppend[i].isbn +
-                        '</p><p>'+ dataAppend[i].physical_description+'</p></div></div></div></div></div>';
-               //The values to the page
+                if (title.length > 24) {
+                    theTitle = title.substring(0, 24) + "..."
+                } else {
+                    theTitle = title
+                };
+                var booklist =
+                    '<div id="' + dataAppend[i].isbn +
+                    '" class="row redirect"><div class="col s12"><div class="card horizontal"><div class="card-image"><img width="80px" height="auto" src="' +
+                    dataAppend[i].coverImageURL +
+                    '\"></div><div class="card-stacked"><div class="card-content"><span style="color:#0000ff;font-weight:bold;font-size:18px;" class="card-title activator text-darken-4">' +
+                    theTitle + '</span><p style="color:brown;">Author: ' + authors + '</p><p class="ISBN"> ISBN: ' +
+                    dataAppend[i].isbn +
+                    '</p><p style="color:brown;">' + dataAppend[i].physical_description +
+                    '</p></div></div></div></div></div>';
+                //The values to the page
                 $("#booklist").prepend(booklist);
             }
 
@@ -308,7 +326,7 @@
         $(".redirect").click(function (event) {
             var contentPanelId = $(this).attr("id");
             localStorage.setItem("editId", contentPanelId);
-            location.href = "edit.html"
+            location.href = "view.html"
         });
 
         // Initialize collapse button

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,minimum-scale=1,maximum-scale=1">
+    <title>Barcode Reader</title>
+    <link rel="stylesheet" href="css/materialize.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://use.fontawesome.com/a7d6937b42.js"></script>
+</head>
+
+<body>
+    <ul id="slide-out" class="side-nav">
+        <li>
+            <div class="user-view">
+                <div class="background">
+                    <img src="img/bg.jpg">
+                </div>
+            </div>
+            <li><a class="waves-effect" href="home.html">Home</a></li>
+            <li><a class="waves-effect" href="contacts.html">Contacts</a></li>
+
+        </li>
+
+    </ul>
+    <nav class="nav-extended">
+        <div class="nav-wrapper">
+            <a href="#" data-activates="slide-out" class="button-collapse"><i class="fa fa-bars" aria-hidden="true"></i></a>
+            <a href="#" class="">Library</a>
+            <ul id="nav-mobile" class="right">
+                <li><a><i id="editFile" class="fa fa-pencil" style="font-size:20px;" aria-hidden="true"></i></a></li>
+            </ul>
+        </div>
+        <div class="nav-content">
+            <ul class="tabs tabs-transparent">
+                <li class="tab"><a class="active" href="#testta">Information</a></li>
+                <li class="tab"><a href="#testtb">Notes</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="col s12">
+        <div id="testta" class="row">
+            <p class="filter-p">About Book</p>
+
+            <div class="col s12">
+                <p class="title" style="color:#0000ff;font-weight:bold;font-size:18px;text-align:center;">
+                </p>
+            </div>
+            <div class="col s12">
+                <div class="col s4"><img id="image" width="120px" height="auto"></div>
+                <div class="col s8">
+                    <div class="authors">Authors:</div>
+                    <div class="category">Subjects:</div>
+                    <div class="publish_date"> Publish Date: </div>
+                    <div class="publisher">Publishers: </div>
+                    <div class="pages">Physical Information: </div>
+                    <div class="isbn">ISBN: </div>
+                </div>
+            </div>
+
+            <div class="col s12">
+                <dvi class="description">Description:</div>
+        </div>
+    </div>
+    </div>
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="js/materialize.min.js"></script>
+    <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="js/index.js"></script>
+    <script>
+        //Create a prototype function for storing objects in localStorage
+        Storage.prototype.setObj = function (key, obj) {
+            return this.setItem(key, JSON.stringify(obj))
+        };
+        //create a prototype function for retrieving objects in localStorage
+        Storage.prototype.getObj = function (key) {
+            return JSON.parse(this.getItem(key))
+        }
+
+        //parse the string of objects comming from the localStorage
+        var biblio = localStorage.getObj("indexSaved");
+        var editId = localStorage.getItem("editId");
+
+        //Loop through the objects and append in the value of page inputs
+        for (var i = 0; i < biblio.length; i++) {
+            if (editId == biblio[i].isbn) {
+                //Append object value in the value of page inputs
+                $(".title").append(biblio[i].title);
+                $("#image").attr("src", biblio[i].coverImageURL);
+                var authors = "";
+                biblio[i].authors.forEach(function (element) {
+                    authors += element.name + ". "
+                });
+                $(".authors").append("<p style=\"color:brown;\">" + authors + "</p>");
+                $(".publish_date").append("<p style=\"color:brown;\">" + biblio[i].published + "</p>");
+                $(".category").append("<p style=\"color:brown;\">" + biblio[i].subjects + "</p>");
+                $(".publisher").append("<p style=\"color:brown;\">" + biblio[i].publisher) + "</p>";
+                $(".pages").append("<p style=\"color:brown;\">" + biblio[i].physical_description + "</p>");
+                $(".isbn").append("<p style=\"color:brown;\">" + biblio[i].isbn + "</p>").attr("id", biblio[i].isbn);
+
+                $(".description").append("<p style=\"font-style:italics;\">" + biblio[i].summary + "</p>");
+                break;
+            }
+        }
+
+        $("#editFile").click(function () {
+            var contentId = $(".isbn").attr("id");
+            localStorage.setItem("editId", contentId);
+            location.href = "edit.html"
+
+        });
+
+        // Initialize collapse button
+        $(".button-collapse").sideNav();
+        // Initialize collapsible (uncomment the line below if you use the dropdown variation)
+        //$('.collapsible').collapsible();
+        $(document).ready(function () {
+            $('.modal').modal();
+            $('select').material_select();
+        });
+    </script>
+</body>
+
+</html>

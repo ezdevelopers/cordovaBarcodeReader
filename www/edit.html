@@ -38,54 +38,54 @@
         </div>
     </nav>
     <div class="col s12">
-    <form>
-        <div id="testta" class="row">
-            <p class="filter-p">Book</p>
-            <div class="col s12">
-                <div class="input-field col s12">
-                    <input id="title" type="text" class="validate">
-                    <label for="title">Title</label>
+        <form>
+            <div id="testta" class="row">
+                <p class="filter-p">Book</p>
+                <div class="col s12">
+                    <div class="input-field col s12">
+                        <input id="title" type="text" class="validate">
+                        <label for="title">Title</label>
+                    </div>
+                    <div class="input-field col s12">
+                        <input disabled id="authors" type="text" class="validate">
+                        <label for="authors">Author</label>
+                    </div>
+                    <div class="col s4"><img id="image" width="100px" height="auto"></div>
+                    <div class="input-field col s8">
+                        <textarea id="desc" class="materialize-textarea"></textarea>
+                        <label for="desc">Description</label>
+                    </div>
+                    <div class="input-field col s12">
+                        <input id="category" type="text" class="validate">
+                        <label for="category">Category</label>
+                    </div>
+                    <div class="input-field col s6">
+                        <input disabled id="publish_date" type="text" class="validate">
+                        <label for="publish_date">Publish Date</label>
+                    </div>
+                    <div class="input-field col s6">
+                        <input disabled id="publisher" type="text" class="validate">
+                        <label for="publisher">Publisher</label>
+                    </div>
+                    <div class="input-field col s12">
+                        <input id="pages" type="text" class="validate">
+                        <label for="pages">Pages</label>
+                    </div>
+                    <div class="input-field col s12">
+                        <input disabled id="ISBN" type="text" class="validate">
+                        <label for="ISBN">ISBN</label>
+                    </div>
+                    <div class="col s12"><a id="add" class="waves-effect waves-light btn">Save Changes</a></div>
                 </div>
-                <div class="input-field col s12">
-                    <input id="authors" type="text" class="validate">
-                    <label for="authors">Author</label>
-                </div>
-                <div class="col s4"><img id="image" width="100px" height="auto"></div>
-                <div class="input-field col s8">
-                    <textarea id="desc" class="materialize-textarea"></textarea>
-                    <label for="desc">Description</label>
-                </div>
-                <div class="input-field col s12">
-                    <input id="category" type="text" class="validate">
-                    <label for="category">Category</label>
-                </div>
-                <div class="input-field col s6">
-                    <input id="publish_date" type="text" class="validate">
-                    <label for="publish_date">Publish Date</label>
-                </div>
-                <div class="input-field col s6">
-                    <input id="publisher" type="text" class="validate">
-                    <label for="publisher">Publisher</label>
-                </div>
-                <div class="input-field col s12">
-                    <input id="pages" type="text" class="validate">
-                    <label for="pages">Pages</label>
-                </div>
-                <div class="input-field col s12">
-                    <input id="ISBN" type="text" class="validate">
-                    <label for="ISBN">ISBN</label>
-                </div>
-                <div class="col s12"><a id="add" class="waves-effect waves-light btn">Save Changes</a></div>
+
             </div>
 
-        </div>
 
 
+            <div id="testtb" class="col s12 test">
 
-        <div id="testtb" class="col s12 test">
-
-        </div>
-    </form>
+            </div>
+        </form>
     </div>
     <script src="js/jquery-3.2.1.min.js"></script>
     <script src="js/materialize.min.js"></script>
@@ -102,47 +102,45 @@
         }
 
         //parse the string of objects comming from the localStorage
-       var biblio = JSON.parse(localStorage.getItem("biblio"));
+        var biblio = localStorage.getObj("indexSaved");
         var editId = localStorage.getItem("editId");
 
         //Loop through the objects and append in the value of page inputs
-                if (editId == biblio.isbn) {
-                   //Append object value in the value of page inputs
-                    $("#title").attr("value", biblio.title);
-                    $("#image").attr("src", biblio.coverImageURL);
-                    var authors = "";
-                    biblio.authors.forEach(function (element) {
-                        authors += element.name + ". "
-                    });
-                    $("#authors").attr("value", authors);
-                    $("#publish_date").attr("value", biblio.published);
-                    $("#category").attr("value", biblio.subjects);
-                    $("#publisher").attr("value", biblio.publisher);
-                    $("#pages").attr("value", biblio.physical_description);
-                    $("#ISBN").attr("value", biblio.isbn);
-                    document.getElementById("desc").value = biblio.summary;
+        for (var i = 0; i < biblio.length; i++) {
+            if (editId == biblio[i].isbn) {
+                //Append object value in the value of page inputs
+                $("#title").attr("value", biblio[i].title);
+                $("#image").attr("src", biblio[i].coverImageURL);
+                var authors = "";
+                biblio[i].authors.forEach(function (element) {
+                    authors += element.name + ". "
+                });
+                $("#authors").attr("value", authors);
+                $("#publish_date").attr("value", biblio[i].published);
+                $("#category").attr("value", biblio[i].subjects);
+                $("#publisher").attr("value", biblio[i].publisher);
+                $("#pages").attr("value", biblio[i].physical_description);
+                $("#ISBN").attr("value", biblio[i].isbn);
+                document.getElementById("desc").value = biblio[i].summary;
+            }
         }
-                //When users make an edit to the page , grap the values and store in appropriate index in the object
-/*                     $("#add").click(function () {
-                        biblio.title = $("#title").val();
-                        biblio.subjects = $("#category").val();
-                        biblio.summary = $("#desc").val();
+        //When users make an edit to the page , grap the values and store in appropriate index in the object
+        $("#add").click(function () {
+            for (var i = 0; i < biblio.length; i++) {
+                if (editId == biblio[i].isbn) {
+                    biblio[i].title = $("#title").val();
+                    biblio[i].subjects = $("#category").val();
+                    biblio[i].summary = $("#desc").val();
+                    break;
+                }
 
-                        //then update the localStorage to contain the edited value
-                        localStorage.setObj('biblioEdits', biblio);
-                        if (!indexSaved) {
-                            var saved = localStorage.getObj("indexSaved");
-                            saved.push(biblio);
-                            localStorage.setObj('indexSaved', saved);
-                        } else {
-                            indexSaved.push(localStorage.getObj("biblioEdits"));
-                            localStorage.setObj('indexSaved', indexSaved);
-                        }
+            }
 
-                        location.href = "index.html";
+            localStorage.setObj("indexSaved", biblio);
+            location.href = "home.html";
 
-                    });
- */
+        });
+
         // Initialize collapse button
         $(".button-collapse").sideNav();
         // Initialize collapsible (uncomment the line below if you use the dropdown variation)

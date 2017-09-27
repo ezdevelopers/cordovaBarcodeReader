@@ -9,6 +9,11 @@
     <link rel="stylesheet" href="css/materialize.min.css">
     <link rel="stylesheet" href="css/style.css">
     <script src="https://use.fontawesome.com/a7d6937b42.js"></script>
+    <style>
+    p{
+        font-size:13px;
+    }
+    </style>
 </head>
 
 <body>
@@ -45,23 +50,23 @@
             <p class="filter-p">About Book</p>
 
             <div class="col s12">
-                <p class="title" style="color:#0000ff;font-weight:bold;font-size:18px;text-align:center;">
+                <p class="title" style="color:#0000ff;font-weight:bold;font-size:18px;text-align:left;">
                 </p>
             </div>
             <div class="col s12">
-                <div class="col s4"><img id="image" width="120px" height="auto"></div>
+                <div class="col s4" style="padding:0;"><img id="image" width="90px" height="auto"></div>
                 <div class="col s8">
-                    <div class="authors">Authors:</div>
-                    <div class="category">Subjects:</div>
-                    <div class="publish_date"> Publish Date: </div>
-                    <div class="publisher">Publishers: </div>
-                    <div class="pages">Physical Information: </div>
-                    <div class="isbn">ISBN: </div>
+                    <p class="authors">Authors:</p>
+                    <p class="category">Subjects:</p>
+                    <p class="publish_date"> Publish Date: </p>
+                    <p class="publisher">Publishers: </p>
+                    <p class="pages">Physical Information: </p>
+                    <p class="isbn">ISBN: </p>
                 </div>
             </div>
 
             <div class="col s12">
-                <dvi class="description">Description:</div>
+                <dvi class="description" style="font-weight:bold;">Description:</div>
         </div>
     </div>
     </div>
@@ -93,14 +98,14 @@
                 biblio[i].authors.forEach(function (element) {
                     authors += element.name + ". "
                 });
-                $(".authors").append("<p style=\"color:brown;\">" + authors + "</p>");
-                $(".publish_date").append("<p style=\"color:brown;\">" + biblio[i].published + "</p>");
-                $(".category").append("<p style=\"color:brown;\">" + biblio[i].subjects + "</p>");
-                $(".publisher").append("<p style=\"color:brown;\">" + biblio[i].publisher) + "</p>";
-                $(".pages").append("<p style=\"color:brown;\">" + biblio[i].physical_description + "</p>");
-                $(".isbn").append("<p style=\"color:brown;\">" + biblio[i].isbn + "</p>").attr("id", biblio[i].isbn);
+                $(".authors").append("<div style=\"color:brown;\">" + authors + "</div>");
+                $(".publish_date").append("<div style=\"color:brown;\">" + biblio[i].published + "</div>");
+                $(".category").append("<div style=\"color:brown;\">" + biblio[i].subjects + "</div>");
+                $(".publisher").append("<div style=\"color:brown;\">" + biblio[i].publisher) + "</div>";
+                $(".pages").append("<div style=\"color:brown;\">" + biblio[i].physical_description + "</div>");
+                $(".isbn").append("<div style=\"color:brown;\">" + biblio[i].isbn + "</div>").attr("id", biblio[i].isbn);
 
-                $(".description").append("<p style=\"font-style:italics;\">" + biblio[i].summary + "</p>");
+                $(".description").append("<p style=\"font-style:italic;\">" + biblio[i].summary + "</p>");
                 break;
             }
         }

@@ -298,24 +298,28 @@
             for (var i = 0; i < dataAppend.length; i++) {
                 //iterate through the varriable and build a html section
                 var authors = "";
-                dataAppend[0].authors.forEach(function (element) {
+                dataAppend[i].authors.forEach(function (element) {
                     authors += element.name + ". "
                 });
                 var title = dataAppend[i].title;
                 var theTitle = "";
-                if (title.length > 24) {
-                    theTitle = title.substring(0, 24) + "..."
+                if (title.length > 30) {
+                    theTitle = title.substring(0, 30) + "..."
                 } else {
                     theTitle = title
                 };
+                var theAuthor = "";
+                if (authors.length > 35) {
+                    theAuthor = authors.substring(0, 25) + "..."
+                } else {
+                    theAuthor = authors
+                };
                 var booklist =
                     '<div id="' + dataAppend[i].isbn +
-                    '" class="row redirect"><div class="col s12"><div class="card horizontal"><div class="card-image"><img width="80px" height="auto" src="' +
+                    '" class="row redirect"><div class="col s12"><div class="card horizontal"><div class="card-image"><img height="auto" src="' +
                     dataAppend[i].coverImageURL +
-                    '\"></div><div class="card-stacked"><div class="card-content"><span style="color:#0000ff;font-weight:bold;font-size:18px;" class="card-title activator text-darken-4">' +
-                    theTitle + '</span><p style="color:brown;">Author: ' + authors + '</p><p class="ISBN"> ISBN: ' +
-                    dataAppend[i].isbn +
-                    '</p><p style="color:brown;">' + dataAppend[i].physical_description +
+                    '\"></div><div class="card-stacked"><div class="card-content"><span style="color:#0000ff;font-weight:bold;font-size:14px;" class="card-title">' +
+                    theTitle + '</span><p style="color:brown;">Author: ' + theAuthor +
                     '</p></div></div></div></div></div>';
                 //The values to the page
                 $("#booklist").prepend(booklist);

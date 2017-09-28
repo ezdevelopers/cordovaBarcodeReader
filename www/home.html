@@ -315,12 +315,19 @@
                     theAuthor = authors
                 };
                 var booklist =
-                    '<div id="' + dataAppend[i].isbn +
-                    '" class="row redirect"><div class="col s12"><div class="card horizontal"><div class="card-image"><img height="auto" src="' +
+                    '<div class="row bottom-margin"><div class="col s12"><div id="' + dataAppend[i].isbn +
+                    '" class="card horizontal redirect"><div class="card-image"><img height="auto" src="' +
                     dataAppend[i].coverImageURL +
-                    '\"></div><div class="card-stacked"><div class="card-content"><span style="color:#0000ff;font-weight:bold;font-size:14px;" class="card-title">' +
-                    theTitle + '</span><p style="color:brown;">Author: ' + theAuthor +
-                    '</p></div></div></div></div></div>';
+                    '\"></div><div class="card-stacked"><div class="card-content">' +
+                    '<span style="color:navy;font-weight:bold;font-size:14px;" class="card-title">' +
+                    theTitle + '</span>' +
+                    '<p style="color:brown;">Author: ' + theAuthor + '</p></div></div></div></div>' +
+                    '<a class="drop' + i +
+                    ' options" data-beloworigin="true" data-activates="dropdown1"><i style="font-size:16px; color:navy;" class="fa fa-ellipsis-v"></i></a><ul id="dropdown1" class="dropdown-content"><li id="' +
+                    dataAppend[i].isbn +
+                    '" class="loan">Loan</p></li><li  id="' + dataAppend[i].isbn +
+                    '" class="delete">Delete</li></ul>' +
+                    '</div>';
                 //The values to the page
                 $("#booklist").prepend(booklist);
             }
@@ -342,5 +349,38 @@
             $('.modal').modal();
             $('select').material_select();
         });
+        //for dropdown button
+        var dropdownValue = {
+            inDuration: 300,
+            outDuration: 225,
+            constrainWidth: false, // Does not change width of dropdown to that of the activator
+            hover: true, // Activate on hover
+            gutter: 0, // Spacing from edge
+            belowOrigin: false, // Displays dropdown below the button
+            alignment: 'left', // Displays dropdown with edge aligned to the left of button
+            stopPropagation: false // Stops event propagation
+        }
+        //dropdown button
+        for (var i = 0; i < dataAppend.length; i++) {
+            $('.drop' + i).dropdown(dropdownValue);
+        };
+
+        //Delete function
+        $(".delete").click(function () {
+            var deleteId = $(this).attr("id");
+            var index = -1;
+
+            for (var i = 0,len = dataAppend.length; i < len; i++) {
+                if (dataAppend[i].isbn == deleteId ) {
+                    index = i;
+                    dataAppend.splice(index, 1);
+                    localStorage.setObj("indexSaved", dataAppend);
+                    break;
+                }
+
+            }
+
+            location.href = "home.html"
+        })
     </script>
 </body>

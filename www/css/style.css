@@ -16,7 +16,7 @@
 .card .card-content{
     padding:5px;
 }
-.redirect{
+.bottom-margin{
     margin-bottom: 0;
 }
 .title{
@@ -26,8 +26,18 @@
  .fa-bars:before{
     font-size: 20px;
 }
+.options{
+    position:relative;
+    top:-78px;
+    right:-92%;
+    z-index:10000;
+}
 #send{
   margin-top: 0px !important;
+}
+.dropdown-content li{
+    padding:10px 10px 0 10px;
+    min-height: 40px;
 }
 .loading{
   font-size:0;

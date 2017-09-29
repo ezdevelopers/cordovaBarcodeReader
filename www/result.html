@@ -92,7 +92,7 @@
     <script type="text/javascript" src="cordova.js"></script>
     <script type="text/javascript" src="js/index.js"></script>
     <script>
-       //create prototype method for storing objects in localStorage 
+        //create prototype method for storing objects in localStorage 
         Storage.prototype.setObj = function (key, obj) {
             return this.setItem(key, JSON.stringify(obj))
         };
@@ -101,8 +101,8 @@
         Storage.prototype.getObj = function (key) {
             return JSON.parse(this.getItem(key))
         }
-       //Check if localStorage exists, if not set declare an Array indexSaved to hold the localStorage
-       //when set
+        //Check if localStorage exists, if not set declare an Array indexSaved to hold the localStorage
+        //when set
         if (!localStorage.getObj("biblioEdits")) {
             var indexSaved = []
         }
@@ -125,6 +125,25 @@
         $("#ISBN").attr("value", biblio.isbn);
         document.getElementById("desc").value = biblio.summary;
 
+        //build an object to send back to server when book is addee
+        var bibliography = {
+            "biblioId": 0,
+            "libraryId": localStorage.getItem("libraryId"),
+            "isbn":  biblio.isbn,
+            "type": "book",
+            "title": biblio.title,
+            "authors": biblio.authors,
+            "publisher": biblio.publisher,
+            "published":  biblio.published,
+            "description": biblio.summary,
+            "subjects": biblio.subjects,
+            "isRead": 1,
+            "startDate": "2017-09-20",
+            "endDate": "2017-09-28",
+            "user_comments": "A must read!"
+
+        };
+        console.log(bibliography);
         //When users make an edit to the page , grap the values and store in appropriate index in the object
         $("#add").click(function () {
             biblio.title = $("#title").val();
@@ -137,7 +156,7 @@
             search and saving to local storage, while avoiding an override of the pre-exiting data when 
             performing another search. */
 
-            if(!indexSaved){
+            if (!indexSaved) {
                 //check if the array indexSaved is defined, indexArray is only defined on initial load of page,
                 //when no localStorage has been set.
                 var saved = localStorage.getObj("indexSaved");
@@ -147,7 +166,7 @@
                 //We then push the new files into the previously saved indexSaved
                 localStorage.setObj('indexSaved', saved);
                 //Then we set the new indexSaved containing all the newly saved data
-            }else{
+            } else {
                 //This snippet is for initial page load when the indexSaved array is declared. Meaning there is no 
                 //localStorage that has been set
                 indexSaved.push(localStorage.getObj("biblioEdits"));
@@ -155,8 +174,27 @@
                 localStorage.setObj('indexSaved', indexSaved);
                 //we then persist the array through localStorage for later saving of other data.
             }
-           //redirect to homepage
-            location.href = "home.html";
+
+            $.ajax({
+                type: "POST",
+                contentType: 'application/json; charset=UTF-8',
+                url: "http://192.168.0.43/lib/api/addItem",
+                data: JSON.stringify(bibliography),
+                processData: true,
+                dataType: "json"
+            }).done(successFn).fail(errorFn);
+            //success function
+            function successFn(result) {
+                alert("You have successfully acquired the number " + result +" copy of this book");
+                //redirect to homepage
+                location.href = "home.html";
+            };
+            //if there is an error in the ajax request display the error
+            function errorFn(xhr, status, strErr) {
+                alert("Could not Insert Item to Library Server");
+            };
+            
+            
 
         });
 

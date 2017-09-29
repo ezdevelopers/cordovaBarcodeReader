@@ -30,8 +30,8 @@
     position:relative;
     top:-78px;
     right:-85%;
-    z-index:10000;
-    display:block;
+    z-index:900;
+    display:inline;
     width:50px;
     padding:15px;
     text-align:center;

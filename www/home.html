@@ -361,10 +361,11 @@
             stopPropagation: false // Stops event propagation
         }
         //dropdown button
-        for (var i = 0; i < dataAppend.length; i++) {
+        if (localStorage.getObj("indexSaved")) {
+        for (var i = 0 ,len = dataAppend.length; i < len ; i++) {
             $('.drop' + i).dropdown(dropdownValue);
         };
-
+    }
         //Delete function
         $(".delete").click(function () {
             var deleteId = $(this).attr("id");

@@ -150,31 +150,7 @@
             biblio.subjects = $("#category").val();
             biblio.summary = $("#desc").val();
 
-            //grabbing data from Biblio object
-            localStorage.setObj('biblioEdits', biblio);
-            /*In this code snippet below, I am trying to save a book for each unique search. Grabbing data from 
-            search and saving to local storage, while avoiding an override of the pre-exiting data when 
-            performing another search. */
-
-            if (!indexSaved) {
-                //check if the array indexSaved is defined, indexArray is only defined on initial load of page,
-                //when no localStorage has been set.
-                var saved = localStorage.getObj("indexSaved");
-                //on reload of page,after saving first data, indexSaved is now undefined. We need to grab the 
-                //previously saved indexSaved to perform another save without overwriting
-                saved.push(biblio);
-                //We then push the new files into the previously saved indexSaved
-                localStorage.setObj('indexSaved', saved);
-                //Then we set the new indexSaved containing all the newly saved data
-            } else {
-                //This snippet is for initial page load when the indexSaved array is declared. Meaning there is no 
-                //localStorage that has been set
-                indexSaved.push(localStorage.getObj("biblioEdits"));
-                //We grab the data from the object biblio containing the data to be saved and push them into the array.
-                localStorage.setObj('indexSaved', indexSaved);
-                //we then persist the array through localStorage for later saving of other data.
-            }
-
+            
             $.ajax({
                 type: "POST",
                 contentType: 'application/json; charset=UTF-8',
@@ -185,13 +161,43 @@
             }).done(successFn).fail(errorFn);
             //success function
             function successFn(result) {
-                alert("You have successfully acquired the number " + result +" copy of this book");
+                var existingBooks = JSON.stringify(localStorage.getObj("indexSaved"));
+                if(existingBooks.indexOf(biblio.isbn) > 0 ){
+                    alert("You already have this book in your library");
+                }else{
+                    //grabbing data from Biblio object
+                    localStorage.setObj('biblioEdits', biblio);
+                    /*In this code snippet below, I am trying to save a book for each unique search. Grabbing data from 
+                    search and saving to local storage, while avoiding an override of the pre-exiting data when 
+                    performing another search. */
+
+                    if (!indexSaved) {
+                        //check if the array indexSaved is defined, indexArray is only defined on initial load of page,
+                        //when no localStorage has been set.
+                        var saved = localStorage.getObj("indexSaved");
+                        //on reload of page,after saving first data, indexSaved is now undefined. We need to grab the 
+                        //previously saved indexSaved to perform another save without overwriting
+                        saved.push(biblio);
+                        //We then push the new files into the previously saved indexSaved
+                        localStorage.setObj('indexSaved', saved);
+                        //Then we set the new indexSaved containing all the newly saved data
+                    } else {
+                        //This snippet is for initial page load when the indexSaved array is declared. Meaning there is no 
+                        //localStorage that has been set
+                        indexSaved.push(localStorage.getObj("biblioEdits"));
+                        //We grab the data from the object biblio containing the data to be saved and push them into the array.
+                        localStorage.setObj('indexSaved', indexSaved);
+                        //we then persist the array through localStorage for later saving of other data.
+                    }
+                    alert("You have successfully acquired the number " + result + " copy of this book");
+                }
+                
                 //redirect to homepage
                 location.href = "home.html";
             };
             //if there is an error in the ajax request display the error
             function errorFn(xhr, status, strErr) {
-                alert("Could not Insert Item to Library Server");
+                alert("Could not Insert Item to Library Server" + strErr + status);
             };
             
             

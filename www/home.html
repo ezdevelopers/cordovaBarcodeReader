@@ -86,7 +86,9 @@
 
 
             <div id="testb" class="col s12 test">
-                <p class="filter-p">Filter</p>
+                <div class="filter-p">
+                    <p class="ajaxFilter">Filter</p>
+                </div>
                 <div id="booklist" class="col s12 m7">
                 </div>
             </div>
@@ -171,6 +173,15 @@
                             "title": "",
                             "author": ""
                         };
+                        $(document).ajaxStart(function () {
+                            $(".ajaxFilter").addClass("loading");
+                            console.log("Ajax Request is Starting");
+                        });
+                        // Ajax stop global function
+                        $(document).ajaxStop(function () {
+                            $(".ajaxFilter").removeClass("loading");
+                            console.log("Ajax Request has ended");
+                        });
                         // Ajax request
                         $.ajax({
                             type: "POST",
@@ -362,17 +373,17 @@
         }
         //dropdown button
         if (localStorage.getObj("indexSaved")) {
-        for (var i = 0 ,len = dataAppend.length; i < len ; i++) {
-            $('.drop' + i).dropdown(dropdownValue);
-        };
-    }
+            for (var i = 0, len = dataAppend.length; i < len; i++) {
+                $('.drop' + i).dropdown(dropdownValue);
+            };
+        }
         //Delete function
         $(".delete").click(function () {
             var deleteId = $(this).attr("id");
             var index = -1;
 
-            for (var i = 0,len = dataAppend.length; i < len; i++) {
-                if (dataAppend[i].isbn == deleteId ) {
+            for (var i = 0, len = dataAppend.length; i < len; i++) {
+                if (dataAppend[i].isbn == deleteId) {
                     index = i;
                     dataAppend.splice(index, 1);
                     localStorage.setObj("indexSaved", dataAppend);

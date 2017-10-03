@@ -186,13 +186,15 @@
                 var itemsFromServer = result.items
                 if (itemsFromServer.length > 0) {
                     console.log(itemsFromServer);
+
                     for (var i = 0, len = itemsFromServer.length; i < len; i++) {
-                        for (var j = 0, length = itemsFromServer.length; j < length; j++)
+                        for (var j = 0, length = itemsFromServer[i].length; j < length; j++) {
                             indexSaved.push(itemsFromServer[i][j]);
+                        }
                     }
                     localStorage.setObj('indexSaved', indexSaved);
                     window.location.reload(true);
-                }else{
+                } else {
                     alert("You have no saved files on the server");
                 }
 
@@ -375,7 +377,8 @@
                 };
                 var booklist =
                     '<div class="row bottom-margin"><div class="col s12"><div id="' + dataAppend[i].isbn +
-                    '" class="card horizontal redirect"><div class="card-image"><img alt="Image" height="auto" src="' + dataAppend[i].coverImageUrl + '\"></div><div class="card-stacked"><div class="card-content">' +
+                    '" class="card horizontal redirect"><div class="card-image"><img alt="Image" height="auto" src="' +
+                    dataAppend[i].coverImageUrl + '\"></div><div class="card-stacked"><div class="card-content">' +
                     '<span style="color:navy;font-weight:bold;font-size:14px;" class="card-title">' +
                     theTitle + '</span>' +
                     '<p style="color:brown;">Author: ' + theAuthor + '</p></div></div></div></div>' +
@@ -445,6 +448,6 @@
 
         // 
 
-        //   [{"itemId":"38","biblioId":"0","libraryId":"12","isbn":"9780684852867","type":"book","title":"First, break all the rules: what the world's greatest managers do differently","authors":[{"name":"Buckingham, Marcus","id":"buckingham_marcus"},{"name":"Coffman, Curt","id":"coffman_curt"}],"publisher":"Simon & Schuster","published_date":"2012-05-18","description":"A story for the gods","subjects":"executive ability, management, executives attitudes, employees attitudes, employer attitude surveys,","isRead":"1","startDate":"2017-09-20","endDate":"2017-09-28","user_comments":"A must read!","date_added":"2017-09-29 17:04:19"}]
+        //   [{"itemId":"38","biblioId":"0","libraryId":"12","isbn":"9780842362207 \\ 9780684852867","type":"book","title":"First, break all the rules: what the world's greatest managers do differently","authors":[{"name":"Buckingham, Marcus","id":"buckingham_marcus"},{"name":"Coffman, Curt","id":"coffman_curt"}],"publisher":"Simon & Schuster","published_date":"2012-05-18","description":"A story for the gods","subjects":"executive ability, management, executives attitudes, employees attitudes, employer attitude surveys,","isRead":"1","startDate":"2017-09-20","endDate":"2017-09-28","user_comments":"A must read!","date_added":"2017-09-29 17:04:19"}]
     </script>
 </body>

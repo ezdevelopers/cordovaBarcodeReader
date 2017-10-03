@@ -103,7 +103,7 @@
         }
         //Check if localStorage exists, if not set declare an Array indexSaved to hold the localStorage
         //when set
-        if (!localStorage.getObj("biblioEdits")) {
+        if (!localStorage.getObj("indexSaved")) {
             var indexSaved = []
         }
         //parse the string of objects comming from the localStorage
@@ -175,12 +175,14 @@
                         //check if the array indexSaved is defined, indexArray is only defined on initial load of page,
                         //when no localStorage has been set.
                         var saved = localStorage.getObj("indexSaved");
+                        console.log(saved);
                         //on reload of page,after saving first data, indexSaved is now undefined. We need to grab the 
                         //previously saved indexSaved to perform another save without overwriting
                         saved.push(biblio);
                         //We then push the new files into the previously saved indexSaved
                         localStorage.setObj('indexSaved', saved);
                         //Then we set the new indexSaved containing all the newly saved data
+                        alert("yeah");
                     } else {
                         //This snippet is for initial page load when the indexSaved array is declared. Meaning there is no 
                         //localStorage that has been set
@@ -188,6 +190,7 @@
                         //We grab the data from the object biblio containing the data to be saved and push them into the array.
                         localStorage.setObj('indexSaved', indexSaved);
                         //we then persist the array through localStorage for later saving of other data.
+                        alert("oh my!");
                     }
                     alert("You have successfully acquired a copy of this book");
                 }

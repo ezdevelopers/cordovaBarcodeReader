@@ -191,7 +191,7 @@
                 $.ajax({
                     type: "POST",
                     contentType: 'application/json; charset=UTF-8',
-                    url: "http://192.168.0.43/lib/api/login",
+                    url: "http://enshelf.com/api/login",
                     data: JSON.stringify(data),
                     processData: true,
                     dataType: "json"
@@ -212,6 +212,7 @@
                     
                     // window.clearTimeout(timeoutID);
                     localStorage.setItem('token', response[3]);
+                    localStorage.setItem('userId', response[0]);
                     alert("You have successfully been logged in");
                     window.location = "home.html"
                 };

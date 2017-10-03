@@ -69,6 +69,19 @@
                 <dvi class="description" style="font-weight:bold;">Description:</div>
         </div>
     </div>
+    <div id="testtb" class="col s12 test">
+        <div class="row">
+            <p class="col s12">
+                <input type="checkbox" id="test5" />
+                <label for="test5">I have read this book</label>
+            </p>
+        </div>
+        <div class="row">
+            <div class="input-field col s12">
+                <textarea id="read" class="materialize-textarea"></textarea>
+                <label for="read" style="padding:18px;">Comment</label>
+            </div>
+        </div>
     </div>
     <script src="js/jquery-3.2.1.min.js"></script>
     <script src="js/materialize.min.js"></script>
@@ -93,7 +106,7 @@
             if (editId == biblio[i].isbn) {
                 //Append object value in the value of page inputs
                 $(".title").append(biblio[i].title);
-                $("#image").attr("src", biblio[i].coverImageURL);
+                $("#image").attr("src", biblio[i].coverImageUrl);
                 var authors = "";
                 biblio[i].authors.forEach(function (element) {
                     authors += element.name + ". "

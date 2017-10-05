@@ -21,6 +21,7 @@
             </div>
             <li><a class="waves-effect" href="home.html">Home</a></li>
             <li><a class="waves-effect" href="contacts.html">Contacts</a></li>
+            <li><a class="waves-effect" onclick="logout">Log Out</a></li>
 
         </li>
 
@@ -90,7 +91,7 @@
     <script src="js/jquery-3.2.1.min.js"></script>
     <script src="js/materialize.min.js"></script>
     <script type="text/javascript" src="cordova.js"></script>
-    <script type="text/javascript" src="js/index.js"></script>
+    <script src="js/logout.js"></script>
     <script>
         //create prototype method for storing objects in localStorage 
         Storage.prototype.setObj = function (key, obj) {
@@ -130,17 +131,18 @@
         var bibliography = {
             "biblioId": 0,
             "libraryId": localStorage.getItem("libraryId"),
-            "isbn":  biblio.isbn,
+            "isbn": biblio.isbn,
             "type": "book",
             "title": biblio.title,
             "authors": biblio.authors,
             "publisher": biblio.publisher,
-            "published":  biblio.published,
+            "published": biblio.published,
             "description": biblio.summary,
             "coverImageUrl": biblio.coverImageUrl,
             "subjects": biblio.subjects,
             "isRead": 1,
-            "user_comments": "A must read!"
+            "user_comments": "A must read!",
+            "token": localStorage.getItem("token")
 
         };
         console.log(bibliography);
@@ -150,21 +152,22 @@
             biblio.subjects = $("#category").val();
             biblio.summary = $("#desc").val();
 
-            
+
             $.ajax({
                 type: "POST",
                 contentType: 'application/json; charset=UTF-8',
                 url: "http://enshelf.com/api/addItem",
                 data: JSON.stringify(bibliography),
                 processData: true,
-                dataType: "json"
+                dataType: "json",
+                timeout: 10000
             }).done(successFn).fail(errorFn);
             //success function
             function successFn(result) {
                 var existingBooks = JSON.stringify(localStorage.getObj("indexSaved"));
-                if(existingBooks.indexOf(biblio.isbn) > 0 ){
+                if (existingBooks.indexOf(biblio.isbn) > 0) {
                     alert("You already have this book in your library");
-                }else{
+                } else {
                     //grabbing data from Biblio object
                     localStorage.setObj('biblioEdits', biblio);
                     /*In this code snippet below, I am trying to save a book for each unique search. Grabbing data from 
@@ -175,14 +178,15 @@
                         //check if the array indexSaved is defined, indexArray is only defined on initial load of page,
                         //when no localStorage has been set.
                         var saved = localStorage.getObj("indexSaved");
-                        console.log(saved);
+                        biblio.itemId = result.itemId;
+                        console.log(biblio);
                         //on reload of page,after saving first data, indexSaved is now undefined. We need to grab the 
                         //previously saved indexSaved to perform another save without overwriting
                         saved.push(biblio);
                         //We then push the new files into the previously saved indexSaved
                         localStorage.setObj('indexSaved', saved);
                         //Then we set the new indexSaved containing all the newly saved data
-                        alert("yeah");
+
                     } else {
                         //This snippet is for initial page load when the indexSaved array is declared. Meaning there is no 
                         //localStorage that has been set
@@ -190,11 +194,10 @@
                         //We grab the data from the object biblio containing the data to be saved and push them into the array.
                         localStorage.setObj('indexSaved', indexSaved);
                         //we then persist the array through localStorage for later saving of other data.
-                        alert("oh my!");
                     }
                     alert("You have successfully acquired a copy of this book");
                 }
-                
+
                 //redirect to homepage
                 location.href = "home.html";
             };
@@ -202,8 +205,8 @@
             function errorFn(xhr, status, strErr) {
                 alert("Could not Insert Item to Library Server");
             };
-            
-            
+
+
 
         });
 

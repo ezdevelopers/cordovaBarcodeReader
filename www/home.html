@@ -21,6 +21,7 @@
             </div>
             <li><a class="waves-effect" href="home.html">Home</a></li>
             <li><a class="waves-effect" href="contacts.html">Contacts</a></li>
+            <li><a class="waves-effect" onClick="logout()">Log Out</a></li>
 
         </li>
 
@@ -149,6 +150,7 @@
     <script src="js/jquery-3.2.1.min.js"></script>
     <script src="js/materialize.min.js"></script>
     <script type="text/javascript" src="cordova.js"></script>
+    <script src="js/logout.js"></script>
     <script>
         //create prototype method for storing objects in localStorage 
         Storage.prototype.setObj = function (key, obj) {
@@ -162,7 +164,7 @@
         if (!localStorage.getObj("indexSaved")) {
             var indexSaved = [];
             var data = {
-                "userId": localStorage.getItem("userId")
+                "token": localStorage.getItem("token")
             };
             $(document).ajaxStart(function () {
                 $(".ajaxFilter").addClass("black-loading");
@@ -179,12 +181,17 @@
                 url: "http://enshelf.com/api/getItems",
                 data: JSON.stringify(data),
                 processData: true,
-                dataType: "json"
+                dataType: "json",
+                timeout: 10000
             }).done(successFn).fail(errorFn);
             //success function
             function successFn(result) {
                 var itemsFromServer = result.items
-                if (itemsFromServer.length > 0) {
+                console.log(result)
+                console.log(itemsFromServer)
+                if (itemsFromServer[0] == null) {
+                    alert("You have no saved files on the server");
+                } else {
                     console.log(itemsFromServer);
 
                     for (var i = 0, len = itemsFromServer.length; i < len; i++) {
@@ -194,8 +201,6 @@
                     }
                     localStorage.setObj('indexSaved', indexSaved);
                     window.location.reload(true);
-                } else {
-                    alert("You have no saved files on the server");
                 }
 
             };
@@ -218,7 +223,8 @@
                         var data = {
                             "isbn": searchValue,
                             "title": "",
-                            "author": ""
+                            "author": "",
+                            "token": localStorage.getItem("token")
                         };
                         $(document).ajaxStart(function () {
                             $(".ajaxFilter").addClass("black-loading");
@@ -236,7 +242,8 @@
                             url: "http://enshelf.com/api/getBiblio",
                             data: JSON.stringify(data),
                             processData: true,
-                            dataType: "json"
+                            dataType: "json",
+                            timeout: 10000
                         }).done(successFn).fail(errorFn);
                         //success function
                         function successFn(result) {
@@ -269,44 +276,6 @@
             );
         }
 
-        /* document.addEventListener("deviceready", onDeviceReady, false);
-        
-        function onDeviceReady() {
-            document.getElementById("showPrompt").click(function () {
-                alert("Working");
-                navigator.notification.prompt(
-                    'Please enter your ISBN', // message
-                    onPrompt, // callback to invoke
-                    'ISBN Number', // title
-                    ['Ok', 'Exit'], // buttonLabels
-                    'Hi' // defaultText
-                );
-                alert("Show something");
-            });
-        } */
-
-
-        /*         function onPrompt(results) {
-                    alert("You selected button number " + results.buttonIndex + " and entered " + results.input1);
-                    var buttonIndex = results.buttonIndex;
-                    var searchValue = results.input1;
-
-                    if (buttonIndex == 1) {
-                        for (var elm in barcode) {
-                            for (var elem in barcode[elm]) {
-                                if (searchValue == barcode[elm].ISBN) {
-                                    localStorage.setObj('element', barcode);
-                                    localStorage.setItem('ISBN', searchValue);
-                                    location.href = "result.html";
-                                } else {
-                                    alert("Please check your value");
-                                }
-
-                            }
-                        }
-                    }
-                } */
-
         //Search function for when the search searches for an ISBN 
         $("#search-button").click(function () {
             var searchValue = $("input#search-modal").val();
@@ -318,7 +287,8 @@
                 var data = {
                     "isbn": searchValue,
                     "title": "",
-                    "author": ""
+                    "author": "",
+                    "token": localStorage.getItem("token")
                 };
                 $(document).ajaxStart(function () {
                     $("#send").addClass("loading");
@@ -337,7 +307,8 @@
                     url: "http://enshelf.com/api/getBiblio",
                     data: JSON.stringify(data),
                     processData: true,
-                    dataType: "json"
+                    dataType: "json",
+                    timeout: 10000
                 }).done(successFn).fail(errorFn);
                 //success function
                 function successFn(result) {
@@ -384,8 +355,8 @@
                     '<p style="color:brown;">Author: ' + theAuthor + '</p></div></div></div></div>' +
                     '<a class="drop' + i +
                     ' options" data-beloworigin="true" data-activates="dropdown1"><i style="font-size:16px; color:navy;" class="fa fa-ellipsis-v"></i></a><ul id="dropdown1" class="dropdown-content"><li id="' +
-                    dataAppend[i].isbn +
-                    '" class="loan">Lend Out</p></li><li  id="' + dataAppend[i].isbn +
+                    dataAppend[i].itemId +
+                    '" class="loan">Lend Out</p></li><li  id="' + dataAppend[i].itemId +
                     '" class="delete">Delete</li></ul>' +
                     '</div>';
                 //The values to the page
@@ -430,18 +401,46 @@
         $(".delete").click(function () {
             var deleteId = $(this).attr("id");
             var index = -1;
+            var data = {
+                    "itemId": deleteId,
+                    "token": localStorage.getItem("token")
+                };
+                $(document).ajaxStart(function () {
+                    $(".ajaxFilter").addClass("black-loading");
+                    console.log("Ajax Request is Starting");
+                });
+                // Ajax stop global function
+                $(document).ajaxStop(function () {
+                    $(".ajaxFilter").removeClass("black-loading");
+                    console.log("Ajax Request has ended");
+                });
+                // Ajax request
+                $.ajax({
+                    type: "POST",
+                    contentType: 'application/json; charset=UTF-8',
+                    url: "http://enshelf.com/api/deleteItem",
+                    data: JSON.stringify(data),
+                    processData: true,
+                    dataType: "json",
+                    timeout: 10000
+                }).done(successFn).fail(errorFn);
+            function successFn(){
+                 for (var i = 0, len = dataAppend.length; i < len; i++) {
+                    if (dataAppend[i].itemId == deleteId) {
+                        index = i;
+                        dataAppend.splice(index, 1);
+                        localStorage.setObj("indexSaved", dataAppend);
+                        break;
+                    }
 
-            for (var i = 0, len = dataAppend.length; i < len; i++) {
-                if (dataAppend[i].isbn == deleteId) {
-                    index = i;
-                    dataAppend.splice(index, 1);
-                    localStorage.setObj("indexSaved", dataAppend);
-                    break;
                 }
 
+                window.location.reload(true);
             }
-
-            location.href = "home.html"
+            function errorFn(){
+                alert("We could not delete the Item");
+            }
+           
         })
         //     [{ "title": "First, break all the rules: what the world's greatest managers do differently", "authors": [{ "name": "Buckingham, Marcus", "id": "buckingham_marcus" }, { "id": "coffman_curt", "name": "Coffman, Curt" }], "isbn": "9780684852867", "publisher": "Simon & Schuster", "published": "New York : Simon & Schuster, c1999.", "physical_description": "271 p. ; 25 cm.", "summary": "", "subjects": "executive ability, management, executives attitudes, employees attitudes, employer attitude surveys, employee attitude surveys", "coverImageURL": "http://covers.openlibrary.org/b/isbn/9780684852867-M.jpg" }, { "title": "Spirit-Controlled Temperament", "authors": [{ "id": "lahaye_tim", "name": "LAHAYE, TIM" }], "isbn": "9780842362207", "publisher": "Tyndale House Publishers", "published": "Tyndale House Publishers", "physical_description": "5.3\"x8.2\"x0.7\"; 251 pages; 0.7 lb", "summary": "A superb treatment of the basic human temperaments and how God can use them, now revised with new chapters and questions for group study. Spanish available", "subjects": "amazon com religion spirituality christianity christian livi, amazon com religion spirituality christianity protesta aaaa4, amazon com religion spirituality authors a z l lahaye tim ge, amazon com religion spirituality authors a z l lahaye tim pa", "coverImageURL": "http://covers.openlibrary.org/b/isbn/9780842362207-M.jpg" }]
 

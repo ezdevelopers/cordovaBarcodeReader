@@ -29,7 +29,8 @@
             box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
         }
 
-        .form input {
+        .form input,
+        .select {
             font-family: "Roboto", sans-serif;
             outline: 0;
             background: #f2f2f2;
@@ -134,14 +135,25 @@
 <body>
     <div class="login-page">
         <div class="form">
-            <div class="register-form">
-                <input type="text" placeholder="name" />
-                <input type="password" placeholder="password" />
-                <input type="text" placeholder="email address" />
-                <button>create</button>
+            <div class="dform register-form">
+                <input type="email" class="email" placeholder="Email address" />
+                <input type="password" class="pass" placeholder="password" />
+                <input type="text" class="first" placeholder="First name" />
+                <input type="text" class="last" placeholder="Last name" />
+                <input type="text" class="phone" placeholder="Phone Number" />
+                <select class="select">
+                    <option value="Gender">Gender</option>
+                    <option value="M">Male</option>
+                    <option value="F">Female</option>
+                </select>
+                <input type="text" class="city" placeholder="City" />
+                <input type="text" class="state" placeholder="State" />
+                <input type="text" class="country" placeholder="Country" />
+                <input type="text" class="occupation" placeholder="Occupation" />
+                <button id="registration"  id="send">Create</button>
                 <p class="message">Already registered? <a href="#">Sign In</a></p>
             </div>
-            <div class="login-form">
+            <div class="dform login-form">
                 <input id="email" type="text" placeholder="email" />
                 <input id="password" type="password" placeholder="password" />
                 <button id="send-button"><div class="center" id="send">login</div></button>
@@ -154,28 +166,45 @@
         var response = [];
         var libraryInfo = [];
 
-        // Switch from login to register page
         $('.message a').click(function () {
-            $('form').animate({
+            $('.dform').animate({
                 height: "toggle",
                 opacity: "toggle"
             }, "slow");
         });
-
-        $("#send-button").click(function () {
-            //assign variables to  email and password values
-            timeoutID = window.setTimeout("We could not get the results", 10000);
-            var email = $("#email").val();
-            var password = $("#password").val();
+        $("#registration").click(function () {
+            var email = $(".email").val();
+            var pass = $(".pass").val();
+            var first = $(".first").val();
+            var last = $(".last").val();
+            var phone = $(".phone").val();
+            var select = $(".select").val();
+            var city = $(".city").val();
+            var state = $(".state").val();
+            var country = $(".country").val();
+            var occupation = $(".occupation").val();
             //Check for empty fields
-            if ((email.length || password.length) == 0) {
-                alert("Fields cannot be empty");
-            } else {
-                // timeoutID = window.setTimeout(function(){alert("We could not get the results, Check your Internet")}, 10000);
-                //store fields in object for use in the ajax request
+            console.log("Hello" + " " + email + " " + pass + " " + first + " " + last + " " + phone + " " +
+                select + " " + city + " " + country + " " + occupation);
+
+            if ((email.length || pass.length) == 0 || first.length == 0 || last.length == 0 || phone.length ==
+                0 ||
+                select == 'Gender' || city.length == 0 || state.length == 0 || country.length == 0 ||
+                occupation.length == 0) {
+                alert("All fields are required");
+            }else{
                 var data = {
+                    "appKey": "4P3d7c3Hk091",
                     "email": email,
-                    "password": password
+                    "password": pass,
+                    "phone":phone,
+                    "fname":first,
+                    "lname":last,
+                    "gender":select,
+                    "city":city,
+                    "state":5,
+                    "country":6,
+                    "occupation":occupation
                 };
                 // Ajax start global function
                 $(document).ajaxStart(function () {
@@ -190,11 +219,61 @@
                 // Ajax request
                 $.ajax({
                     type: "POST",
+                    crossDomain: true,
+                    contentType: 'application/json; charset=UTF-8',
+                    url: "http://enshelf.com/api/createUser",
+                    data: JSON.stringify(data),
+                    processData: true,
+                    dataType: "json",
+                    timeout: 10000
+                }).done(successFn).fail(errorFn);
+
+                function successFn(){
+                alert("User has been created successfully");
+                window.location.reload(true);
+                };
+                function errorFn(){
+               alert("Something went wrong in creating user");
+                }
+            }
+
+        });
+        $("#send-button").click(function () {
+            //assign variables to  email and password values
+            timeoutID = window.setTimeout("We could not get the results", 10000);
+            var email = $("#email").val();
+            var password = $("#password").val();
+            //Check for empty fields
+            if ((email.length || password.length) == 0) {
+                alert("Fields cannot be empty");
+            } else {
+                // timeoutID = window.setTimeout(function(){alert("We could not get the results, Check your Internet")}, 10000);
+                //store fields in object for use in the ajax request
+                var data = {
+                    "email": email,
+                    "password": password,
+                    "appKey": "4P3d7c3Hk091"
+                };
+                // Ajax start global function
+                $(document).ajaxStart(function () {
+                    $("#send").addClass("loading");
+                    console.log("Ajax Request is Starting");
+                });
+                // Ajax stop global function
+                $(document).ajaxStop(function () {
+                    $("#send").removeClass("loading");
+                    console.log("Ajax Request has ended");
+                });
+                // Ajax request
+                $.ajax({
+                    type: "POST",
+                    crossDomain: true,
                     contentType: 'application/json; charset=UTF-8',
                     url: "http://enshelf.com/api/login",
                     data: JSON.stringify(data),
                     processData: true,
-                    dataType: "json"
+                    dataType: "json",
+                    timeout: 10000
                 }).done(successFn).fail(errorFn);
                 //This function check the response from the server and looks 
                 //for a token field, if token id found it stores the token in
@@ -209,7 +288,7 @@
                         localStorage.setItem('libraryId', library[i].libraryId);
                         break;
                     }
-                    
+
                     // window.clearTimeout(timeoutID);
                     localStorage.setItem('token', response[3]);
                     localStorage.setItem('userId', response[0]);
@@ -220,6 +299,7 @@
                 //if there is an error in the ajax request display the error
                 function errorFn(xhr, status, strErr) {
                     alert("Something went wrong : Username/Password Incorrect");
+                    console.log(strErr)
                 };
             };
         });

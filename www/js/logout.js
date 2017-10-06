@@ -1,5 +1,4 @@
 function logout(){
-    alert("logging out");
     var data = {
         "token": localStorage.getItem("token")
     };
@@ -14,7 +13,6 @@ function logout(){
     //success function
     function successFn(result) {
         localStorage.clear();
-        alert("Logout Successful");
         location.href="index.html";
     };
     //if there is an error in the ajax request display the error

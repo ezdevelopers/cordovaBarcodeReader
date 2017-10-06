@@ -8,6 +8,11 @@
     <title>Barcode Reader</title>
     <link rel="stylesheet" href="css/materialize.min.css">
     <link rel="stylesheet" href="css/style.css">
+    <script>
+    if(!localStorage.getItem("token")){
+        location.href="index.html";
+    }
+    </script>
     <script src="https://use.fontawesome.com/a7d6937b42.js"></script>
 </head>
 

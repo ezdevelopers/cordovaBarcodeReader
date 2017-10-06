@@ -8,7 +8,12 @@
     <title>Barcode Reader</title>
     <link rel="stylesheet" href="css/materialize.min.css">
     <link rel="stylesheet" href="css/style.css">
-    <script src="https://use.fontawesome.com/a7d6937b42.js"></script>
+    <link rel="stylesheet" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+    <script>
+        if (!localStorage.getItem("token")) {
+            location.href = "index.html";
+        }
+    </script>
 </head>
 
 <body>
@@ -145,7 +150,7 @@
             "token": localStorage.getItem("token")
 
         };
-        console.log(bibliography);
+        //console.log(bibliography);
         //When users make an edit to the page , grap the values and store in appropriate index in the object
         $("#add").click(function () {
             biblio.title = $("#title").val();
@@ -179,7 +184,7 @@
                         //when no localStorage has been set.
                         var saved = localStorage.getObj("indexSaved");
                         biblio.itemId = result.itemId;
-                        console.log(biblio);
+                       // console.log(biblio);
                         //on reload of page,after saving first data, indexSaved is now undefined. We need to grab the 
                         //previously saved indexSaved to perform another save without overwriting
                         saved.push(biblio);

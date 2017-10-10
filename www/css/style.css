@@ -6,6 +6,12 @@
 .card .card-title{
     font-size: 16px;
 }
+nav ul {
+    height: 56px;
+}
+.navbar-fixed{
+    height:105px;
+}
 .card .btn-floating > i{
     font-size: 15px;
 }

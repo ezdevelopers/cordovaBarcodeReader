@@ -8,6 +8,7 @@
     <title>Barcode Reader</title>
     <link rel="stylesheet" href="css/materialize.min.css">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/pull-to-refresh.css">
     <link rel="stylesheet" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
 
     <script>
@@ -93,12 +94,19 @@
 
 
             <div id="testb" class="col s12 test">
-                <div class="filter-p">
-                    <p class="ajaxFilter">Filter</p>
+                <div class="scrollable">
+                    <div class="wrap">
+                        <div class="filter-p">
+                            <p class="ajaxFilter">Filter</p>
+                        </div>
+                        <div id="booklist" class="col s12 m7">
+                        </div>
+                    </div>
                 </div>
-                <div id="booklist" class="col s12 m7">
-                </div>
+
             </div>
+
+
             <div id="testc" class="col s12 test">
                 <div class="row">
                     <ul class="collection">
@@ -155,6 +163,7 @@
 
     <script src="js/jquery-3.2.1.min.js"></script>
     <script src="js/materialize.min.js"></script>
+    <script src="js/jquery.plugin.pullToRefresh.js"></script>
     <script type="text/javascript" src="cordova.js"></script>
     <script src="js/logout.js"></script>
     <script>
@@ -172,51 +181,21 @@
             var data = {
                 "token": localStorage.getItem("token")
             };
-            $(document).ajaxStart(function () {
-                $(".ajaxFilter").addClass("black-loading");
-                console.log("Ajax Request is Starting");
-            });
-            // Ajax stop global function
-            $(document).ajaxStop(function () {
-                $(".ajaxFilter").removeClass("black-loading");
-                console.log("Ajax Request has ended");
-            });
-            $.ajax({
-                type: "POST",
-                contentType: 'application/json; charset=UTF-8',
-                url: "http://enshelf.com/api/getItems",
-                data: JSON.stringify(data),
-                processData: true,
-                dataType: "json",
-                timeout: 10000
-            }).done(successFn).fail(errorFn);
-            //success function
-            function successFn(result) {
-                var itemsFromServer = result.items
-                console.log(result)
-                console.log(itemsFromServer)
-                if (itemsFromServer[0] == null) {
-                    alert("You have no saved files on the server");
-                } else {
-                    console.log(itemsFromServer);
-
-                    for (var i = 0, len = itemsFromServer.length; i < len; i++) {
-                        for (var j = 0, length = itemsFromServer[i].length; j < length; j++) {
-                            indexSaved.push(itemsFromServer[i][j]);
-                        }
-                    }
-                    localStorage.setObj('indexSaved', indexSaved);
-                    window.location.reload(true);
-                }
-
-            };
-            //if there is an error in the ajax request display the error
-            function errorFn(xhr, status, strErr) {
-                alert("No records Found");
-            };
-
+            ajaxRequest();
         };
 
+        $('.scrollable').pullToRefresh({
+            callback: function () {
+                var def = $.Deferred();
+
+                setTimeout(function () {
+                    ajaxRequest();
+                    def.resolve();
+                }, 5000);
+
+                return def.promise();
+            }
+        });
 
         function barcodescanner() {
             cordova.plugins.barcodeScanner.scan(
@@ -360,7 +339,9 @@
                     theTitle + '</span>' +
                     '<p style="color:brown;">Author: ' + theAuthor + '</p></div></div></div></div>' +
                     '<a class="drop' + i +
-                    ' options" data-beloworigin="true" data-activates="'+dataAppend[i].itemId+'"><i style="font-size:16px; color:navy;" class="fa fa-ellipsis-v"></i></a><ul id="'+ dataAppend[i].itemId+'" class="dropdown-content"><li id="' +
+                    ' options" data-beloworigin="true" data-activates="' + dataAppend[i].itemId +
+                    '"><i style="font-size:16px; color:navy;" class="fa fa-ellipsis-v"></i></a><ul id="' + dataAppend[i]
+                    .itemId + '" class="dropdown-content"><li id="' +
                     dataAppend[i].itemId +
                     '" class="loan">Lend Out</p></li><li  id="' + dataAppend[i].itemId +
                     '" class="delete">Delete</li></ul>' +
@@ -403,38 +384,39 @@
             for (var i = 0, len = dataAppend.length; i < len; i++) {
                 $('.drop' + i).dropdown(dropdownValue);
             };
-            
+
         }
         //Delete function
         $(".delete").click(function () {
-            var deleteId =  $(this).parent().attr("id");
+            var deleteId = $(this).parent().attr("id");
             var index = -1;
             var data = {
-                    "itemId": deleteId,
-                    "token": localStorage.getItem("token")
-                };
-                console.log(data);
-                $(document).ajaxStart(function () {
-                    $(".ajaxFilter").addClass("black-loading");
-                    console.log("Ajax Request is Starting");
-                });
-                // Ajax stop global function
-                $(document).ajaxStop(function () {
-                    $(".ajaxFilter").removeClass("black-loading");
-                    console.log("Ajax Request has ended");
-                });
-                // Ajax request
-                $.ajax({
-                    type: "POST",
-                    contentType: 'application/json; charset=UTF-8',
-                    url: "http://enshelf.com/api/deleteItem",
-                    data: JSON.stringify(data),
-                    processData: true,
-                    dataType: "json",
-                    timeout: 10000
-                }).done(successFn).fail(errorFn);
-            function successFn(){
-                 for (var i = 0, len = dataAppend.length; i < len; i++) {
+                "itemId": deleteId,
+                "token": localStorage.getItem("token")
+            };
+            console.log(data);
+            $(document).ajaxStart(function () {
+                $(".ajaxFilter").addClass("black-loading");
+                console.log("Ajax Request is Starting");
+            });
+            // Ajax stop global function
+            $(document).ajaxStop(function () {
+                $(".ajaxFilter").removeClass("black-loading");
+                console.log("Ajax Request has ended");
+            });
+            // Ajax request
+            $.ajax({
+                type: "POST",
+                contentType: 'application/json; charset=UTF-8',
+                url: "http://enshelf.com/api/deleteItem",
+                data: JSON.stringify(data),
+                processData: true,
+                dataType: "json",
+                timeout: 10000
+            }).done(successFn).fail(errorFn);
+
+            function successFn() {
+                for (var i = 0, len = dataAppend.length; i < len; i++) {
                     if (dataAppend[i].itemId == deleteId) {
                         index = i;
                         dataAppend.splice(index, 1);
@@ -446,10 +428,57 @@
 
                 window.location.reload(true);
             }
-            function errorFn(){
+
+            function errorFn() {
                 alert("We could not delete the Item");
             }
         })
+
+        function ajaxRequest() {
+            $(document).ajaxStart(function () {
+                $(".ajaxFilter").addClass("black-loading");
+                console.log("Ajax Request is Starting");
+            });
+            // Ajax stop global function
+            $(document).ajaxStop(function () {
+                $(".ajaxFilter").removeClass("black-loading");
+                console.log("Ajax Request has ended");
+            });
+            $.ajax({
+                type: "POST",
+                contentType: 'application/json; charset=UTF-8',
+                url: "http://enshelf.com/api/getItems",
+                data: JSON.stringify(data),
+                processData: true,
+                dataType: "json",
+                timeout: 10000
+            }).done(successFn).fail(errorFn);
+            //success function
+            function successFn(result) {
+                var itemsFromServer = result.items
+                console.log(result)
+                console.log(itemsFromServer)
+                if (itemsFromServer[0] == null) {
+                    alert("You have no saved files on the server");
+                } else {
+                    console.log(itemsFromServer);
+
+                    for (var i = 0, len = itemsFromServer.length; i < len; i++) {
+                        for (var j = 0, length = itemsFromServer[i].length; j < length; j++) {
+                            indexSaved.push(itemsFromServer[i][j]);
+                        }
+                    }
+                    localStorage.setObj('indexSaved', indexSaved);
+                    window.location.reload(true);
+                }
+
+            };
+            //if there is an error in the ajax request display the error
+            function errorFn(xhr, status, strErr) {
+                alert("No records Found");
+            };
+        }
+
         //     [{ "title": "First, break all the rules: what the world's greatest managers do differently", "authors": [{ "name": "Buckingham, Marcus", "id": "buckingham_marcus" }, { "id": "coffman_curt", "name": "Coffman, Curt" }], "isbn": "9780684852867", "publisher": "Simon & Schuster", "published": "New York : Simon & Schuster, c1999.", "physical_description": "271 p. ; 25 cm.", "summary": "", "subjects": "executive ability, management, executives attitudes, employees attitudes, employer attitude surveys, employee attitude surveys", "coverImageURL": "http://covers.openlibrary.org/b/isbn/9780684852867-M.jpg" }, { "title": "Spirit-Controlled Temperament", "authors": [{ "id": "lahaye_tim", "name": "LAHAYE, TIM" }], "isbn": "9780842362207", "publisher": "Tyndale House Publishers", "published": "Tyndale House Publishers", "physical_description": "5.3\"x8.2\"x0.7\"; 251 pages; 0.7 lb", "summary": "A superb treatment of the basic human temperaments and how God can use them, now revised with new chapters and questions for group study. Spanish available", "subjects": "amazon com religion spirituality christianity christian livi, amazon com religion spirituality christianity protesta aaaa4, amazon com religion spirituality authors a z l lahaye tim ge, amazon com religion spirituality authors a z l lahaye tim pa", "coverImageURL": "http://covers.openlibrary.org/b/isbn/9780842362207-M.jpg" }]
 
 

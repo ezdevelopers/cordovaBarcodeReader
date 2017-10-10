@@ -169,10 +169,10 @@
             }).done(successFn).fail(errorFn);
             //success function
             function successFn(result) {
-                var existingBooks = JSON.stringify(localStorage.getObj("indexSaved"));
-                if (existingBooks.indexOf(biblio.isbn) > 0) {
-                    alert("You already have this book in your library");
-                } else {
+                // var existingBooks = JSON.stringify(localStorage.getObj("indexSaved"));
+                // if (existingBooks.indexOf(biblio.isbn) > 0) {
+                //     alert("You already have this book in your library");
+                // } else {
                     //grabbing data from Biblio object
                     localStorage.setObj('biblioEdits', biblio);
                     /*In this code snippet below, I am trying to save a book for each unique search. Grabbing data from 
@@ -201,7 +201,7 @@
                         //we then persist the array through localStorage for later saving of other data.
                     }
                     alert("You have successfully acquired a copy of this book");
-                }
+               // }
 
                 //redirect to homepage
                 location.href = "home.html";

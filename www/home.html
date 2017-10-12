@@ -8,17 +8,19 @@
     <title>Barcode Reader</title>
     <link rel="stylesheet" href="css/materialize.min.css">
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/pull-to-refresh.css">
+    
     <link rel="stylesheet" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
 
-    <script>
+    <script type="text/javascript">
         if (!localStorage.getItem("token")) {
             location.href = "index.html";
         }
+
+       
     </script>
 </head>
 
-<body>
+<body onload="loaded()">
     <ul id="slide-out" class="side-nav">
         <li>
             <div class="user-view">
@@ -34,26 +36,26 @@
 
     </ul>
     <div class="navbar-fixed">
-    <nav class="nav-extended">
-        <div class="nav-wrapper">
-            <a href="#" data-activates="slide-out" class="button-collapse"><i class="fa fa-bars" aria-hidden="true"></i></a>
-            <a href="#" class="">Library</a>
+        <nav class="nav-extended">
+            <div class="nav-wrapper">
+                <a href="#" data-activates="slide-out" class="button-collapse"><i class="fa fa-bars" aria-hidden="true"></i></a>
+                <a href="#" class="">Library</a>
 
-            <ul id="nav-mobile" class="right hide-on-med-and-down">
-                <li><a href="sass.html">Sass</a></li>
-                <li><a href="badges.html">Components</a></li>
-                <li><a href="collapsible.html">JavaScript</a></li>
-            </ul>
+                <ul id="nav-mobile" class="right hide-on-med-and-down">
+                    <li><a href="sass.html">Sass</a></li>
+                    <li><a href="badges.html">Components</a></li>
+                    <li><a href="collapsible.html">JavaScript</a></li>
+                </ul>
 
-        </div>
-        <div class="nav-content">
-            <ul class="tabs tabs-transparent">
-                <li class="tab"><a href="#testa">Find Books</a></li>
-                <li class="tab"><a class="active" href="#testb">My library</a></li>
-                <li class="tab"><a href="#testc">Loans</a></li>
-            </ul>
-        </div>
-    </nav>
+            </div>
+            <div class="nav-content">
+                <ul class="tabs tabs-transparent">
+                    <li class="tab"><a href="#testa">Find Books</a></li>
+                    <li class="tab"><a class="active" href="#testb">My library</a></li>
+                    <li class="tab"><a href="#testc">Loans</a></li>
+                </ul>
+            </div>
+        </nav>
     </div>
     <div class="col s12">
         <form>
@@ -96,13 +98,16 @@
 
 
             <div id="testb" class="col s12 test">
-                <div class="scrollable">
-                    <div class="wrap">
-                        <div class="filter-p">
-                            <p class="ajaxFilter">Filter</p>
+                <div class="filter-p">
+                    <p id="pullDownAjax" class="ajaxFilter">Filter</p>
+                </div>
+                <div id="wrapper">
+                    <div id="scroller">
+                        <div id="pullDown" class=>
+                            <span class="pullDownIcon"></span>
+                            <p class="pullDownText">Pull down to refresh...</p>
                         </div>
-                        <div id="booklist" class="col s12 m7">
-                        </div>
+                        <div id="booklist" class="col s12 m7"></div>
                     </div>
                 </div>
 
@@ -165,11 +170,70 @@
 
     <script src="js/jquery-3.2.1.min.js"></script>
     <script src="js/materialize.min.js"></script>
-    <script src="js/jquery.plugin.pullToRefresh.js"></script>
+    <script src="js/iscroll.js"></script>
     <script type="text/javascript" src="cordova.js"></script>
     <script src="js/logout.js"></script>
     <script>
         //create prototype method for storing objects in localStorage 
+
+         var myScroll, pullDownEl, pullDownOffset;
+
+            function pullDownAction() {
+                setTimeout(function () { // <-- Simulate network congestion, remove setTimeout from production!
+                    ajaxRequest();
+
+                    myScroll.refresh(); // Remember to refresh when contents are loaded (ie: on ajax completion)
+                }, 1000); // <-- Simulate network congestion, remove setTimeout from production!
+            }
+
+            function loaded() {
+                pullDownEl = document.getElementById('pullDown');
+                pullDownOffset = pullDownEl.offsetHeight;
+
+
+                myScroll = new iScroll('wrapper', {
+                    useTransition: true,
+                    tap: true,
+                    click: true,
+                    topOffset: pullDownOffset,
+                    onRefresh: function () {
+                        if (pullDownEl.className.match('loading')) {
+                            pullDownEl.className = '';
+                            pullDownEl.querySelector('.pullDownText').innerHTML = 'Pull down to refresh...';
+                        }
+                    },
+                    onScrollMove: function () {
+                        if (this.y > 5 && !pullDownEl.className.match('flip')) {
+                            pullDownEl.className = 'flip';
+                            pullDownEl.querySelector('.pullDownText').innerHTML = 'Release to refresh...';
+                            this.minScrollY = 0;
+                        } else if (this.y < 5 && pullDownEl.className.match('flip')) {
+                            pullDownEl.className = '';
+                            pullDownEl.querySelector('.pullDownText').innerHTML = 'Pull down to refresh...';
+                            this.minScrollY = -pullDownOffset;
+                        }
+                    },
+                    onScrollEnd: function () {
+                        if (pullDownEl.className.match('flip')) {
+                            pullDownEl.className = 'loading';
+                            pullDownEl.querySelector('.pullDownText').innerHTML = 'Loading...';
+                            pullDownAction(); // Execute custom function (ajax call?)
+                        }
+                    }
+                });
+
+                setTimeout(function () {
+                    document.getElementById('wrapper').style.left = '0';
+                }, 800);
+            }
+
+            document.addEventListener('touchmove', function (e) {
+                e.preventDefault();
+            }, false);
+
+            document.addEventListener('DOMContentLoaded', function () {
+                setTimeout(loaded, 200);
+            }, false);
         Storage.prototype.setObj = function (key, obj) {
             return this.setItem(key, JSON.stringify(obj))
         };
@@ -177,34 +241,67 @@
         Storage.prototype.getObj = function (key) {
             return JSON.parse(this.getItem(key))
         }
+
         //check if local files exist, if not pull files of the userfrom the server
         if (!localStorage.getObj("indexSaved")) {
             var indexSaved = [];
             var data = {
                 "token": localStorage.getItem("token")
             };
-            ajaxRequest();
+            $(document).ajaxStart(function () {
+                $(".ajaxFilter").addClass("black-loading");
+                console.log("Ajax Request is Starting");
+            });
+            // Ajax stop global function
+            $(document).ajaxStop(function () {
+                $(".ajaxFilter").removeClass("black-loading");
+                console.log("Ajax Request has ended");
+            });
+            $.ajax({
+                type: "POST",
+                contentType: 'application/json; charset=UTF-8',
+                url: "http://enshelf.com/api/getItems",
+                data: JSON.stringify(data),
+                processData: true,
+                dataType: "json",
+                timeout: 5000
+            }).done(successFn).fail(errorFn);
+            //success function
+            function successFn(result) {
+                var itemsFromServer = result.items
+                console.log(result)
+                console.log(itemsFromServer)
+                if (itemsFromServer[0] == null) {
+                    Materialize.toast('You no saved files on the server', 4000);
+                } else {
+                    console.log(itemsFromServer);
+
+                    for (var i = 0, len = itemsFromServer.length; i < len; i++) {
+                        for (var j = 0, length = itemsFromServer[i].length; j < length; j++) {
+                            indexSaved.push(itemsFromServer[i][j]);
+                        }
+                    }
+                    localStorage.removeItem('indexSaved')
+                    localStorage.setObj('indexSaved', indexSaved);
+                    window.location.reload(true);
+                }
+
+            };
+            //if there is an error in the ajax request display the error
+            function errorFn(xhr, status, strErr) {
+                Materialize.toast('No records Found', 4000);
+                console.log(strErr + " " + status)
+            };
         };
 
-        $('.scrollable').pullToRefresh({
-            callback: function () {
-                var def = $.Deferred();
 
-                setTimeout(function () {
-                    ajaxRequest();
-                    def.resolve();
-                }, 5000);
-
-                return def.promise();
-            }
-        });
 
         function barcodescanner() {
             cordova.plugins.barcodeScanner.scan(
                 function (result) {
                     var searchValue = result.text;
                     if ((searchValue.length) == 0) {
-                        alert("No ISBN Found");
+                        Materialize.toast('No isbn Found', 4000);
                     } else {
                         //store fields in object for use in the ajax request
                         var data = {
@@ -240,13 +337,13 @@
                         };
                         //if there is an error in the ajax request display the error
                         function errorFn(xhr, status, strErr) {
-                            alert("No records Found");
+                            Materialize.toast('No records Found', 4000);
                         };
                     }
 
                 },
                 function (error) {
-                    alert("Scanning failed: " + error);
+                    Materialize.toast('Scanning Failed ' + error, 4000);
                 }, {
                     preferFrontCamera: false, // iOS and Android
                     showFlipCameraButton: false, // iOS and Android
@@ -268,7 +365,7 @@
             var searchValue = $("input#search-modal").val();
             //Check for empty fields
             if ((searchValue.length) == 0) {
-                alert("Fields cannot be empty");
+                Materialize.toast('Fields cannot be empty', 4000);
             } else {
                 //store fields in object for use in the ajax request
                 var data = {
@@ -305,7 +402,7 @@
                 };
                 //if there is an error in the ajax request display the error
                 function errorFn(xhr, status, strErr) {
-                    alert("No records Found");
+                    Materialize.toast('No records Found', 4000);
                 };
             }
         });
@@ -334,10 +431,10 @@
                     theAuthor = authors
                 };
                 var booklist =
-                    '<div class="row bottom-margin"><div class="col s12"><div id="' + dataAppend[i].isbn +
-                    '" class="card horizontal redirect"><div class="card-image"><img alt="Image" height="auto" src="' +
+                    '<div class="row bottom-margin"><div class="col s12"><div class="card horizontal "><div class="card-image"><img alt="Image" height="auto" src="' +
                     dataAppend[i].coverImageUrl + '\"></div><div class="card-stacked"><div class="card-content">' +
-                    '<span style="color:navy;font-weight:bold;font-size:14px;" class="card-title">' +
+                    '<span  id="' + dataAppend[i].isbn +
+                    '" style="color:navy;font-weight:bold;font-size:14px;" class="card-title redirect">' +
                     theTitle + '</span>' +
                     '<p style="color:brown;">Author: ' + theAuthor + '</p></div></div></div></div>' +
                     '<a class="drop' + i +
@@ -366,11 +463,17 @@
         // Initialize collapsible (uncomment the line below if you use the dropdown variation)
         //$('.collapsible').collapsible();
 
+        //initiate tabs
+        $(document).ready(function () {
+                $('ul.tabs').tabs({onShow:function(e){console.log("hi")}});
+            });
+
+
         $(document).ready(function () {
             $('.modal').modal();
             $('select').material_select();
         });
-        //for dropdown button
+        //for dropdown button to delete and loan books
         var dropdownValue = {
             inDuration: 300,
             outDuration: 225,
@@ -380,8 +483,9 @@
             belowOrigin: false, // Displays dropdown below the button
             alignment: 'left', // Displays dropdown with edge aligned to the left of button
             stopPropagation: false // Stops event propagation
-        }
-        //dropdown button
+        };
+
+        // The buttons will not work if there are no items in localStorage dropdown button
         if (localStorage.getObj("indexSaved")) {
             for (var i = 0, len = dataAppend.length; i < len; i++) {
                 $('.drop' + i).dropdown(dropdownValue);
@@ -427,16 +531,23 @@
                     }
 
                 }
-
+                Materialize.toast('Delete Successfull', 4000);
                 window.location.reload(true);
             }
 
             function errorFn() {
-                alert("We could not delete the Item");
+                Materialize.toast('We could not delete the item', 4000);
             }
         })
 
+
+        //function ajax call
         function ajaxRequest() {
+            var indexSaved = [];
+
+            var data = {
+                "token": localStorage.getItem("token")
+            };
             $(document).ajaxStart(function () {
                 $(".ajaxFilter").addClass("black-loading");
                 console.log("Ajax Request is Starting");
@@ -453,39 +564,42 @@
                 data: JSON.stringify(data),
                 processData: true,
                 dataType: "json",
-                timeout: 10000
+                timeout: 5000
             }).done(successFn).fail(errorFn);
             //success function
             function successFn(result) {
                 var itemsFromServer = result.items
-                console.log(result)
-                console.log(itemsFromServer)
                 if (itemsFromServer[0] == null) {
-                    alert("You have no saved files on the server");
+                    Materialize.toast('You have no save files on the server', 4000);
                 } else {
-                    console.log(itemsFromServer);
-
                     for (var i = 0, len = itemsFromServer.length; i < len; i++) {
                         for (var j = 0, length = itemsFromServer[i].length; j < length; j++) {
                             indexSaved.push(itemsFromServer[i][j]);
                         }
                     }
+                   var serverLength = indexSaved.length;
+                   var localLength = JSON.parse(localStorage.getItem('indexSaved')).length;
+                   if(serverLength > localLength){
                     localStorage.setObj('indexSaved', indexSaved);
-                    window.location.reload(true);
+                   }else{
+                       Materialize.toast('Files are up to date', 4000)
+                   }
+                    
                 }
 
             };
             //if there is an error in the ajax request display the error
             function errorFn(xhr, status, strErr) {
                 alert("No records Found");
+                console.log(strErr + " " + status)
             };
         }
+
+        //   [{"itemId":"38","biblioId":"0","libraryId":"12","isbn":"9780842362207 \\ 978068485
 
         //     [{ "title": "First, break all the rules: what the world's greatest managers do differently", "authors": [{ "name": "Buckingham, Marcus", "id": "buckingham_marcus" }, { "id": "coffman_curt", "name": "Coffman, Curt" }], "isbn": "9780684852867", "publisher": "Simon & Schuster", "published": "New York : Simon & Schuster, c1999.", "physical_description": "271 p. ; 25 cm.", "summary": "", "subjects": "executive ability, management, executives attitudes, employees attitudes, employer attitude surveys, employee attitude surveys", "coverImageURL": "http://covers.openlibrary.org/b/isbn/9780684852867-M.jpg" }, { "title": "Spirit-Controlled Temperament", "authors": [{ "id": "lahaye_tim", "name": "LAHAYE, TIM" }], "isbn": "9780842362207", "publisher": "Tyndale House Publishers", "published": "Tyndale House Publishers", "physical_description": "5.3\"x8.2\"x0.7\"; 251 pages; 0.7 lb", "summary": "A superb treatment of the basic human temperaments and how God can use them, now revised with new chapters and questions for group study. Spanish available", "subjects": "amazon com religion spirituality christianity christian livi, amazon com religion spirituality christianity protesta aaaa4, amazon com religion spirituality authors a z l lahaye tim ge, amazon com religion spirituality authors a z l lahaye tim pa", "coverImageURL": "http://covers.openlibrary.org/b/isbn/9780842362207-M.jpg" }]
 
 
-        // 
-
-        //   [{"itemId":"38","biblioId":"0","libraryId":"12","isbn":"9780842362207 \\ 9780684852867","type":"book","title":"First, break all the rules: what the world's greatest managers do differently","authors":[{"name":"Buckingham, Marcus","id":"buckingham_marcus"},{"name":"Coffman, Curt","id":"coffman_curt"}],"publisher":"Simon & Schuster","published_date":"2012-05-18","description":"A story for the gods","subjects":"executive ability, management, executives attitudes, employees attitudes, employer attitude surveys,","isRead":"1","startDate":"2017-09-20","endDate":"2017-09-28","user_comments":"A must read!","date_added":"2017-09-29 17:04:19"}]
+        // 2867","type":"book","title":"First, break all the rules: what the world's greatest managers do differently","authors":[{"name":"Buckingham, Marcus","id":"buckingham_marcus"},{"name":"Coffman, Curt","id":"coffman_curt"}],"publisher":"Simon & Schuster","published_date":"2012-05-18","description":"A story for the gods","subjects":"executive ability, management, executives attitudes, employees attitudes, employer attitude surveys,","isRead":"1","startDate":"2017-09-20","endDate":"2017-09-28","user_comments":"A must read!","date_added":"2017-09-29 17:04:19"}]
     </script>
 </body>

@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="css/materialize.min.css">
     <link rel="stylesheet" href="css/style.css">
     <title>Login</title>
     <script>
@@ -150,21 +151,31 @@
                 <input type="text" class="state" placeholder="State" />
                 <input type="text" class="country" placeholder="Country" />
                 <input type="text" class="occupation" placeholder="Occupation" />
-                <button id="registration"  id="send">Create</button>
+                <div class="progress">
+                    <div class="indeterminate"></div>
+                </div>
+                <button id="registration">Create</button>
                 <p class="message">Already registered? <a href="#">Sign In</a></p>
             </div>
             <div class="dform login-form">
                 <input id="email" type="text" placeholder="email" />
                 <input id="password" type="password" placeholder="password" />
-                <button id="send-button"><div class="center" id="send">login</div></button>
+                <div class="progress">
+                    <div class="indeterminate"></div>
+                </div>
+                <button id="send-button"><div class="center">
+                    login</div></button>
                 <p class="message">Not registered? <a href="#">Create an account</a></p>
             </div>
         </div>
     </div>
     <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="js/materialize.min.js"></script>
     <script>
         var response = [];
         var libraryInfo = [];
+        //hide ajax functionality
+        $(".progress").hide();
 
         $('.message a').click(function () {
             $('.dform').animate({
@@ -191,29 +202,31 @@
                 0 ||
                 select == 'Gender' || city.length == 0 || state.length == 0 || country.length == 0 ||
                 occupation.length == 0) {
-                alert("All fields are required");
-            }else{
+                Materialize.toast('Fields are missing', 4000);
+            } else {
                 var data = {
                     "appKey": "4P3d7c3Hk091",
                     "email": email,
                     "password": pass,
-                    "phone":phone,
-                    "fname":first,
-                    "lname":last,
-                    "gender":select,
-                    "city":city,
-                    "state":5,
-                    "country":6,
-                    "occupation":occupation
+                    "phone": phone,
+                    "fname": first,
+                    "lname": last,
+                    "gender": select,
+                    "city": city,
+                    "state": 5,
+                    "country": 6,
+                    "occupation": occupation
                 };
                 // Ajax start global function
                 $(document).ajaxStart(function () {
-                    $("#send").addClass("loading");
+                    $("#registration").hide();
+                    $(".progress").show();
                     console.log("Ajax Request is Starting");
                 });
                 // Ajax stop global function
                 $(document).ajaxStop(function () {
-                    $("#send").removeClass("loading");
+                    $("#registration").show();
+                    $(".progress").hide();
                     console.log("Ajax Request has ended");
                 });
                 // Ajax request
@@ -228,12 +241,13 @@
                     timeout: 10000
                 }).done(successFn).fail(errorFn);
 
-                function successFn(){
-                alert("User has been created successfully");
-                window.location.reload(true);
+                function successFn() {
+                    Materialize.toast('User created successfully ', 4000);
+                    window.location.reload(true);
                 };
-                function errorFn(){
-               alert("Something went wrong in creating user");
+
+                function errorFn() {
+                    Materialize.toast('Something Went wrong in creating user', 4000);
                 }
             }
 
@@ -244,8 +258,10 @@
             var email = $("#email").val();
             var password = $("#password").val();
             //Check for empty fields
-            if ((email.length || password.length) == 0) {
-                alert("Fields cannot be empty");
+            if ((email.length) == 0) {
+                Materialize.toast('Username cannot be empty', 4000);
+            } else if (password.length == 0) {
+                Materialize.toast('Password cannot be empty', 4000);
             } else {
                 // timeoutID = window.setTimeout(function(){alert("We could not get the results, Check your Internet")}, 10000);
                 //store fields in object for use in the ajax request
@@ -256,12 +272,14 @@
                 };
                 // Ajax start global function
                 $(document).ajaxStart(function () {
-                    $("#send").addClass("loading");
+                    $("#send-button").hide();
+                    $(".progress").show();
                     console.log("Ajax Request is Starting");
                 });
                 // Ajax stop global function
                 $(document).ajaxStop(function () {
-                    $("#send").removeClass("loading");
+                    $("#send-button").show();
+                    $(".progress").hide();
                     console.log("Ajax Request has ended");
                 });
                 // Ajax request
@@ -279,26 +297,33 @@
                 //for a token field, if token id found it stores the token in
                 //local storage else it returns an error.      
                 function successFn(result) {
-                    //var resultString = JSON.stringify(result);
-                    for (var elm in result) {
-                        response.push(result[elm]);
-                    };
-                    var library = result.Libraries;
-                    for (var i = 0, len = library.length; i < len; i++) {
-                        localStorage.setItem('libraryId', library[i].libraryId);
-                        break;
-                    }
+                    var resultString = JSON.stringify(result);
+                    if(resultString.indexOf("token")>0){
+                        for (var elm in result) {
+                            response.push(result[elm]);
+                        };
+                        var library = result.Libraries;
+                        for (var i = 0, len = library.length; i < len; i++) {
+                            localStorage.setItem('libraryId', library[i].libraryId);
+                            break;
+                        }
 
-                    // window.clearTimeout(timeoutID);
-                    localStorage.setItem('token', response[3]);
-                    localStorage.setItem('userId', response[0]);
-                    alert("You have successfully been logged in");
-                    window.location = "home.html"
+                        // window.clearTimeout(timeoutID);
+                        localStorage.setItem('token', response[3]);
+                        localStorage.setItem('userId', response[0]);
+                        Materialize.toast('Login successful', 4000);
+                        window.location = "home.html"
+                    }
+                    else{
+                        Materialize.toast('Incorrect Username/Password', 4000);
+                        $("document").ajaxStop();
+                    }
+                    
                 };
 
                 //if there is an error in the ajax request display the error
                 function errorFn(xhr, status, strErr) {
-                    alert("Something went wrong : Username/Password Incorrect");
+                    Materialize.toast('Something went wrong/Check User details', 4000);
                     console.log(strErr)
                 };
             };

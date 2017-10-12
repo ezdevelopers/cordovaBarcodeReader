@@ -202,7 +202,7 @@
                         localStorage.setObj('indexSaved', indexSaved);
                         //we then persist the array through localStorage for later saving of other data.
                     }
-                    alert("You have successfully acquired a copy of this book");
+                     Materialize.toast('You have successfully acquired a copy of this book', 4000);
                // }
 
                 //redirect to homepage
@@ -210,7 +210,7 @@
             };
             //if there is an error in the ajax request display the error
             function errorFn(xhr, status, strErr) {
-                alert("Could not Insert Item to Library Server");
+                Materialize.toast('Could not Insert Item to Library Server', 4000)
             };
 
 

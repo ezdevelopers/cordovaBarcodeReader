@@ -98,9 +98,9 @@
 
 
             <div id="testb" class="col s12 test">
-                <div class="filter-p">
+                 <div class="filter-p">
                     <p id="pullDownAjax" class="ajaxFilter">Filter</p>
-                </div>
+                </div> 
                 <div id="wrapper">
                     <div id="scroller">
                         <div id="pullDown" class=>
@@ -192,12 +192,13 @@
 
 
                 myScroll = new iScroll('wrapper', {
-                    useTransition: true,
+                    //useTransition: true,
                     tap: true,
                     click: true,
+                    vScrollbar:false,
                     topOffset: pullDownOffset,
                     onRefresh: function () {
-                        if (pullDownEl.className.match('loading')) {
+                        if (pullDownEl.className.match('load')) {
                             pullDownEl.className = '';
                             pullDownEl.querySelector('.pullDownText').innerHTML = 'Pull down to refresh...';
                         }
@@ -215,7 +216,7 @@
                     },
                     onScrollEnd: function () {
                         if (pullDownEl.className.match('flip')) {
-                            pullDownEl.className = 'loading';
+                            pullDownEl.className = 'load';
                             pullDownEl.querySelector('.pullDownText').innerHTML = 'Loading...';
                             pullDownAction(); // Execute custom function (ajax call?)
                         }
@@ -241,61 +242,6 @@
         Storage.prototype.getObj = function (key) {
             return JSON.parse(this.getItem(key))
         }
-
-        //check if local files exist, if not pull files of the userfrom the server
-        if (!localStorage.getObj("indexSaved")) {
-            var indexSaved = [];
-            var data = {
-                "token": localStorage.getItem("token")
-            };
-            $(document).ajaxStart(function () {
-                $(".ajaxFilter").addClass("black-loading");
-                console.log("Ajax Request is Starting");
-            });
-            // Ajax stop global function
-            $(document).ajaxStop(function () {
-                $(".ajaxFilter").removeClass("black-loading");
-                console.log("Ajax Request has ended");
-            });
-            $.ajax({
-                type: "POST",
-                contentType: 'application/json; charset=UTF-8',
-                url: "http://enshelf.com/api/getItems",
-                data: JSON.stringify(data),
-                processData: true,
-                dataType: "json",
-                timeout: 5000
-            }).done(successFn).fail(errorFn);
-            //success function
-            function successFn(result) {
-                var itemsFromServer = result.items
-                console.log(result)
-                console.log(itemsFromServer)
-                if (itemsFromServer[0] == null) {
-                    Materialize.toast('You no saved files on the server', 4000);
-                } else {
-                    console.log(itemsFromServer);
-
-                    for (var i = 0, len = itemsFromServer.length; i < len; i++) {
-                        for (var j = 0, length = itemsFromServer[i].length; j < length; j++) {
-                            indexSaved.push(itemsFromServer[i][j]);
-                        }
-                    }
-                    localStorage.removeItem('indexSaved')
-                    localStorage.setObj('indexSaved', indexSaved);
-                    window.location.reload(true);
-                }
-
-            };
-            //if there is an error in the ajax request display the error
-            function errorFn(xhr, status, strErr) {
-                Materialize.toast('No records Found', 4000);
-                console.log(strErr + " " + status)
-            };
-        };
-
-
-
         function barcodescanner() {
             cordova.plugins.barcodeScanner.scan(
                 function (result) {
@@ -408,7 +354,7 @@
         });
 
         //grab saved searches from the localStorage 'indexSaved' if it exists
-        if (localStorage.getObj("indexSaved")) {
+        if (localStorage.getObj("indexSaved") && !(localStorage.getObj("noItems")) ) {
             var dataAppend = localStorage.getObj("indexSaved");
             //store the values of the localStorage(an array of objects) in a variable
             for (var i = 0; i < dataAppend.length; i++) {
@@ -450,6 +396,9 @@
             }
 
         }
+        else{
+            Materialize.toast('You have no saved items on the Server', 4000);
+        }
         //redirect function to grab ISBN and store in localhost
         $(".redirect").click(function (event) {
             var contentPanelId = $(this).attr("id");
@@ -465,7 +414,7 @@
 
         //initiate tabs
         $(document).ready(function () {
-                $('ul.tabs').tabs({onShow:function(e){console.log("hi")}});
+                $('ul.tabs').tabs();
             });
 
 
@@ -541,7 +490,7 @@
         })
 
 
-        //function ajax call
+        //function ajax call for refresh function
         function ajaxRequest() {
             var indexSaved = [];
 
@@ -590,8 +539,7 @@
             };
             //if there is an error in the ajax request display the error
             function errorFn(xhr, status, strErr) {
-                alert("No records Found");
-                console.log(strErr + " " + status)
+                Materialize.toast('Network Error', 4000)
             };
         }
 

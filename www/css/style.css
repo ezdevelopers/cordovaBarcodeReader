@@ -139,9 +139,8 @@ nav ul {
     position: relative;
     top: -78px;
     right: -85%;
-    z-index: 0;
+    z-index: 99999;
     display: inline;
-    width: 50px;
     padding: 15px;
     text-align: center;
 }

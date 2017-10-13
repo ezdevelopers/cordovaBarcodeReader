@@ -8,15 +8,13 @@
     <title>Barcode Reader</title>
     <link rel="stylesheet" href="css/materialize.min.css">
     <link rel="stylesheet" href="css/style.css">
-    
+
     <link rel="stylesheet" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
 
     <script type="text/javascript">
         if (!localStorage.getItem("token")) {
             location.href = "index.html";
         }
-
-       
     </script>
 </head>
 
@@ -98,17 +96,23 @@
 
 
             <div id="testb" class="col s12 test">
-                 <div class="filter-p">
+                <div class="filter-p">
                     <p id="pullDownAjax" class="ajaxFilter">Filter</p>
-                </div> 
+                </div>
                 <div id="wrapper">
-                    <div id="scroller">
-                        <div id="pullDown" class=>
+                    <div>
+                        <div id="pullDown">
                             <span class="pullDownIcon"></span>
                             <p class="pullDownText">Pull down to refresh...</p>
                         </div>
                         <div id="booklist" class="col s12 m7"></div>
                     </div>
+                    
+
+
+                    <!-- <div id="scroller">
+
+                    </div> -->
                 </div>
 
             </div>
@@ -176,65 +180,65 @@
     <script>
         //create prototype method for storing objects in localStorage 
 
-         var myScroll, pullDownEl, pullDownOffset;
+        var myScroll, pullDownEl, pullDownOffset;
 
-            function pullDownAction() {
-                setTimeout(function () { // <-- Simulate network congestion, remove setTimeout from production!
-                    ajaxRequest();
+        function pullDownAction() {
+            setTimeout(function () { // <-- Simulate network congestion, remove setTimeout from production!
+                ajaxRequest();
 
-                    myScroll.refresh(); // Remember to refresh when contents are loaded (ie: on ajax completion)
-                }, 1000); // <-- Simulate network congestion, remove setTimeout from production!
-            }
+                myScroll.refresh(); // Remember to refresh when contents are loaded (ie: on ajax completion)
+            }, 1000); // <-- Simulate network congestion, remove setTimeout from production!
+        }
 
-            function loaded() {
-                pullDownEl = document.getElementById('pullDown');
-                pullDownOffset = pullDownEl.offsetHeight;
+        function loaded() {
+            pullDownEl = document.getElementById('pullDown');
+            pullDownOffset = pullDownEl.offsetHeight;
 
 
-                myScroll = new iScroll('wrapper', {
-                    //useTransition: true,
-                    tap: true,
-                    click: true,
-                    vScrollbar:false,
-                    topOffset: pullDownOffset,
-                    onRefresh: function () {
-                        if (pullDownEl.className.match('load')) {
-                            pullDownEl.className = '';
-                            pullDownEl.querySelector('.pullDownText').innerHTML = 'Pull down to refresh...';
-                        }
-                    },
-                    onScrollMove: function () {
-                        if (this.y > 5 && !pullDownEl.className.match('flip')) {
-                            pullDownEl.className = 'flip';
-                            pullDownEl.querySelector('.pullDownText').innerHTML = 'Release to refresh...';
-                            this.minScrollY = 0;
-                        } else if (this.y < 5 && pullDownEl.className.match('flip')) {
-                            pullDownEl.className = '';
-                            pullDownEl.querySelector('.pullDownText').innerHTML = 'Pull down to refresh...';
-                            this.minScrollY = -pullDownOffset;
-                        }
-                    },
-                    onScrollEnd: function () {
-                        if (pullDownEl.className.match('flip')) {
-                            pullDownEl.className = 'load';
-                            pullDownEl.querySelector('.pullDownText').innerHTML = 'Loading...';
-                            pullDownAction(); // Execute custom function (ajax call?)
-                        }
+            myScroll = new iScroll('wrapper', {
+                //useTransition: true,
+                // tap: true,
+                // click: true,
+                vScrollbar: false,
+                topOffset: pullDownOffset,
+                onRefresh: function () {
+                    if (pullDownEl.className.match('load')) {
+                        pullDownEl.className = '';
+                        pullDownEl.querySelector('.pullDownText').innerHTML = 'Pull down to refresh...';
                     }
-                });
+                },
+                onScrollMove: function () {
+                    if (this.y > 3 && !pullDownEl.className.match('flip')) {
+                        pullDownEl.className = 'flip';
+                        pullDownEl.querySelector('.pullDownText').innerHTML = 'Release to refresh...';
+                        this.minScrollY = 0;
+                    } else if (this.y < 3 && pullDownEl.className.match('flip')) {
+                        pullDownEl.className = '';
+                        pullDownEl.querySelector('.pullDownText').innerHTML = 'Pull down to refresh...';
+                        this.minScrollY = -pullDownOffset;
+                    }
+                },
+                onScrollEnd: function () {
+                    if (pullDownEl.className.match('flip')) {
+                        pullDownEl.className = 'load';
+                        pullDownEl.querySelector('.pullDownText').innerHTML = 'Loading...';
+                        pullDownAction(); // Execute custom function (ajax call?)
+                    }
+                }
+            });
 
-                setTimeout(function () {
-                    document.getElementById('wrapper').style.left = '0';
-                }, 800);
-            }
+            setTimeout(function () {
+                document.getElementById('wrapper').style.left = '0';
+            }, 800);
+        }
 
-            document.addEventListener('touchmove', function (e) {
-                e.preventDefault();
-            }, false);
+        document.addEventListener('touchmove', function (e) {
+            e.preventDefault();
+        }, false);
 
-            document.addEventListener('DOMContentLoaded', function () {
-                setTimeout(loaded, 200);
-            }, false);
+        document.addEventListener('DOMContentLoaded', function () {
+            setTimeout(loaded, 200);
+        }, false);
         Storage.prototype.setObj = function (key, obj) {
             return this.setItem(key, JSON.stringify(obj))
         };
@@ -242,6 +246,7 @@
         Storage.prototype.getObj = function (key) {
             return JSON.parse(this.getItem(key))
         }
+
         function barcodescanner() {
             cordova.plugins.barcodeScanner.scan(
                 function (result) {
@@ -354,7 +359,7 @@
         });
 
         //grab saved searches from the localStorage 'indexSaved' if it exists
-        if (localStorage.getObj("indexSaved") && !(localStorage.getObj("noItems")) ) {
+        if (localStorage.getObj("indexSaved") && !(localStorage.getObj("noItems"))) {
             var dataAppend = localStorage.getObj("indexSaved");
             //store the values of the localStorage(an array of objects) in a variable
             for (var i = 0; i < dataAppend.length; i++) {
@@ -383,7 +388,7 @@
                     '" style="color:navy;font-weight:bold;font-size:14px;" class="card-title redirect">' +
                     theTitle + '</span>' +
                     '<p style="color:brown;">Author: ' + theAuthor + '</p></div></div></div></div>' +
-                    '<a class="drop' + i +
+                    '<a class="dropper' + i +
                     ' options" data-beloworigin="true" data-activates="' + dataAppend[i].itemId +
                     '"><i style="font-size:16px; color:navy;" class="fa fa-ellipsis-v"></i></a><ul id="' + dataAppend[i]
                     .itemId + '" class="dropdown-content"><li id="' +
@@ -395,8 +400,7 @@
                 $("#booklist").prepend(booklist);
             }
 
-        }
-        else{
+        } else {
             Materialize.toast('You have no saved items on the Server', 4000);
         }
         //redirect function to grab ISBN and store in localhost
@@ -414,8 +418,10 @@
 
         //initiate tabs
         $(document).ready(function () {
-                $('ul.tabs').tabs();
+            $('ul.tabs').tabs({
+                onShow: ajaxRequest()
             });
+        });
 
 
         $(document).ready(function () {
@@ -437,7 +443,7 @@
         // The buttons will not work if there are no items in localStorage dropdown button
         if (localStorage.getObj("indexSaved")) {
             for (var i = 0, len = dataAppend.length; i < len; i++) {
-                $('.drop' + i).dropdown(dropdownValue);
+                $('.dropper' + i).dropdown(dropdownValue);
             };
 
         }
@@ -526,14 +532,14 @@
                             indexSaved.push(itemsFromServer[i][j]);
                         }
                     }
-                   var serverLength = indexSaved.length;
-                   var localLength = JSON.parse(localStorage.getItem('indexSaved')).length;
-                   if(serverLength > localLength){
-                    localStorage.setObj('indexSaved', indexSaved);
-                   }else{
-                       Materialize.toast('Files are up to date', 4000)
-                   }
-                    
+                    var serverLength = indexSaved.length;
+                    var localLength = JSON.parse(localStorage.getItem('indexSaved')).length;
+                    if (serverLength > localLength) {
+                        localStorage.setObj('indexSaved', indexSaved);
+                    } else {
+                        Materialize.toast('Files are up to date', 4000)
+                    }
+
                 }
 
             };

@@ -288,7 +288,6 @@
                     console.log("Ajax Request has ended");
                 });
                 // Ajax request
-                $.when(
                     //login ajax call 
                     $.ajax({
                         type: "POST",
@@ -299,8 +298,7 @@
                         processData: true,
                         dataType: "json",
                         timeout: 10000
-                    }).done(loginSuccessFn).fail(loginErrorFn),
-                ).then(allPassed, someFailed);
+                    }).done(loginSuccessFn).fail(loginErrorFn)
                 //This function check the response from the server on logging inand looks 
                 //for a token field, if token id found it stores the token in
                 //local storage else it returns an error.      
@@ -355,6 +353,10 @@
                         }
                         //localStorage.removeItem('indexSaved')
                         localStorage.setObj('indexSaved', indexSaved);
+                         Materialize.toast('Login successful', 4000);
+                        setTimeout(function () {
+                                window.location.href = "home.html"; //will redirect to your blog page (an ex: blog.html)
+                            }, 2000);
                     }
 
                 };
@@ -369,15 +371,6 @@
                 };
             };
 
-            function allPassed() {
-                Materialize.toast('Login successful', 4000);
-                window.location = "home.html"
-
-            }
-
-            function someFailed() {
-                Materialize.toast('Something Went Wrong', 4000);
-            }
         });
     </script>
 </body>

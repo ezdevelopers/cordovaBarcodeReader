@@ -545,7 +545,45 @@
                     var localLength = JSON.parse(localStorage.getItem('indexSaved')).length;
                     if (serverLength !== localLength) {
                         localStorage.setObj('indexSaved', indexSaved);
-                        location.reload(true);
+                         var dataAppend = localStorage.getObj("indexSaved");
+                            //store the values of the localStorage(an array of objects) in a variable
+                            for (var i = 0; i < dataAppend.length; i++) {
+                                //iterate through the varriable and build a html section
+                                var authors = "";
+                                dataAppend[i].authors.forEach(function (element) {
+                                    authors += element.name + ". "
+                                });
+                                var title = dataAppend[i].title;
+                                var theTitle = "";
+                                if (title.length > 30) {
+                                    theTitle = title.substring(0, 30) + "..."
+                                } else {
+                                    theTitle = title
+                                };
+                                var theAuthor = "";
+                                if (authors.length > 35) {
+                                    theAuthor = authors.substring(0, 25) + "..."
+                                } else {
+                                    theAuthor = authors
+                                };
+                                var booklist =
+                                    '<div class="row bottom-margin"><div class="col s12"><div class="card horizontal "><div class="card-image"><img alt="Image" height="auto" src="' +
+                                    dataAppend[i].coverImageUrl + '\"></div><div class="card-stacked"><div class="card-content">' +
+                                    '<span  id="' + dataAppend[i].isbn +
+                                    '" style="color:navy;font-weight:bold;font-size:14px;" class="card-title redirect">' +
+                                    theTitle + '</span>' +
+                                    '<p style="color:brown;">Author: ' + theAuthor + '</p></div></div></div></div>' +
+                                    '<a class="dropper' + i +
+                                    ' options" data-beloworigin="true" data-activates="' + dataAppend[i].itemId +
+                                    '"><i style="font-size:16px; color:navy;" class="fa fa-ellipsis-v"></i></a><ul id="' + dataAppend[i]
+                                        .itemId + '" class="dropdown-content"><li id="' +
+                                    dataAppend[i].itemId +
+                                    '" class="loan">Lend Out</p></li><li  id="' + dataAppend[i].itemId +
+                                    '" class="delete">Delete</li></ul>' +
+                                    '</div>';
+                                //The values to the page
+                                $("#booklist").html().prepend(booklist);
+                            }
                     } else {
                         Materialize.toast('Files are up to date', 4000)
                     }

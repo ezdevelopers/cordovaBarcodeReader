@@ -27,6 +27,7 @@
     <plugin name="phonegap-plugin-barcodescanner" spec="~6.0.8" />
     <plugin name="cordova-plugin-contacts" spec="^2.3.1" />
     <universal-links>
+    <host name=" https://e4vx3.app.goo.gl/" scheme="https">
     <host name="enshelf.firebaseapp.com" scheme="https">
         <path url="/__/auth/callback"/>
     </host>

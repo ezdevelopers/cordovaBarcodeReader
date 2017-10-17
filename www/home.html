@@ -196,7 +196,7 @@
 
 
             myScroll = new iScroll('wrapper', {
-                useTransition: true,
+               // useTransition: true,
                 //tap: true,
                 //click: true,
                 vScrollbar: false,
@@ -361,8 +361,156 @@
 
         //grab saved searches from the localStorage 'indexSaved' if it exists
         if (localStorage.getObj("indexSaved") && !(localStorage.getObj("noItems"))) {
+            insertBooks();
+        } else {
+            Materialize.toast('You have no saved items on the Server', 4000);
+        }
+
+        // Initialize collapse button
+        $(".button-collapse").sideNav();
+        // Initialize collapsible (uncomment the line below if you use the dropdown variation)
+        //$('.collapsible').collapsible();
+
+        //initiate tabs
+        $(document).ready(function () {
+            $('ul.tabs').tabs({
+                onShow: ajaxRequest()
+            });
+        });
+
+        $(document).ready(function () {
+            $('.modal').modal();
+            $('select').material_select();
+        });
+        //for dropdown button to delete and loan books
+        var dropdownValue = {
+            inDuration: 300,
+            outDuration: 225,
+            constrainWidth: false, // Does not change width of dropdown to that of the activator
+            hover: false, // Activate on hover
+            gutter: 0, // Spacing from edge
+            belowOrigin: true, // Displays dropdown below the button
+            alignment: 'left', // Displays dropdown with edge aligned to the left of button
+            stopPropagation: false // Stops event propagation
+        };
+
+
+        //function ajax call for refresh function
+        function ajaxRequest() {
+            var indexSaved = [];
+
+            var data = {
+                "token": localStorage.getItem("token")
+            };
+            $(document).ajaxStart(function () {
+                $(".ajaxFilter").addClass("black-loading");
+                console.log("Ajax Request is Starting");
+            });
+            // Ajax stop global function
+            $(document).ajaxStop(function () {
+                $(".ajaxFilter").removeClass("black-loading");
+                console.log("Ajax Request has ended");
+            });
+            $.ajax({
+                type: "POST",
+                contentType: 'application/json; charset=UTF-8',
+                url: "http://enshelf.com/api/getItems",
+                data: JSON.stringify(data),
+                processData: true,
+                dataType: "json",
+                timeout: 5000
+            }).done(successFn).fail(errorFn);
+
+            //success function
+            function successFn(result) {
+                var itemsFromServer = result.items
+                if (itemsFromServer[0] == null) {
+                    Materialize.toast('You have no save files on the server', 4000);
+                } else {
+                    for (var i = 0, len = itemsFromServer.length; i < len; i++) {
+                        for (var j = 0, length = itemsFromServer[i].length; j < length; j++) {
+                            indexSaved.push(itemsFromServer[i][j]);
+                            console.log(indexSaved);
+                        }
+                    }
+                    var serverLength = indexSaved.length;
+                    var localLength = JSON.parse(localStorage.getItem('indexSaved')).length;
+                    console.log(serverLength);
+                    console.log(localLength)
+                    if (serverLength !== localLength) {
+                        localStorage.setObj('indexSaved', indexSaved);
+                        $("#booklist").html("");
+                        insertBooks();
+                    } else {
+                        Materialize.toast('Files are up to date', 4000)
+                    }
+
+                }
+
+            };
+            //if there is an error in the ajax request display the error
+            function errorFn(xhr, status, strErr) {
+                Materialize.toast('Network Error', 4000)
+            };
+        }
+
+        //founction for deleting books
+        //Delete function
+        $(".delete").click(function () {
+            var dataAppend = localStorage.getObj("indexSaved");
+            var deleteId = $(this).parent().attr("id");
+            var index = -1;
+            // var data = {
+            //     "itemId": deleteId,
+            //     "token": localStorage.getItem("token")
+            // };
+            // console.log(data);
+            // $(document).ajaxStart(function () {
+            //     $(".ajaxFilter").addClass("black-loading");
+            //     console.log("Ajax Request is Starting");
+            // });
+            // // Ajax stop global function
+            // $(document).ajaxStop(function () {
+            //     $(".ajaxFilter").removeClass("black-loading");
+            //     console.log("Ajax Request has ended");
+            // });
+            // // Ajax request
+            // $.ajax({
+            //     type: "POST",
+            //     contentType: 'application/json; charset=UTF-8',
+            //     url: "http://enshelf.com/api/deleteItem",
+            //     data: JSON.stringify(data),
+            //     processData: true,
+            //     dataType: "json",
+            //     timeout: 10000
+            // }).done(successFn).fail(errorFn);
+
+            // function successFn() {
+            for (var i = 0, len = dataAppend.length; i < len; i++) {
+                if (dataAppend[i].itemId == deleteId) {
+                    index = i;
+                    dataAppend.splice(index, 1);
+                    localStorage.setObj("indexSaved", dataAppend);
+                    break;
+                }
+
+            }
+            Materialize.toast('Delete Successfull', 4000);
+             $("#booklist").html("");
+                insertBooks();
+            // }
+
+            // function errorFn() {
+            //     Materialize.toast('We could not delete the item', 4000);
+            // }
+        })
+
+
+        //function to insert book to page and attach event handlers
+        function insertBooks() {
             var dataAppend = localStorage.getObj("indexSaved");
             //store the values of the localStorage(an array of objects) in a variable
+
             for (var i = 0; i < dataAppend.length; i++) {
                 //iterate through the varriable and build a html section
                 var authors = "";
@@ -400,202 +548,25 @@
                 //The values to the page
                 $("#booklist").prepend(booklist);
             }
+            $(".redirect").click(function (event) {
+                var contentPanelId = $(this).attr("id");
+                console.log(contentPanelId)
+                localStorage.setItem("editId", contentPanelId);
+                location.href = "view.html"
+            });
+            // The buttons will not work if there are no items in localStorage dropdown button
+            if (localStorage.getObj("indexSaved")) {
+                for (var i = 0, len = dataAppend.length; i < len; i++) {
+                    $('.dropper' + i).dropdown(dropdownValue);
+                    $(".dropper" + i).click(function (event) {
+                        console.log("Clicked dropper" + " " + event.target.id);
+                    })
+                };
 
-        } else {
-            Materialize.toast('You have no saved items on the Server', 4000);
+            }
+
         }
         //redirect function to grab ISBN and store in localhost
-        $(".redirect").click(function (event) {
-            var contentPanelId = $(this).attr("id");
-            console.log(contentPanelId)
-            localStorage.setItem("editId", contentPanelId);
-            location.href = "view.html"
-        });
-
-        // Initialize collapse button
-        $(".button-collapse").sideNav();
-        // Initialize collapsible (uncomment the line below if you use the dropdown variation)
-        //$('.collapsible').collapsible();
-
-        //initiate tabs
-        $(document).ready(function () {
-            $('ul.tabs').tabs({
-                onShow: ajaxRequest()
-            });
-        });
-
-        $(document).ready(function () {
-            $('.modal').modal();
-            $('select').material_select();
-        });
-        //for dropdown button to delete and loan books
-        var dropdownValue = {
-            inDuration: 300,
-            outDuration: 225,
-            constrainWidth: false, // Does not change width of dropdown to that of the activator
-            hover: false, // Activate on hover
-            gutter: 0, // Spacing from edge
-            belowOrigin: true, // Displays dropdown below the button
-            alignment: 'left', // Displays dropdown with edge aligned to the left of button
-            stopPropagation: false // Stops event propagation
-        };
-
-        
-
-
-
-        // The buttons will not work if there are no items in localStorage dropdown button
-        if (localStorage.getObj("indexSaved")) {
-            for (var i = 0, len = dataAppend.length; i < len; i++) {
-                $('.dropper' + i).dropdown(dropdownValue);
-                $(".dropper" + i).click(function (event) {
-                    console.log("Clicked dropper" + " " + event.target.id);
-                })
-            };
-
-        }
-        //Delete function
-        $(".delete").click(function () {
-            var deleteId = $(this).parent().attr("id");
-            var index = -1;
-            var data = {
-                "itemId": deleteId,
-                "token": localStorage.getItem("token")
-            };
-            console.log(data);
-            $(document).ajaxStart(function () {
-                $(".ajaxFilter").addClass("black-loading");
-                console.log("Ajax Request is Starting");
-            });
-            // Ajax stop global function
-            $(document).ajaxStop(function () {
-                $(".ajaxFilter").removeClass("black-loading");
-                console.log("Ajax Request has ended");
-            });
-            // Ajax request
-            $.ajax({
-                type: "POST",
-                contentType: 'application/json; charset=UTF-8',
-                url: "http://enshelf.com/api/deleteItem",
-                data: JSON.stringify(data),
-                processData: true,
-                dataType: "json",
-                timeout: 10000
-            }).done(successFn).fail(errorFn);
-
-            function successFn() {
-                for (var i = 0, len = dataAppend.length; i < len; i++) {
-                    if (dataAppend[i].itemId == deleteId) {
-                        index = i;
-                        dataAppend.splice(index, 1);
-                        localStorage.setObj("indexSaved", dataAppend);
-                        break;
-                    }
-
-                }
-                Materialize.toast('Delete Successfull', 4000);
-                window.location.reload(true);
-            }
-
-            function errorFn() {
-                Materialize.toast('We could not delete the item', 4000);
-            }
-        })
-
-
-        //function ajax call for refresh function
-        function ajaxRequest() {
-            var indexSaved = [];
-
-            var data = {
-                "token": localStorage.getItem("token")
-            };
-            $(document).ajaxStart(function () {
-                $(".ajaxFilter").addClass("black-loading");
-                console.log("Ajax Request is Starting");
-            });
-            // Ajax stop global function
-            $(document).ajaxStop(function () {
-                $(".ajaxFilter").removeClass("black-loading");
-                console.log("Ajax Request has ended");
-            });
-            $.ajax({
-                type: "POST",
-                contentType: 'application/json; charset=UTF-8',
-                url: "http://enshelf.com/api/getItems",
-                data: JSON.stringify(data),
-                processData: true,
-                dataType: "json",
-                timeout: 5000
-            }).done(successFn).fail(errorFn);
-            
-            //success function
-            function successFn(result) {
-                var itemsFromServer = result.items
-                if (itemsFromServer[0] == null) {
-                    Materialize.toast('You have no save files on the server', 4000);
-                } else {
-                    for (var i = 0, len = itemsFromServer.length; i < len; i++) {
-                        for (var j = 0, length = itemsFromServer[i].length; j < length; j++) {
-                            indexSaved.push(itemsFromServer[i][j]);
-                            console.log(indexSaved);
-                        }
-                    }
-                    var serverLength = indexSaved.length;
-                    var localLength = JSON.parse(localStorage.getItem('indexSaved')).length;
-                    if (serverLength !== localLength) {
-                        localStorage.setObj('indexSaved', indexSaved);
-                         var dataAppend = localStorage.getObj("indexSaved");
-                            //store the values of the localStorage(an array of objects) in a variable
-                            for (var i = 0; i < dataAppend.length; i++) {
-                                //iterate through the varriable and build a html section
-                                var authors = "";
-                                dataAppend[i].authors.forEach(function (element) {
-                                    authors += element.name + ". "
-                                });
-                                var title = dataAppend[i].title;
-                                var theTitle = "";
-                                if (title.length > 30) {
-                                    theTitle = title.substring(0, 30) + "..."
-                                } else {
-                                    theTitle = title
-                                };
-                                var theAuthor = "";
-                                if (authors.length > 35) {
-                                    theAuthor = authors.substring(0, 25) + "..."
-                                } else {
-                                    theAuthor = authors
-                                };
-                                var booklist =
-                                    '<div class="row bottom-margin"><div class="col s12"><div class="card horizontal "><div class="card-image"><img alt="Image" height="auto" src="' +
-                                    dataAppend[i].coverImageUrl + '\"></div><div class="card-stacked"><div class="card-content">' +
-                                    '<span  id="' + dataAppend[i].isbn +
-                                    '" style="color:navy;font-weight:bold;font-size:14px;" class="card-title redirect">' +
-                                    theTitle + '</span>' +
-                                    '<p style="color:brown;">Author: ' + theAuthor + '</p></div></div></div></div>' +
-                                    '<a class="dropper' + i +
-                                    ' options" data-beloworigin="true" data-activates="' + dataAppend[i].itemId +
-                                    '"><i style="font-size:16px; color:navy;" class="fa fa-ellipsis-v"></i></a><ul id="' + dataAppend[i]
-                                        .itemId + '" class="dropdown-content"><li id="' +
-                                    dataAppend[i].itemId +
-                                    '" class="loan">Lend Out</p></li><li  id="' + dataAppend[i].itemId +
-                                    '" class="delete">Delete</li></ul>' +
-                                    '</div>';
-                                //The values to the page
-                                $("#booklist").html().prepend(booklist);
-                            }
-                    } else {
-                        Materialize.toast('Files are up to date', 4000)
-                    }
-
-                }
-
-            };
-            //if there is an error in the ajax request display the error
-            function errorFn(xhr, status, strErr) {
-                Materialize.toast('Network Error', 4000)
-            };
-        }
 
         //   [{"itemId":"38","biblioId":"0","libraryId":"12","isbn":"9780842362207 \\ 978068485
 

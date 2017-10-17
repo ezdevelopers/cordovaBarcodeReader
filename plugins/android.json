@@ -1,28 +1,40 @@
 {
-    "prepare_queue": {
-        "installed": [],
-        "uninstalled": []
+  "prepare_queue": {
+    "installed": [],
+    "uninstalled": []
+  },
+  "config_munge": {
+    "files": {}
+  },
+  "installed_plugins": {
+    "cordova-plugin-whitelist": {
+      "PACKAGE_NAME": "com.example.com"
     },
-    "config_munge": {
-        "files": {}
+    "phonegap-plugin-barcodescanner": {
+      "PACKAGE_NAME": "com.example.com"
     },
-    "installed_plugins": {
-        "cordova-plugin-whitelist": {
-            "PACKAGE_NAME": "com.example.com"
-        },
-        "phonegap-plugin-barcodescanner": {
-            "PACKAGE_NAME": "com.example.com"
-        },
-        "cordova-plugin-contacts": {
-            "PACKAGE_NAME": "com.example.com"
-        },
-        "cordova-plugin-dialogs": {
-            "PACKAGE_NAME": "com.example.com"
-        }
+    "cordova-plugin-contacts": {
+      "PACKAGE_NAME": "com.example.com"
     },
-    "dependent_plugins": {
-        "cordova-plugin-compat": {
-            "PACKAGE_NAME": "com.example.com"
-        }
+    "cordova-plugin-dialogs": {
+      "PACKAGE_NAME": "com.example.com"
+    },
+    "cordova-plugin-buildinfo": {
+      "PACKAGE_NAME": "com.example.com"
+    },
+    "cordova-plugin-browsertab": {
+      "PACKAGE_NAME": "com.example.com"
+    },
+    "cordova-plugin-inappbrowser": {
+      "PACKAGE_NAME": "com.example.com"
+    },
+    "cordova-universal-links-plugin": {
+      "PACKAGE_NAME": "com.example.com"
     }
+  },
+  "dependent_plugins": {
+    "cordova-plugin-compat": {
+      "PACKAGE_NAME": "com.example.com"
+    }
+  }
 }

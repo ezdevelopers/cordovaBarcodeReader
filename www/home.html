@@ -107,7 +107,7 @@
                         </div>
                         <div id="booklist" class="col s12 m7"></div>
                     </div>
-                    
+
 
 
                     <!-- <div id="scroller">
@@ -196,9 +196,9 @@
 
 
             myScroll = new iScroll('wrapper', {
-                //useTransition: true,
-                // tap: true,
-                // click: true,
+                useTransition: true,
+                //tap: true,
+                //click: true,
                 vScrollbar: false,
                 topOffset: pullDownOffset,
                 onRefresh: function () {
@@ -239,6 +239,7 @@
         document.addEventListener('DOMContentLoaded', function () {
             setTimeout(loaded, 200);
         }, false);
+
         Storage.prototype.setObj = function (key, obj) {
             return this.setItem(key, JSON.stringify(obj))
         };
@@ -423,7 +424,6 @@
             });
         });
 
-
         $(document).ready(function () {
             $('.modal').modal();
             $('select').material_select();
@@ -433,17 +433,24 @@
             inDuration: 300,
             outDuration: 225,
             constrainWidth: false, // Does not change width of dropdown to that of the activator
-            hover: true, // Activate on hover
+            hover: false, // Activate on hover
             gutter: 0, // Spacing from edge
-            belowOrigin: false, // Displays dropdown below the button
+            belowOrigin: true, // Displays dropdown below the button
             alignment: 'left', // Displays dropdown with edge aligned to the left of button
             stopPropagation: false // Stops event propagation
         };
+
+        
+
+
 
         // The buttons will not work if there are no items in localStorage dropdown button
         if (localStorage.getObj("indexSaved")) {
             for (var i = 0, len = dataAppend.length; i < len; i++) {
                 $('.dropper' + i).dropdown(dropdownValue);
+                $(".dropper" + i).click(function (event) {
+                    console.log("Clicked dropper" + " " + event.target.id);
+                })
             };
 
         }
@@ -521,6 +528,7 @@
                 dataType: "json",
                 timeout: 5000
             }).done(successFn).fail(errorFn);
+            
             //success function
             function successFn(result) {
                 var itemsFromServer = result.items
@@ -530,12 +538,14 @@
                     for (var i = 0, len = itemsFromServer.length; i < len; i++) {
                         for (var j = 0, length = itemsFromServer[i].length; j < length; j++) {
                             indexSaved.push(itemsFromServer[i][j]);
+                            console.log(indexSaved);
                         }
                     }
                     var serverLength = indexSaved.length;
                     var localLength = JSON.parse(localStorage.getItem('indexSaved')).length;
-                    if (serverLength > localLength) {
+                    if (serverLength !== localLength) {
                         localStorage.setObj('indexSaved', indexSaved);
+                        location.reload(true);
                     } else {
                         Materialize.toast('Files are up to date', 4000)
                     }

@@ -165,7 +165,7 @@
                 </div>
                 <button id="send-button"><div class="center">
                     login</div></button>
-                    <button id="fb-button"><div class="center">
+                <button id="fb-button"><div class="center">
                     Login with Facebook</div></button>
                 <p class="message">Not registered? <a href="#">Create an account</a></p>
             </div>
@@ -173,49 +173,58 @@
     </div>
     <script src="js/jquery-3.2.1.min.js"></script>
     <script src="js/materialize.min.js"></script>
-<script src="https://www.gstatic.com/firebasejs/4.5.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/4.5.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.5.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/4.5.0/firebase-auth.js"></script>
 
     <script>
-        // Initialize Firebase
-            var config = {
-                apiKey: "AIzaSyBjtksPVatJX46Z1gTEseIpJgwn7BEbt6U",
-                authDomain: "enshelf.firebaseapp.com",
-                databaseURL: "https://enshelf.firebaseio.com",
-                projectId: "enshelf",
-                storageBucket: "enshelf.appspot.com",
-                messagingSenderId: "581315232250"
-            };
-            firebase.initializeApp(config);
+        function onLoad() {
+            document.addEventListener("deviceready", onDeviceReady, false);
+        }
+
+        function onDeviceReady() {
+            if (!firebase.apps.length) {
+                // Initialize Firebase
+                var config = {
+                    apiKey: "AIzaSyBjtksPVatJX46Z1gTEseIpJgwn7BEbt6U",
+                    authDomain: "enshelf.firebaseapp.com",
+                    databaseURL: "https://enshelf.firebaseio.com",
+                    projectId: "enshelf",
+                    storageBucket: "enshelf.appspot.com",
+                    messagingSenderId: "581315232250"
+                };
+                firebase.initializeApp(config);
+
+            }
+        }
 
 
-            $("#fb-button").click(function(){
-                var provider = new firebase.auth.FacebookAuthProvider();
-                firebase.auth().signInWithRedirect(provider);
+        $("#fb-button").click(function () {
+            var provider = new firebase.auth.FacebookAuthProvider();
+            firebase.auth().signInWithRedirect(provider);
 
-                firebase.auth().getRedirectResult().then(function (result) {
-                        if (result.credential) {
-                            // This gives you a Facebook Access Token. You can use it to access the Facebook API.
-                            var token = result.credential.accessToken;
-                            alert("You have signed in");
-                        }
-                        // The signed-in user info.
-                        var user = result.user;
-                        alert("You have signed in as" + user);
-                    }).catch(function (error) {
-                        // Handle Errors here.
-                        var errorCode = error.code;
-                        var errorMessage = error.message;
-                        // The email of the user's account used.
-                        var email = error.email;
-                        // The firebase.auth.AuthCredential type that was used.
-                        var credential = error.credential;
-                        alert("Error on signing in")
-                        // ...
-                    });
+            firebase.auth().getRedirectResult().then(function (result) {
+                if (result.credential) {
+                    // This gives you a Facebook Access Token. You can use it to access the Facebook API.
+                    var token = result.credential.accessToken;
+                    alert("You have signed in");
+                }
+                // The signed-in user info.
+                var user = result.user;
+                alert("You have signed in as" + user);
+            }).catch(function (error) {
+                // Handle Errors here.
+                var errorCode = error.code;
+                var errorMessage = error.message;
+                // The email of the user's account used.
+                var email = error.email;
+                // The firebase.auth.AuthCredential type that was used.
+                var credential = error.credential;
+                alert(errorMessage);
+                // ...
+            });
 
 
-            })
+        })
         //create prototype method for storing objects in localStorage   
         Storage.prototype.setObj = function (key, obj) {
             return this.setItem(key, JSON.stringify(obj))
@@ -333,17 +342,17 @@
                     console.log("Ajax Request has ended");
                 });
                 // Ajax request
-                    //login ajax call 
-                    $.ajax({
-                        type: "POST",
-                        crossDomain: true,
-                        contentType: 'application/json; charset=UTF-8',
-                        url: "http://enshelf.com/api/login",
-                        data: JSON.stringify(data),
-                        processData: true,
-                        dataType: "json",
-                        timeout: 10000
-                    }).done(loginSuccessFn).fail(loginErrorFn)
+                //login ajax call 
+                $.ajax({
+                    type: "POST",
+                    crossDomain: true,
+                    contentType: 'application/json; charset=UTF-8',
+                    url: "http://enshelf.com/api/login",
+                    data: JSON.stringify(data),
+                    processData: true,
+                    dataType: "json",
+                    timeout: 10000
+                }).done(loginSuccessFn).fail(loginErrorFn)
                 //This function check the response from the server on logging inand looks 
                 //for a token field, if token id found it stores the token in
                 //local storage else it returns an error.      
@@ -366,15 +375,15 @@
                             var token = {
                                 "token": localStorage.getItem("token")
                             }
-                                $.ajax({
-                                    type: "POST",
-                                    contentType: 'application/json; charset=UTF-8',
-                                    url: "http://enshelf.com/api/getItems",
-                                    data: JSON.stringify(token),
-                                    processData: true,
-                                    dataType: "json",
-                                    timeout: 5000
-                                }).done(getItemSuccessFn).fail(getItemErrorFn)
+                            $.ajax({
+                                type: "POST",
+                                contentType: 'application/json; charset=UTF-8',
+                                url: "http://enshelf.com/api/getItems",
+                                data: JSON.stringify(token),
+                                processData: true,
+                                dataType: "json",
+                                timeout: 5000
+                            }).done(getItemSuccessFn).fail(getItemErrorFn)
                         };
 
                     } else {
@@ -398,10 +407,10 @@
                         }
                         //localStorage.removeItem('indexSaved')
                         localStorage.setObj('indexSaved', indexSaved);
-                         Materialize.toast('Login successful', 4000);
+                        Materialize.toast('Login successful', 4000);
                         setTimeout(function () {
-                                window.location.href = "home.html"; //will redirect to your blog page (an ex: blog.html)
-                            }, 2000);
+                            window.location.href = "home.html"; //will redirect to your blog page (an ex: blog.html)
+                        }, 2000);
                     }
 
                 };

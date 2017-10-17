@@ -26,8 +26,8 @@
     <engine name="android" spec="~6.2.3" />
     <plugin name="phonegap-plugin-barcodescanner" spec="~6.0.8" />
     <plugin name="cordova-plugin-contacts" spec="^2.3.1" />
-    <gap:plugin name="cordova-plugin-inappbrowser" source="npm" />
-    <gap:plugin source="git" spec="https://github.com/nordnet/cordova-universal-links-plugin" />
+    <plugin name="cordova-plugin-inappbrowser" source="npm" />
+    <plugin source="git" spec="https://github.com/nordnet/cordova-universal-links-plugin"/>
     <universal-links>
         <host name="e4vx3.app.goo.gl" scheme="https" />
         <host name="enshelf.firebaseapp.com" scheme="https">

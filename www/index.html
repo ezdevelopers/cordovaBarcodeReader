@@ -182,7 +182,6 @@
         }
 
         function onDeviceReady() {
-            if (!firebase.apps.length) {
                 // Initialize Firebase
                 var config = {
                     apiKey: "AIzaSyBjtksPVatJX46Z1gTEseIpJgwn7BEbt6U",
@@ -194,7 +193,6 @@
                 };
                 firebase.initializeApp(config);
 
-            }
         }
 
 

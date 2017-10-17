@@ -17,7 +17,7 @@
     "cordova-plugin-contacts-phonenumbers": "git+https://github.com/dbaq/cordova-plugin-contacts-phone-numbers.git",
     "cordova-plugin-dialogs": "^1.3.3",
     "cordova-plugin-whitelist": "^1.3.2",
-    "cordova-universal-links-plugin": "^1.2.1",
+    "cordova-universal-links-plugin": "git+https://github.com/nordnet/cordova-universal-links-plugin.git",
     "firebase": "^4.5.2"
   },
   "cordova": {

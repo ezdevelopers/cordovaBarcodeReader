@@ -165,8 +165,11 @@
                 </div>
                 <button id="send-button"><div class="center">
                     login</div></button>
-                <button id="fb-button"><div class="center">
+                <button id="fb-button" style="margin:5px"><div class="center">
                     Login with Facebook</div></button>
+
+                    <button id="fb"><div class="center">
+                    Facebook</div></button>    
                 <p class="message">Not registered? <a href="#">Create an account</a></p>
                 <p id="signOut"><a href="#">Sign out</a></p>
             </div>
@@ -193,6 +196,9 @@
             };
             firebase.initializeApp(config);
 
+            $("#fb").click(function () {
+                facebookConnectPlugin.login(["public_profiles"], function success(){alert("login success")}, function failure(){alert("login failed")});
+            });
 
             $("#fb-button").click(function () {
                 var provider = new firebase.auth.FacebookAuthProvider();

@@ -33,6 +33,10 @@
     <plugin source="git" spec="https://github.com/nordnet/cordova-universal-links-plugin"/>
     <plugin source="git" spec="https://github.com/lynrin/cordova-plugin-buildinfo"/>
     <plugin source="git" spec="https://github.com/jeduan/cordova-plugin-facebook4"/>
+    <plugin name="cordova-plugin-facebook4" source="npm" spec="1.7.4">
+        <param name="APP_ID" value="1686989511333980" />
+        <param name="APP_NAME" value="LibraryApp" />
+    </plugin>
     <universal-links>
         <host name="e4vx3.app.goo.gl/" scheme="https" />
         <host name="enshelf.firebaseapp.com" scheme="https">

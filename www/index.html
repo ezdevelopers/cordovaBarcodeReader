@@ -177,24 +177,12 @@
     <script src="https://www.gstatic.com/firebasejs/4.5.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/4.5.0/firebase-auth.js"></script>
     <script type="text/javascript" src="cordova.js"></script>
-    <script src="//connect.facebook.net/en_US/sdk.js"></script>
     <script>
-          FB.init({
-                /**********************************************************************
-                 * TODO(Developer): Change the value below with your Facebook app ID. *
-                 **********************************************************************/
-                appId: '1686989511333980',
-                status: true,
-                xfbml: true,
-                version: 'v2.6'
-            });
-
-            FB.Event.subscribe('auth.authResponseChange', checkLoginState);
-            
         document.addEventListener("deviceready", onDeviceReady, false);
+
         function onDeviceReady() {
             alert("device is ready");
-         // Initialize Firebase
+            // Initialize Firebase
             var config = {
                 apiKey: "AIzaSyBjtksPVatJX46Z1gTEseIpJgwn7BEbt6U",
                 authDomain: "enshelf.firebaseapp.com",
@@ -209,60 +197,60 @@
 
 
 
-            $("#fb-button").click(function () {
-                var provider = new firebase.auth.FacebookAuthProvider();
-                // firebase.auth().signInWithRedirect(provider);
-                // firebase.auth().getRedirectResult().then(function (result) {
-                //     if (result.credential) {
-                //         // This gives you a Facebook Access Token. You can use it to access the Facebook API.
-                //         var token = result.credential.accessToken;
-                //         // ...
-                //     }
-                //     // The signed-in user info.
-                //     var user = result.user;
-                //     alert("you have signed in");
-                //     alert(user);
-                // }).catch(function (error) {
-                //     // Handle Errors here.
-                //     var errorCode = error.code;
-                //     var errorMessage = error.message;
-                //     // The email of the user's account used.
-                //     var email = error.email;
-                //     // The firebase.auth.AuthCredential type that was used.
-                //     var credential = error.credential;
-                //     alert(errorMessage);
-                //     // ...
-                // });
-                
-                firebase.auth().signInWithRedirect(provider).then(function () {
-                    return firebase.auth().getRedirectResult();
-                }).then(function (result) {
-                    // This gives you a Google Access Token.
-                    // You can use it to access the Google API.
-                    var token = result.credential.accessToken;
-                    // The signed-in user info.
-                    var user = result.user;
-                    alert("you have signed in");
-                    // ...
-                }).catch(function (error) {
-                    // Handle Errors here.
-                    var errorCode = error.code;
-                    var errorMessage = error.message;
-                    alert(errorMessage);
-                });
+        $("#fb-button").click(function () {
+            var provider = new firebase.auth.FacebookAuthProvider();
+            // firebase.auth().signInWithRedirect(provider);
+            // firebase.auth().getRedirectResult().then(function (result) {
+            //     if (result.credential) {
+            //         // This gives you a Facebook Access Token. You can use it to access the Facebook API.
+            //         var token = result.credential.accessToken;
+            //         // ...
+            //     }
+            //     // The signed-in user info.
+            //     var user = result.user;
+            //     alert("you have signed in");
+            //     alert(user);
+            // }).catch(function (error) {
+            //     // Handle Errors here.
+            //     var errorCode = error.code;
+            //     var errorMessage = error.message;
+            //     // The email of the user's account used.
+            //     var email = error.email;
+            //     // The firebase.auth.AuthCredential type that was used.
+            //     var credential = error.credential;
+            //     alert(errorMessage);
+            //     // ...
+            // });
+
+            firebase.auth().signInWithRedirect(provider).then(function () {
+                return firebase.auth().getRedirectResult();
+            }).then(function (result) {
+                // This gives you a Google Access Token.
+                // You can use it to access the Google API.
+                var token = result.credential.accessToken;
+                // The signed-in user info.
+                var user = result.user;
+                alert("you have signed in");
+                // ...
+            }).catch(function (error) {
+                // Handle Errors here.
+                var errorCode = error.code;
+                var errorMessage = error.message;
+                alert(errorMessage);
+            });
 
 
-            })
+        })
 
-            $("#signOut").click(function () {
-                firebase.auth().signOut().then(function () {
-                    alert("Sign-out successful")
-                }).catch(function (error) {
-                    alert("Error");
-                    // An error happened.
-                });
+        $("#signOut").click(function () {
+            firebase.auth().signOut().then(function () {
+                alert("Sign-out successful")
+            }).catch(function (error) {
+                alert("Error");
+                // An error happened.
+            });
 
-            })
+        })
         //create prototype method for storing objects in localStorage   
         Storage.prototype.setObj = function (key, obj) {
             return this.setItem(key, JSON.stringify(obj))

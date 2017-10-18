@@ -19,6 +19,7 @@
     <platform name="android">
         <allow-intent href="market:*" />
     </platform>
+    
     <platform name="ios">
         <allow-intent href="itms:*" />
         <allow-intent href="itms-apps:*" />
@@ -26,10 +27,10 @@
     <engine name="android" spec="~6.2.3" />
     <plugin name="phonegap-plugin-barcodescanner" spec="~6.0.8" />
     <plugin name="cordova-plugin-contacts" spec="^2.3.1" />
+    <plugin name="cordova-plugin-browsertab" source="npm" />
     <plugin name="cordova-plugin-inappbrowser" source="npm" />
     <plugin source="git" spec="https://github.com/nordnet/cordova-universal-links-plugin"/>
     <plugin source="git" spec="https://github.com/lynrin/cordova-plugin-buildinfo"/>
-    <plugin source="git" spec="https://github.com/google/cordova-plugin-browsertab"/>
     <universal-links>
         <host name="e4vx3.app.goo.gl" scheme="https" />
         <host name="enshelf.firebaseapp.com" scheme="https">

@@ -167,8 +167,6 @@
                     login</div></button>
                 <button id="fb-button"><div class="center">
                     Login with Facebook</div></button>
-                     <button id="fb"><div class="center">
-                    Facebook</div></button>
                 <p class="message">Not registered? <a href="#">Create an account</a></p>
                 <p id="signOut"><a href="#">Sign out</a></p>
             </div>
@@ -180,6 +178,10 @@
     <script src="https://www.gstatic.com/firebasejs/4.5.0/firebase-auth.js"></script>
     <script type="text/javascript" src="cordova.js"></script>
     <script>
+        if (localStorage.getItem("firebase:authUser:AIzaSyBjtksPVatJX46Z1gTEseIpJgwn7BEbt6U:[DEFAULT]")) {
+            alert("You have logged in via facebook");
+        }
+
         document.addEventListener("deviceready", onDeviceReady, false);
 
         function onDeviceReady() {
@@ -196,9 +198,13 @@
             firebase.initializeApp(config);
         }
 
-            $("#fb").click(function () {
-                facebookConnectPlugin.login(["public_profile"], function success(){alert("login success")}, function failure(){alert("login failed")})
+        $("#fb").click(function () {
+            facebookConnectPlugin.login(["public_profile"], function success() {
+                alert("login success")
+            }, function failure() {
+                alert("login failed")
             })
+        })
 
         $("#fb-button").click(function () {
             var provider = new firebase.auth.FacebookAuthProvider();
@@ -210,8 +216,7 @@
                 var token = result.credential.accessToken;
                 // The signed-in user info.
                 var user = result.user;
-                alert("you have signed in");
-                // ...
+
             }).catch(function (error) {
                 // Handle Errors here.
                 var errorCode = error.code;
@@ -219,21 +224,6 @@
                 alert(errorMessage);
             });
         })
-        firebase.auth().getRedirectResult().then(function (result) {
-                if (result.credential) {
-                    // This gives you a Facebook Access Token.
-                    // You can use it to access the Google API.
-                    var token = result.credential.accessToken;
-                    // The signed-in user info.
-                    var user = result.user;
-                    alert("you have signed in");
-                    // ...
-                }
-            }).catch(function (error) {
-                // Handle Errors here.
-                var errorCode = error.code;
-                var errorMessage = error.message;
-            });
 
 
         $("#signOut").click(function () {

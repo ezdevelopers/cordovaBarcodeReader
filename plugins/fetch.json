@@ -74,7 +74,7 @@
   "cordova-plugin-facebook4": {
     "source": {
       "type": "registry",
-      "id": "cordova-plugin-facebook4"
+      "id": "https://github.com/jeduan/cordova-plugin-facebook4"
     },
     "is_top_level": true,
     "variables": {

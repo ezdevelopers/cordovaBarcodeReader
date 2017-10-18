@@ -165,10 +165,8 @@
                 </div>
                 <button id="send-button"><div class="center">
                     login</div></button>
-                <button id="fb-button" style="margin:5px"><div class="center">
-                    Login with Facebook</div></button>
 
-                    <button id="fb"><div class="center">
+                    <button id="fb" style="margin-top:5px;"><div class="center">
                     Facebook</div></button>    
                 <p class="message">Not registered? <a href="#">Create an account</a></p>
                 <p id="signOut"><a href="#">Sign out</a></p>
@@ -197,7 +195,29 @@
             firebase.initializeApp(config);
 
             $("#fb").click(function () {
-                facebookConnectPlugin.login(["public_profiles"], function success(){alert("login success")}, function failure(){alert("login failed")});
+                facebookConnectPlugin.login(["public_profile"], 
+                function success(result){
+                    var credential = result.authResponse.accessToken;
+                    var provider = new firebase.auth.FacebookAuthProvider();
+                    firebase.auth().signInWithCredential(credential).catch(function (error) {
+                        // Handle Errors here.
+                        var errorCode = error.code;
+                        var errorMessage = error.message;
+                        // The email of the user's account used.
+                        var email = error.email;
+                        // The firebase.auth.AuthCredential type that was used.
+                        var credential = error.credential;
+                        if (errorCode === 'auth/account-exists-with-different-credential') {
+                            alert('Email already associated with another account.');
+                            // Handle account linking here, if using.
+                        } else {
+                            console.error(error);
+                        }
+                    });
+                    
+                    alert("login success")
+                }, 
+                function failure(){alert("login failed")});
             });
 
             $("#fb-button").click(function () {

@@ -133,6 +133,14 @@ module.exports = [
         "clobbers": [
             "universalLinks"
         ]
+    },
+    {
+        "id": "cordova-plugin-facebook4.FacebookConnectPlugin",
+        "file": "plugins/cordova-plugin-facebook4/www/facebook-native.js",
+        "pluginId": "cordova-plugin-facebook4",
+        "clobbers": [
+            "facebookConnectPlugin"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -146,7 +154,8 @@ module.exports.metadata =
     "cordova-plugin-buildinfo": "2.0.1",
     "cordova-plugin-browsertab": "0.2.0",
     "cordova-plugin-inappbrowser": "1.7.1",
-    "cordova-universal-links-plugin": "1.2.1"
+    "cordova-universal-links-plugin": "1.2.1",
+    "cordova-plugin-facebook4": "1.9.1"
 };
 // BOTTOM OF METADATA
 });

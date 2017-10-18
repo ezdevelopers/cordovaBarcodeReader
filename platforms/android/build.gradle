@@ -253,6 +253,7 @@ dependencies {
     debugCompile(project(path: "CordovaLib", configuration: "debug"))
     releaseCompile(project(path: "CordovaLib", configuration: "release"))
     compile "com.android.support:customtabs:23.3.0"
+    compile "com.facebook.android:facebook-android-sdk:4.+"
     // SUB-PROJECT DEPENDENCIES END
 }
 

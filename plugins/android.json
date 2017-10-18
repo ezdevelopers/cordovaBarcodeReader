@@ -30,6 +30,11 @@
     },
     "cordova-universal-links-plugin": {
       "PACKAGE_NAME": "com.example.com"
+    },
+    "cordova-plugin-facebook4": {
+      "APP_ID": "1686989511333980",
+      "APP_NAME": "libraryApp",
+      "PACKAGE_NAME": "com.example.com"
     }
   },
   "dependent_plugins": {

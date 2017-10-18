@@ -178,27 +178,31 @@
     <script src="https://www.gstatic.com/firebasejs/4.5.0/firebase-auth.js"></script>
     <script type="text/javascript" src="cordova.js"></script>
     <script>
-        if (localStorage.getItem("firebase:authUser:AIzaSyBjtksPVatJX46Z1gTEseIpJgwn7BEbt6U:[DEFAULT]")) {
-            alert("You have logged in via facebook");
-        }
-
         document.addEventListener("deviceready", onDeviceReady, false);
+                    function onDeviceReady() {
+                alert("device is ready");
+                // Initialize Firebase
+                var config = {
+                    apiKey: "AIzaSyBjtksPVatJX46Z1gTEseIpJgwn7BEbt6U",
+                    authDomain: "enshelf.firebaseapp.com",
+                    databaseURL: "https://enshelf.firebaseio.com",
+                    projectId: "enshelf",
+                    storageBucket: "enshelf.appspot.com",
+                    messagingSenderId: "581315232250"
+                };
+                firebase.initializeApp(config);
+            }
 
-        function onDeviceReady() {
-            alert("device is ready");
-            // Initialize Firebase
-            var config = {
-                apiKey: "AIzaSyBjtksPVatJX46Z1gTEseIpJgwn7BEbt6U",
-                authDomain: "enshelf.firebaseapp.com",
-                databaseURL: "https://enshelf.firebaseio.com",
-                projectId: "enshelf",
-                storageBucket: "enshelf.appspot.com",
-                messagingSenderId: "581315232250"
-            };
-            firebase.initializeApp(config);
+    setTimeout(function () {
+        if (localStorage.getItem("firebase:authUser:AIzaSyBjtksPVatJX46Z1gTEseIpJgwn7BEbt6U:[DEFAULT]")) {
+                alert("You have logged in via facebook");
+        }else{
+           alert("You have not logged in via Facebook");
         }
 
-        $("#fb").click(function () {
+    }, 6000);
+    
+    $("#fb").click(function () {
             facebookConnectPlugin.login(["public_profile"], function success() {
                 alert("login success")
             }, function failure() {

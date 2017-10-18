@@ -177,8 +177,20 @@
     <script src="https://www.gstatic.com/firebasejs/4.5.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/4.5.0/firebase-auth.js"></script>
     <script type="text/javascript" src="cordova.js"></script>
-
+    <script src="//connect.facebook.net/en_US/sdk.js"></script>
     <script>
+          FB.init({
+                /**********************************************************************
+                 * TODO(Developer): Change the value below with your Facebook app ID. *
+                 **********************************************************************/
+                appId: '1686989511333980',
+                status: true,
+                xfbml: true,
+                version: 'v2.6'
+            });
+
+            FB.Event.subscribe('auth.authResponseChange', checkLoginState);
+            
         document.addEventListener("deviceready", onDeviceReady, false);
         function onDeviceReady() {
             alert("device is ready");

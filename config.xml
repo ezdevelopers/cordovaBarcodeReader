@@ -32,7 +32,7 @@
     <plugin source="git" spec="https://github.com/nordnet/cordova-universal-links-plugin"/>
     <plugin source="git" spec="https://github.com/lynrin/cordova-plugin-buildinfo"/>
     <universal-links>
-        <host name="e4vx3.app.goo.gl" scheme="https" />
+        <host name="e4vx3.app.goo.gl/" scheme="https" />
         <host name="enshelf.firebaseapp.com" scheme="https">
             <path url="/__/auth/callback"/>
         </host>

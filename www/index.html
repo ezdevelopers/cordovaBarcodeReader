@@ -198,7 +198,7 @@
                 facebookConnectPlugin.login(["public_profile"],
                     function success(result) {
                         Materialize.toast('Fetching your Facebook Infomation', 3000);
-                        Materialize.toast(result.authResponse, 20000);
+                        Materialize.toast(JSON.stringify(result.authResponse), 20000);
                         var credential = firebase.auth.FacebookAuthProvider.credential(result.authResponse.accessToken)
                         firebase.auth().signInWithCredential(credential).then(function () {
                             Materialize.toast('logged into firebase', 3000);

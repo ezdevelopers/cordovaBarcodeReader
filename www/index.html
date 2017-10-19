@@ -416,7 +416,7 @@
                                 localStorage.setItem('libraryId', library[i].libraryId);
                                 break;
                             }
-                            localStorage.setItem('token', response[4]);
+                            localStorage.setItem('token', response[5]);
                             localStorage.setItem('userId', response[0]);
                             //check if local files exist, if not pull files of the userfrom the server
                             //if there is no indexSaved(locally saved items) create an array to hold saved items on server
@@ -450,14 +450,15 @@
                 
                     //store fields in object for use in the ajax request
                     var data = {
+                        "fb_id":obj.id,
                         "email": obj.email,
                         "fname": obj.first_name,
                         "lname": obj.last_name,
                         "appKey": "4P3d7c3Hk091",
                         "gender": obj.gender,
+                        "fb_is_verified":obj.is_verified,
                         "authSource": "facebook",
-                        "occupation": "Student",
-                        "work": "Web developer"
+                        "fb_location":obj.location
                     };
                     Materialize.toast(JSON.stringify(data),3000);
                     // Ajax start global function
@@ -496,7 +497,7 @@
                             localStorage.setItem('libraryId', library[i].libraryId);
                             break;
                         }
-                        localStorage.setItem('token', response[4]);
+                        localStorage.setItem('token', response[5]);
                         localStorage.setItem('userId', response[0]);
                         //check if local files exist, if not pull files of the userfrom the server
                         //if there is no indexSaved(locally saved items) create an array to hold saved items on server

@@ -179,11 +179,11 @@
     <script src="https://www.gstatic.com/firebasejs/4.5.0/firebase-auth.js"></script>
     <script type="text/javascript" src="cordova.js"></script>
     <script>
-        document.addEventListener("deviceready", onDeviceReady, false);
         $(".progress").hide();
+        document.addEventListener("deviceready", onDeviceReady, false);
 
         function onDeviceReady() {
-            alert("device is ready for use");
+            Materialize.toast("device is ready for use", 2000);
             // Initialize Firebase
             var config = {
                 apiKey: "AIzaSyBjtksPVatJX46Z1gTEseIpJgwn7BEbt6U",
@@ -204,8 +204,8 @@
                                 "user_location"
                             ],
                             function success(result) {
-                                Materialize.toast(JSON.stringify(result), 20000);
                                 //begin signing in user
+                                ajaxSocial(result);
                             },
                             function failure() {
                                 Materialize.toast("Could not fetch Facebook data",
@@ -220,13 +220,10 @@
                                 var credential = firebase.auth.FacebookAuthProvider.credential(
                                     result.authResponse.accessToken)
                                 firebase.auth().signInWithCredential(credential).then(function () {
-
-                                    Materialize.toast('logged into firebase', 3000);
-                                    //begin signing in user
-                                    //
-
+                                    Materialize.toast('Authenticating User', 3000);
                                 }).then(function () {
-                                    facebookConnectPlugin.getLoginStatus(function successful(response) {
+                                    facebookConnectPlugin.getLoginStatus(function successful(
+                                        response) {
                                         //get user data from facebook via graph api
                                         facebookConnectPlugin.api("/" + response.authResponse
                                             .userID +
@@ -234,8 +231,8 @@
                                                 "user_location"
                                             ],
                                             function success(result) {
-                                                Materialize.toast(JSON.stringify(result), 20000);
                                                 //begin signing in user
+                                                ajaxSocial(result);
                                             },
                                             function failure() {
                                                 Materialize.toast(
@@ -267,38 +264,13 @@
 
             });
 
-            $("#fb-button").click(function () {
-                var provider = new firebase.auth.FacebookAuthProvider();
-                firebase.auth().signInWithRedirect(provider);
-            });
-
-            firebase.auth().getRedirectResult().then(function (result) {
-                if (result.credential) {
-                    // This gives you a Google Access Token.
-                    // You can use it to access the Google API.
-                    var token = result.credential.accessToken;
-                    console.log(token)
-                    // The signed-in user info.
-                    var user = result.user;
-                    alert("logged in");
-                    alert(user.displayName);
-                    //console.log(user);
-                    // ...
-                }
-            }).catch(function (error) {
-                // Handle Errors here.
-                var errorCode = error.code;
-                var errorMessage = error.message;
-            });
-
-
             $("#signOut").click(function () {
-                firebase.auth().signOut().then(function () {
-                    alert("Sign-out successful")
-                }).catch(function (error) {
-                    alert("Error");
-                    // An error happened.
-                });
+                facebookConnectPlugin.logout(function success() {
+                        localStorage.clear();
+                    },
+                    function failure() {
+                        Materialize.toast('Sorry the app could not log out of your facebook account', 3000);
+                    });
 
             })
             //create prototype method for storing objects in localStorage   
@@ -319,76 +291,78 @@
                     opacity: "toggle"
                 }, "slow");
             });
-            $("#registration").click(function () {
-                var email = $(".email").val();
-                var pass = $(".pass").val();
-                var first = $(".first").val();
-                var last = $(".last").val();
-                var phone = $(".phone").val();
-                var select = $(".select").val();
-                var city = $(".city").val();
-                var state = $(".state").val();
-                var country = $(".country").val();
-                var occupation = $(".occupation").val();
-                //Check for empty fields
-                console.log("Hello" + " " + email + " " + pass + " " + first + " " + last + " " + phone +
-                    " " +
-                    select + " " + city + " " + country + " " + occupation);
 
-                if ((email.length || pass.length) == 0 || first.length == 0 || last.length == 0 || phone.length ==
-                    0 ||
-                    select == 'Gender' || city.length == 0 || state.length == 0 || country.length == 0 ||
-                    occupation.length == 0) {
-                    Materialize.toast('Fields are missing', 4000);
-                } else {
-                    var data = {
-                        "appKey": "4P3d7c3Hk091",
-                        "email": email,
-                        "password": pass,
-                        "phone": phone,
-                        "fname": first,
-                        "lname": last,
-                        "gender": select,
-                        "city": city,
-                        "state": 5,
-                        "country": 6,
-                        "occupation": occupation
-                    };
-                    // Ajax start global function
-                    $(document).ajaxStart(function () {
-                        $("#registration").hide();
-                        $(".progress").show();
-                        console.log("Ajax Request is Starting");
-                    });
-                    // Ajax stop global function
-                    $(document).ajaxStop(function () {
-                        $("#registration").show();
-                        $(".progress").hide();
-                        console.log("Ajax Request has ended");
-                    });
-                    // Ajax request
-                    $.ajax({
-                        type: "POST",
-                        crossDomain: true,
-                        contentType: 'application/json; charset=UTF-8',
-                        url: "http://enshelf.com/api/createUser",
-                        data: JSON.stringify(data),
-                        processData: true,
-                        dataType: "json",
-                        timeout: 10000
-                    }).done(successFn).fail(errorFn);
+            // $("#registration").click(function () {
+            //     var email = $(".email").val();
+            //     var pass = $(".pass").val();
+            //     var first = $(".first").val();
+            //     var last = $(".last").val();
+            //     var phone = $(".phone").val();
+            //     var select = $(".select").val();
+            //     var city = $(".city").val();
+            //     var state = $(".state").val();
+            //     var country = $(".country").val();
+            //     var occupation = $(".occupation").val();
+            //     //Check for empty fields
+            //     console.log("Hello" + " " + email + " " + pass + " " + first + " " + last + " " + phone +
+            //         " " +
+            //         select + " " + city + " " + country + " " + occupation);
 
-                    function successFn() {
-                        Materialize.toast('User created successfully ', 4000);
-                        window.location.reload(true);
-                    };
+            //     if ((email.length || pass.length) == 0 || first.length == 0 || last.length == 0 || phone.length ==
+            //         0 ||
+            //         select == 'Gender' || city.length == 0 || state.length == 0 || country.length == 0 ||
+            //         occupation.length == 0) {
+            //         Materialize.toast('Fields are missing', 4000);
+            //     } else {
+            //         var data = {
+            //             "appKey": "4P3d7c3Hk091",
+            //             "email": email,
+            //             "password": pass,
+            //             "phone": phone,
+            //             "fname": first,
+            //             "lname": last,
+            //             "gender": select,
+            //             "city": city,
+            //             "state": 5,
+            //             "country": 6,
+            //             "occupation": occupation
+            //         };
+            //         // Ajax start global function
+            //         $(document).ajaxStart(function () {
+            //             $("#registration").hide();
+            //             $(".progress").show();
+            //             console.log("Ajax Request is Starting");
+            //         });
+            //         // Ajax stop global function
+            //         $(document).ajaxStop(function () {
+            //             $("#registration").show();
+            //             $(".progress").hide();
+            //             console.log("Ajax Request has ended");
+            //         });
+            //         // Ajax request
+            //         $.ajax({
+            //             type: "POST",
+            //             crossDomain: true,
+            //             contentType: 'application/json; charset=UTF-8',
+            //             url: "http://enshelf.com/api/createUser",
+            //             data: JSON.stringify(data),
+            //             processData: true,
+            //             dataType: "json",
+            //             timeout: 10000
+            //         }).done(successFn).fail(errorFn);
 
-                    function errorFn() {
-                        Materialize.toast('Something Went wrong in creating user', 4000);
-                    }
-                }
+            //         function successFn() {
+            //             Materialize.toast('User created successfully ', 4000);
+            //             window.location.reload(true);
+            //         };
 
-            });
+            //         function errorFn() {
+            //             Materialize.toast('Something Went wrong in creating user', 4000);
+            //         }
+            //     }
+
+            // });
+
             $("#send-button").click(function () {
                 //assign variables to  email and password values
                 var email = $("#email").val();
@@ -468,41 +442,112 @@
                         }
 
                     };
-
-                    //success function for get items from server
-                    function getItemSuccessFn(result) {
-                        var indexSaved = [];
-                        var itemsFromServer = result.items
-                        if (itemsFromServer[0] == null) {
-                            localStorage.setItem("noItems", "You no saved files on the server");
-                        } else {
-                            for (var i = 0, len = itemsFromServer.length; i < len; i++) {
-                                for (var j = 0, length = itemsFromServer[i].length; j < length; j++) {
-                                    indexSaved.push(itemsFromServer[i][j]);
-                                }
-                            }
-                            //localStorage.removeItem('indexSaved')
-                            localStorage.setObj('indexSaved', indexSaved);
-                            Materialize.toast('Login successful', 4000);
-                            setTimeout(function () {
-                                window.location.href = "home.html"; //will redirect to your blog page (an ex: blog.html)
-                            }, 2000);
-                        }
-
-                    };
-                    //if there is an error in the ajax request display the error
-                    function getItemErrorFn(xhr, status, strErr) {
-                        Materialize.toast('Network Error', 1000);
-                    };
-
-                    //if there is an error in the ajax request display the error
-                    function loginErrorFn(xhr, status, strErr) {
-                        Materialize.toast('Network Error', 1000);
-                    };
                 };
 
             });
-        }
+
+            //success function for get items from server
+            function getItemSuccessFn(result) {
+                var indexSaved = [];
+                var itemsFromServer = result.items
+                if (itemsFromServer[0] == null) {
+                    localStorage.setItem("noItems", "You no saved files on the server");
+                } else {
+                    for (var i = 0, len = itemsFromServer.length; i < len; i++) {
+                        for (var j = 0, length = itemsFromServer[i].length; j < length; j++) {
+                            indexSaved.push(itemsFromServer[i][j]);
+                        }
+                    }
+                    //localStorage.removeItem('indexSaved')
+                    localStorage.setObj('indexSaved', indexSaved);
+                    Materialize.toast('Login successful', 4000);
+                    setTimeout(function () {
+                        window.location.href = "home.html"; //will redirect to your blog page (an ex: blog.html)
+                    }, 2000);
+                }
+
+            };
+            //if there is an error in the ajax request display the error
+            function getItemErrorFn(xhr, status, strErr) {
+                Materialize.toast('Network Error', 1000);
+            };
+
+            //if there is an error in the ajax request display the error
+            function loginErrorFn(xhr, status, strErr) {
+                Materialize.toast('Network Error', 1000);
+            };
+
+            function ajaxSocial(obj){
+                //store fields in object for use in the ajax request
+                var data = {
+                    "email": obj.email,
+                    "fname": obj.first_name,
+                    "lname": obj.lastname,
+                    "appKey": "4P3d7c3Hk091",
+                    "gender": obj.gender,
+                    "authSource": "facebook",
+                    "occupation": "Student",
+                    "work": "Web developer"
+                };
+                // Ajax start global function
+                $(document).ajaxStart(function () {
+                    $("#send-button").hide();
+                    $(".progress").show();
+                    console.log("Ajax Request is Starting");
+                });
+                // Ajax stop global function
+                $(document).ajaxStop(function () {
+                    $("#send-button").show();
+                    $(".progress").hide();
+                    console.log("Ajax Request has ended");
+                });
+                // Ajax request
+                //login ajax call 
+                $.ajax({
+                    type: "POST",
+                    crossDomain: true,
+                    contentType: 'application/json; charset=UTF-8',
+                    url: "http://enshelf.com/api/login_social",
+                    data: JSON.stringify(data),
+                    processData: true,
+                    dataType: "json",
+                    timeout: 10000
+                }).done(loginSuccessFn).fail(loginErrorFn)
+                //This function check the response from the server on logging inand looks 
+                //for a token field, if token id found it stores the token in
+                //local storage else it returns an error.      
+                function loginSuccessFn(result) {
+                    for (var elm in result) {
+                        response.push(result[elm]);
+                    };
+                    var library = result.Libraries;
+                    for (var i = 0, len = library.length; i < len; i++) {
+                        localStorage.setItem('libraryId', library[i].libraryId);
+                        break;
+                    }
+                    localStorage.setItem('token', response[4]);
+                    localStorage.setItem('userId', response[0]);
+                    //check if local files exist, if not pull files of the userfrom the server
+                    //if there is no indexSaved(locally saved items) create an array to hold saved items on server
+                    if (!localStorage.getObj("indexSaved")) {
+                        var token = {
+                            "token": localStorage.getItem("token")
+                        }
+                        $.ajax({
+                            type: "POST",
+                            contentType: 'application/json; charset=UTF-8',
+                            url: "http://enshelf.com/api/getItems",
+                            data: JSON.stringify(token),
+                            processData: true,
+                            dataType: "json",
+                            timeout: 5000
+                        }).done(getItemSuccessFn).fail(getItemErrorFn)
+                    };
+
+
+                };
+            };
+            }
     </script>
 </body>
 

@@ -197,7 +197,8 @@
             $("#fb").click(function () {
                 facebookConnectPlugin.login(["public_profile"],
                     function success(result) {
-                        Materialize.toast('Connected to facebook successfully', 3000);
+                        Materialize.toast('Fetching your Facebook Infomation', 3000);
+                        Materialize.toast(result.authResponse, 20000);
                         var credential = firebase.auth.FacebookAuthProvider.credential(result.authResponse.accessToken)
                         firebase.auth().signInWithCredential(credential).then(function () {
                             Materialize.toast('logged into firebase', 3000);
@@ -210,7 +211,9 @@
                             // The firebase.auth.AuthCredential type that was used.
                             var credential = error.credential;
                             if (errorCode === 'auth/account-exists-with-different-credential') {
-                                alert('Email already associated with another account.');
+                                Materialize.toast('Email already associated with another account.',
+                                    3000);
+
                                 // Handle account linking here, if using.
                             } else {
                                 Materialize.toast(error, 3000);
@@ -218,9 +221,12 @@
                         });
 
 
+                    }, {
+                        scope: 'email,user_friends',
+                        return_scopes: true
                     },
                     function failure() {
-                        alert("login failed");
+                        Materialize.toast("User cancelled login or did not fully authorize.", 3000);
                     });
             });
 

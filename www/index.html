@@ -195,47 +195,42 @@
             firebase.initializeApp(config);
 
             $("#fb").click(function () {
-                facebookConnectPlugin.login(["public_profile"],
+                facebookConnectPlugin.login(["email"],
                     function success(result) {
                         //fetch te token from facebook
                         Materialize.toast('Fetching your Facebook Infomation', 3000);
-                        Materialize.toast(JSON.stringify(result.authResponse), 20000);
-                        alert(JSON.stringify(result));
+                        Materialize.toast(JSON.stringify(result.authResponse), 5000);
+                       // alert(JSON.stringify(result));
 
                         //call the graph api for user details
-                        facebookConnectPlugin.api("/me", ["pubilc_profile", "user_friends"], function success(result) {
-                                Materialize.toast(JSON.stringify(result), 20000);
-                                alert(JSON.stringify(result));
-                            },
-                            function failure() {
-                                alert("Could not fetch facebook data")
-                            });
+                        facebookConnectPlugin.getLoginStatus(function successful(response) {
+                            if (response.status == "connected") {
+                                facebookConnectPlugin.api("/" + response.authResponse.userID +"?fields=first_name,last_name,email,gender,age_range,is_verified,location", ["user_location"],
+                                  function success(result) {
+                                        Materialize.toast(JSON.stringify(result), 20000);
+                                    },
+                                    function failure() {
+                                        Materialize.toast("Could not fetch Facebook data",20000);
+                                    });
 
-                        var credential = firebase.auth.FacebookAuthProvider.credential(result.authResponse.accessToken)
-                        firebase.auth().signInWithCredential(credential).then(function () {
-                            Materialize.toast('logged into firebase', 3000);
-                        }).catch(function (error) {
-                            // Handle Errors here.
-                            var errorCode = error.code;
-                            var errorMessage = error.message;
-                            // The email of the user's account used.
-                            var email = error.email;
-                            // The firebase.auth.AuthCredential type that was used.
-                            var credential = error.credential;
-                            if (errorCode === 'auth/account-exists-with-different-credential') {
-                                Materialize.toast('Email already associated with another account.',
-                                    3000);
+                                var credential = firebase.auth.FacebookAuthProvider.credential(result.authResponse.accessToken)
+                                firebase.auth().signInWithCredential(credential).then(function () {
+                                    Materialize.toast('logged into firebase', 3000);
+                                }).catch(function (error) {
+                                    if (errorCode === 'auth/account-exists-with-different-credential') {
+                                        Materialize.toast('Email already associated with another account.',3000);
 
-                                // Handle account linking here, if using.
-                            } else {
-                                Materialize.toast(error, 3000);
+                                        // Handle account linking here, if using.
+                                    } else {
+                                        Materialize.toast(error, 3000);
+                                    }
+                                });
                             }
+
                         });
 
 
-                    }, {
-                        scope: 'email,user_friends',
-                        return_scopes: true
+
                     },
                     function failure() {
                         Materialize.toast("User cancelled login or did not fully authorize.", 3000);
@@ -419,7 +414,7 @@
                                 localStorage.setItem('libraryId', library[i].libraryId);
                                 break;
                             }
-                            localStorage.setItem('token', response[3]);
+                            localStorage.setItem('token', response[4]);
                             localStorage.setItem('userId', response[0]);
                             //check if local files exist, if not pull files of the userfrom the server
                             //if there is no indexSaved(locally saved items) create an array to hold saved items on server

@@ -1,5 +1,3 @@
-
-
 function logout(){
     var data = {
         "token": localStorage.getItem("token")
@@ -24,6 +22,6 @@ function logout(){
     };
     //if there is an error in the ajax request display the error
     function errorFn(xhr, status, strErr) {
-        Materialize.toast('There seems to be an Error in the network', 4000);
+        Materialize.toast('There seems to be an Error in connection' + strErr, 4000);
     };
 }

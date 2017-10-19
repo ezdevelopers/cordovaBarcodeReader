@@ -420,20 +420,24 @@
                             localStorage.setItem('userId', response[0]);
                             //check if local files exist, if not pull files of the userfrom the server
                             //if there is no indexSaved(locally saved items) create an array to hold saved items on server
-                            if (!localStorage.getObj("indexSaved")) {
-                                var token = {
-                                    "token": localStorage.getItem("token")
-                                }
-                                $.ajax({
-                                    type: "POST",
-                                    contentType: 'application/json; charset=UTF-8',
-                                    url: "http://enshelf.com/api/getItems",
-                                    data: JSON.stringify(token),
-                                    processData: true,
-                                    dataType: "json",
-                                    timeout: 5000
-                                }).done(getItemSuccessFn).fail(getItemErrorFn)
-                            };
+                            Materialize.toast('Login successful', 4000);
+                                setTimeout(function () {
+                                    window.location.href = "home.html"; //will redirect to your blog page (an ex: blog.html)
+                                }, 2000);
+                            // if (!localStorage.getObj("indexSaved")) {
+                            //     var token = {
+                            //         "token": localStorage.getItem("token")
+                            //     }
+                            //     $.ajax({
+                            //         type: "POST",
+                            //         contentType: 'application/json; charset=UTF-8',
+                            //         url: "http://enshelf.com/api/getItems",
+                            //         data: JSON.stringify(token),
+                            //         processData: true,
+                            //         dataType: "json",
+                            //         timeout: 5000
+                            //     }).done(getItemSuccessFn).fail(getItemErrorFn)
+                            // };
 
                         } else {
                             Materialize.toast('Incorrect Username/Password', 4000);
@@ -499,22 +503,26 @@
                         }
                         localStorage.setItem('token', response[5]);
                         localStorage.setItem('userId', response[0]);
+                         Materialize.toast('Login successful', 4000);
+                            setTimeout(function () {
+                                window.location.href = "home.html"; //will redirect to your blog page (an ex: blog.html)
+                            }, 2000);
                         //check if local files exist, if not pull files of the userfrom the server
                         //if there is no indexSaved(locally saved items) create an array to hold saved items on server
-                        if (!localStorage.getObj("indexSaved")) {
-                            var token = {
-                                "token": localStorage.getItem("token")
-                            }
-                            $.ajax({
-                                type: "POST",
-                                contentType: 'application/json; charset=UTF-8',
-                                url: "http://enshelf.com/api/getItems",
-                                data: JSON.stringify(token),
-                                processData: true,
-                                dataType: "json",
-                                timeout: 5000
-                            }).done(getItemSuccessFn).fail(getItemErrorFn)
-                        };
+                        // if (!localStorage.getObj("indexSaved")) {
+                        //     var token = {
+                        //         "token": localStorage.getItem("token")
+                        //     }
+                        //     $.ajax({
+                        //         type: "POST",
+                        //         contentType: 'application/json; charset=UTF-8',
+                        //         url: "http://enshelf.com/api/getItems",
+                        //         data: JSON.stringify(token),
+                        //         processData: true,
+                        //         dataType: "json",
+                        //         timeout: 5000
+                        //     }).done(getItemSuccessFn).fail(getItemErrorFn)
+                        //};
 
 
                     };

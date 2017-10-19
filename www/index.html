@@ -197,8 +197,20 @@
             $("#fb").click(function () {
                 facebookConnectPlugin.login(["public_profile"],
                     function success(result) {
+                        //fetch te token from facebook
                         Materialize.toast('Fetching your Facebook Infomation', 3000);
                         Materialize.toast(JSON.stringify(result.authResponse), 20000);
+                        alert(JSON.stringify(result));
+
+                        //call the graph api for user details
+                        facebookConnectPlugin.api("/me", ["pubilc_profile", "user_friends"], function success(result) {
+                                Materialize.toast(JSON.stringify(result), 20000);
+                                alert(JSON.stringify(result));
+                            },
+                            function failure() {
+                                alert("Could not fetch facebook data")
+                            });
+
                         var credential = firebase.auth.FacebookAuthProvider.credential(result.authResponse.accessToken)
                         firebase.auth().signInWithCredential(credential).then(function () {
                             Materialize.toast('logged into firebase', 3000);

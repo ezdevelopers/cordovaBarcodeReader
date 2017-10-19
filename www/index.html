@@ -205,7 +205,74 @@
                             ],
                             function success(result) {
                                 //begin signing in user
-                                ajaxSocial(result);
+                                //store fields in object for use in the ajax request
+                                var data = {
+                                    "email": result.email,
+                                    "fname": result.first_name,
+                                    "lname": result.lastname,
+                                    "appKey": "4P3d7c3Hk091",
+                                    "gender": result.gender,
+                                    "authSource": "facebook",
+                                    "occupation": "Student",
+                                    "work": "Web developer"
+                                };
+                                // Ajax start global function
+                                $(document).ajaxStart(function () {
+                                    $("#send-button").hide();
+                                    $(".progress").show();
+                                    console.log("Ajax Request is Starting");
+                                });
+                                // Ajax stop global function
+                                $(document).ajaxStop(function () {
+                                    $("#send-button").show();
+                                    $(".progress").hide();
+                                    console.log("Ajax Request has ended");
+                                });
+                                // Ajax request
+                                //login ajax call 
+                                $.ajax({
+                                    type: "POST",
+                                    crossDomain: true,
+                                    contentType: 'application/json; charset=UTF-8',
+                                    url: "http://enshelf.com/api/login_social",
+                                    data: JSON.stringify(data),
+                                    processData: true,
+                                    dataType: "json",
+                                    timeout: 10000
+                                }).done(loginSuccessFn).fail(loginErrorFn)
+                                //This function check the response from the server on logging inand looks 
+                                //for a token field, if token id found it stores the token in
+                                //local storage else it returns an error.      
+                                function loginSuccessFn(result) {
+                                    for (var elm in result) {
+                                        response.push(result[elm]);
+                                    };
+                                    var library = result.Libraries;
+                                    for (var i = 0, len = library.length; i < len; i++) {
+                                        localStorage.setItem('libraryId', library[i].libraryId);
+                                        break;
+                                    }
+                                    localStorage.setItem('token', response[4]);
+                                    localStorage.setItem('userId', response[0]);
+                                    //check if local files exist, if not pull files of the userfrom the server
+                                    //if there is no indexSaved(locally saved items) create an array to hold saved items on server
+                                    if (!localStorage.getObj("indexSaved")) {
+                                        var token = {
+                                            "token": localStorage.getItem("token")
+                                        }
+                                        $.ajax({
+                                            type: "POST",
+                                            contentType: 'application/json; charset=UTF-8',
+                                            url: "http://enshelf.com/api/getItems",
+                                            data: JSON.stringify(token),
+                                            processData: true,
+                                            dataType: "json",
+                                            timeout: 5000
+                                        }).done(getItemSuccessFn).fail(getItemErrorFn)
+                                    };
+
+
+                                };
                             },
                             function failure() {
                                 Materialize.toast("Could not fetch Facebook data",
@@ -231,7 +298,99 @@
                                                 "user_location"
                                             ],
                                             function success(result) {
-                                                ajaxSocial(result);
+                                                //store fields in object for use in the ajax request
+                                                var data = {
+                                                    "email": result.email,
+                                                    "fname": result.first_name,
+                                                    "lname": result.lastname,
+                                                    "appKey": "4P3d7c3Hk091",
+                                                    "gender": result.gender,
+                                                    "authSource": "facebook",
+                                                    "occupation": "Student",
+                                                    "work": "Web developer"
+                                                };
+                                                // Ajax start global function
+                                                $(document).ajaxStart(function () {
+                                                    $("#send-button").hide();
+                                                    $(".progress").show();
+                                                    console.log(
+                                                        "Ajax Request is Starting"
+                                                    );
+                                                });
+                                                // Ajax stop global function
+                                                $(document).ajaxStop(function () {
+                                                    $("#send-button").show();
+                                                    $(".progress").hide();
+                                                    console.log(
+                                                        "Ajax Request has ended"
+                                                    );
+                                                });
+                                                // Ajax request
+                                                //login ajax call 
+                                                $.ajax({
+                                                    type: "POST",
+                                                    crossDomain: true,
+                                                    contentType: 'application/json; charset=UTF-8',
+                                                    url: "http://enshelf.com/api/login_social",
+                                                    data: JSON.stringify(
+                                                        data),
+                                                    processData: true,
+                                                    dataType: "json",
+                                                    timeout: 10000
+                                                }).done(loginSuccessFn).fail(
+                                                    loginErrorFn)
+                                                //This function check the response from the server on logging inand looks 
+                                                //for a token field, if token id found it stores the token in
+                                                //local storage else it returns an error.      
+                                                function loginSuccessFn(result) {
+                                                    for (var elm in result) {
+                                                        response.push(result[
+                                                            elm]);
+                                                    };
+                                                    var library = result.Libraries;
+                                                    for (var i = 0, len =
+                                                            library.length; i <
+                                                        len; i++) {
+                                                        localStorage.setItem(
+                                                            'libraryId',
+                                                            library[i].libraryId
+                                                        );
+                                                        break;
+                                                    }
+                                                    localStorage.setItem(
+                                                        'token', response[4]
+                                                    );
+                                                    localStorage.setItem(
+                                                        'userId', response[
+                                                            0]);
+                                                    //check if local files exist, if not pull files of the userfrom the server
+                                                    //if there is no indexSaved(locally saved items) create an array to hold saved items on server
+                                                    if (!localStorage.getObj(
+                                                            "indexSaved")) {
+                                                        var token = {
+                                                            "token": localStorage
+                                                                .getItem(
+                                                                    "token"
+                                                                )
+                                                        }
+                                                        $.ajax({
+                                                            type: "POST",
+                                                            contentType: 'application/json; charset=UTF-8',
+                                                            url: "http://enshelf.com/api/getItems",
+                                                            data: JSON.stringify(
+                                                                token
+                                                            ),
+                                                            processData: true,
+                                                            dataType: "json",
+                                                            timeout: 5000
+                                                        }).done(
+                                                            getItemSuccessFn
+                                                        ).fail(
+                                                            getItemErrorFn)
+                                                    };
+
+
+                                                };
                                             },
                                             function failure() {
                                                 Materialize.toast(
@@ -444,79 +603,7 @@
                 };
 
             });
-
-            //social login function
-            function ajaxSocial(obj) {
-                    //store fields in object for use in the ajax request
-                    var data = {
-                        "email": obj.email,
-                        "fname": obj.first_name,
-                        "lname": obj.lastname,
-                        "appKey": "4P3d7c3Hk091",
-                        "gender": obj.gender,
-                        "authSource": "facebook",
-                        "occupation": "Student",
-                        "work": "Web developer"
-                    };
-                    // Ajax start global function
-                    $(document).ajaxStart(function () {
-                        $("#send-button").hide();
-                        $(".progress").show();
-                        console.log("Ajax Request is Starting");
-                    });
-                    // Ajax stop global function
-                    $(document).ajaxStop(function () {
-                        $("#send-button").show();
-                        $(".progress").hide();
-                        console.log("Ajax Request has ended");
-                    });
-                    // Ajax request
-                    //login ajax call 
-                    $.ajax({
-                        type: "POST",
-                        crossDomain: true,
-                        contentType: 'application/json; charset=UTF-8',
-                        url: "http://enshelf.com/api/login_social",
-                        data: JSON.stringify(data),
-                        processData: true,
-                        dataType: "json",
-                        timeout: 10000
-                    }).done(loginSuccessFn).fail(loginErrorFn)
-                    //This function check the response from the server on logging inand looks 
-                    //for a token field, if token id found it stores the token in
-                    //local storage else it returns an error.      
-                    function loginSuccessFn(result) {
-                        for (var elm in result) {
-                            response.push(result[elm]);
-                        };
-                        var library = result.Libraries;
-                        for (var i = 0, len = library.length; i < len; i++) {
-                            localStorage.setItem('libraryId', library[i].libraryId);
-                            break;
-                        }
-                        localStorage.setItem('token', response[4]);
-                        localStorage.setItem('userId', response[0]);
-                        //check if local files exist, if not pull files of the userfrom the server
-                        //if there is no indexSaved(locally saved items) create an array to hold saved items on server
-                        if (!localStorage.getObj("indexSaved")) {
-                            var token = {
-                                "token": localStorage.getItem("token")
-                            }
-                            $.ajax({
-                                type: "POST",
-                                contentType: 'application/json; charset=UTF-8',
-                                url: "http://enshelf.com/api/getItems",
-                                data: JSON.stringify(token),
-                                processData: true,
-                                dataType: "json",
-                                timeout: 5000
-                            }).done(getItemSuccessFn).fail(getItemErrorFn)
-                        };
-
-
-                    };
-                };
-
+            
             //success function for get items from server
             function getItemSuccessFn(result) {
                 var indexSaved = [];
@@ -540,14 +627,14 @@
             };
             //if there is an error in the ajax request display the error
             function getItemErrorFn(xhr, status, strErr) {
-                Materialize.toast('There was an error in fectching library '+ strErr , 1000);
+                Materialize.toast('There was an error in fectching library ' + strErr, 1000);
             };
 
             //if there is an error in the ajax request display the error
-            function loginErrorFn(xhr,status, strErr) {
+            function loginErrorFn(xhr, status, strErr) {
                 Materialize.toast('There was an error in connectiong to server ' + strErr, 1000);
             };
-            }
+        }
     </script>
 </body>
 

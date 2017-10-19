@@ -196,26 +196,26 @@
 
             $("#fb").click(function () {
                 facebookConnectPlugin.login(["public_profile"],
-                    function success() {
-                        Materialize.toast('Connected to facebook successfully', 4000);
-                        alert("login success");
-                        // var credential = result.authResponse.accessToken;
-                        // var provider = new firebase.auth.FacebookAuthProvider();
-                        // firebase.auth().signInWithCredential(credential).catch(function (error) {
-                        //     // Handle Errors here.
-                        //     var errorCode = error.code;
-                        //     var errorMessage = error.message;
-                        //     // The email of the user's account used.
-                        //     var email = error.email;
-                        //     // The firebase.auth.AuthCredential type that was used.
-                        //     var credential = error.credential;
-                        //     if (errorCode === 'auth/account-exists-with-different-credential') {
-                        //         alert('Email already associated with another account.');
-                        //         // Handle account linking here, if using.
-                        //     } else {
-                        //         console.error(error);
-                        //     }
-                        // });
+                    function success(result) {
+                        Materialize.toast('Connected to facebook successfully', 3000);
+                        var credential = firebase.auth.FacebookAuthProvider.credential(result.authResponse.accessToken)
+                        firebase.auth().signInWithCredential(credential).then(function () {
+                            Materialize.toast('logged into firebase', 3000);
+                        }).catch(function (error) {
+                            // Handle Errors here.
+                            var errorCode = error.code;
+                            var errorMessage = error.message;
+                            // The email of the user's account used.
+                            var email = error.email;
+                            // The firebase.auth.AuthCredential type that was used.
+                            var credential = error.credential;
+                            if (errorCode === 'auth/account-exists-with-different-credential') {
+                                alert('Email already associated with another account.');
+                                // Handle account linking here, if using.
+                            } else {
+                                Materialize.toast(error, 3000);
+                            }
+                        });
 
 
                     },

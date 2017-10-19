@@ -180,6 +180,7 @@
     <script type="text/javascript" src="cordova.js"></script>
     <script>
         document.addEventListener("deviceready", onDeviceReady, false);
+        $(".progress").hide();
 
         function onDeviceReady() {
             alert("device is ready for use");
@@ -195,46 +196,75 @@
             firebase.initializeApp(config);
 
             $("#fb").click(function () {
-                facebookConnectPlugin.login(["email"],
-                    function success(result) {
-                        //fetch te token from facebook
-                        Materialize.toast('Fetching your Facebook Infomation', 3000);
-                        Materialize.toast(JSON.stringify(result.authResponse), 5000);
-                       // alert(JSON.stringify(result));
+                //get login status then call the graph api for user details
+                facebookConnectPlugin.getLoginStatus(function successful(response) {
+                    if (response.status == "connected") {
+                        facebookConnectPlugin.api("/" + response.authResponse.userID +
+                            "?fields=first_name,last_name,email,gender,age_range,is_verified,location", [
+                                "user_location"
+                            ],
+                            function success(result) {
+                                Materialize.toast(JSON.stringify(result), 20000);
+                                //begin signing in user
+                            },
+                            function failure() {
+                                Materialize.toast("Could not fetch Facebook data",
+                                    20000);
+                            });
+                    } else {
+                        facebookConnectPlugin.login(["email"],
+                            function success(result) {
+                                //fetch the token from facebook
+                                Materialize.toast('Fetching your Facebook Infomation', 3000);
 
-                        //call the graph api for user details
-                        facebookConnectPlugin.getLoginStatus(function successful(response) {
-                            if (response.status == "connected") {
-                                facebookConnectPlugin.api("/" + response.authResponse.userID +"?fields=first_name,last_name,email,gender,age_range,is_verified,location", ["user_location"],
-                                  function success(result) {
-                                        Materialize.toast(JSON.stringify(result), 20000);
-                                    },
-                                    function failure() {
-                                        Materialize.toast("Could not fetch Facebook data",20000);
-                                    });
-
-                                var credential = firebase.auth.FacebookAuthProvider.credential(result.authResponse.accessToken)
+                                var credential = firebase.auth.FacebookAuthProvider.credential(
+                                    result.authResponse.accessToken)
                                 firebase.auth().signInWithCredential(credential).then(function () {
-                                    Materialize.toast('logged into firebase', 3000);
-                                }).catch(function (error) {
-                                    if (errorCode === 'auth/account-exists-with-different-credential') {
-                                        Materialize.toast('Email already associated with another account.',3000);
 
-                                        // Handle account linking here, if using.
+                                    Materialize.toast('logged into firebase', 3000);
+                                    //begin signing in user
+                                    //
+
+                                }).then(function () {
+                                    facebookConnectPlugin.getLoginStatus(function successful(response) {
+                                        //get user data from facebook via graph api
+                                        facebookConnectPlugin.api("/" + response.authResponse
+                                            .userID +
+                                            "?fields=first_name,last_name,email,gender,age_range,is_verified,location", [
+                                                "user_location"
+                                            ],
+                                            function success(result) {
+                                                Materialize.toast(JSON.stringify(result), 20000);
+                                                //begin signing in user
+                                            },
+                                            function failure() {
+                                                Materialize.toast(
+                                                    "Could not fetch Facebook data",
+                                                    20000);
+                                            });
+                                    });
+                                }).catch(function (error) {
+                                    if (errorCode ===
+                                        'auth/account-exists-with-different-credential') {
+                                        Materialize.toast(
+                                            'Email already associated with another account.',
+                                            3000);
                                     } else {
                                         Materialize.toast(error, 3000);
                                     }
                                 });
-                            }
+                            },
+                            function failure() {
+                                Materialize.toast(
+                                    "User cancelled login or did not fully authorize.",
+                                    3000);
+                            });
+                    }
 
-                        });
+                });
 
 
 
-                    },
-                    function failure() {
-                        Materialize.toast("User cancelled login or did not fully authorize.", 3000);
-                    });
             });
 
             $("#fb-button").click(function () {
@@ -282,7 +312,6 @@
             var response = [];
             var libraryInfo = [];
             //hide ajax functionality
-            $(".progress").hide();
 
             $('.message a').click(function () {
                 $('.dform').animate({

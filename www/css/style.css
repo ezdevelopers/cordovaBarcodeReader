@@ -39,6 +39,8 @@ html {
     -o-text-size-adjust: none;
     text-size-adjust: none;
 }
+
+
 /**
  *
  * Pull down styles
@@ -84,8 +86,21 @@ html {
     }
 }
 
+nav .button-collapse i {
+    width: 56px;
+    display: block;
+    margin: auto auto;
+}
+nav .button-collapse{
+    margin:0 10px;
+}
+
+nav a.library{
+    margin-left:-30px;
+}
 
 /* pullDown Style */
+
 .filter-p {
     position: relative;
     z-index: 2;
@@ -93,7 +108,8 @@ html {
     padding: 10px;
     margin: 0 0 10px 0;
 }
-.pullDownText{
+
+.pullDownText {
     padding-left: 40px;
 }
 

@@ -160,8 +160,8 @@
             <div class="dform login-form">
                 <input id="email" type="text" placeholder="email" />
                 <input id="password" type="password" placeholder="password" />
-                <div class="progress">
-                    <div class="indeterminate"></div>
+                <div id="load" class="">
+                    <div id="loader" class=""></div>
                 </div>
                 <button id="send-button"><div class="center">
                     login</div></button>
@@ -179,7 +179,8 @@
     <script src="https://www.gstatic.com/firebasejs/4.5.0/firebase-auth.js"></script>
     <script type="text/javascript" src="cordova.js"></script>
     <script>
-        $(".progress").hide();
+         var response = [];
+         var libraryInfo = [];
         document.addEventListener("deviceready", onDeviceReady, false);
 
         function onDeviceReady() {
@@ -280,8 +281,6 @@
             Storage.prototype.getObj = function (key) {
                 return JSON.parse(this.getItem(key))
             }
-            var response = [];
-            var libraryInfo = [];
             //hide ajax functionality
 
             $('.message a').click(function () {
@@ -381,13 +380,15 @@
                     // Ajax start global function
                     $(document).ajaxStart(function () {
                         $("#send-button").hide();
-                        $(".progress").show();
+                        $("#load").addClass("progress");
+                        $("#loader").addClass("indeterminate");
                         console.log("Ajax Request is Starting");
                     });
                     // Ajax stop global function
                     $(document).ajaxStop(function () {
                         $("#send-button").show();
-                        $(".progress").hide();
+                        $("#load").removeClass("progress");
+                        $("#loader").removeClass("indeterminate");
                         console.log("Ajax Request has ended");
                     });
                     // Ajax request
@@ -411,33 +412,30 @@
                             for (var elm in result) {
                                 response.push(result[elm]);
                             };
+                            console.log(response);
                             var library = result.Libraries;
                             for (var i = 0, len = library.length; i < len; i++) {
                                 localStorage.setItem('libraryId', library[i].libraryId);
                                 break;
                             }
-                            localStorage.setItem('token', response[5]);
+                            localStorage.setItem('token', response[4]);
                             localStorage.setItem('userId', response[0]);
                             //check if local files exist, if not pull files of the userfrom the server
                             //if there is no indexSaved(locally saved items) create an array to hold saved items on server
-                            Materialize.toast('Login successful', 4000);
-                                setTimeout(function () {
-                                    window.location.href = "home.html"; //will redirect to your blog page (an ex: blog.html)
-                                }, 2000);
-                            // if (!localStorage.getObj("indexSaved")) {
-                            //     var token = {
-                            //         "token": localStorage.getItem("token")
-                            //     }
-                            //     $.ajax({
-                            //         type: "POST",
-                            //         contentType: 'application/json; charset=UTF-8',
-                            //         url: "http://enshelf.com/api/getItems",
-                            //         data: JSON.stringify(token),
-                            //         processData: true,
-                            //         dataType: "json",
-                            //         timeout: 5000
-                            //     }).done(getItemSuccessFn).fail(getItemErrorFn)
-                            // };
+                            if (!localStorage.getObj("indexSaved")) {
+                                var token = {
+                                    "token": localStorage.getItem("token")
+                                }
+                                $.ajax({
+                                    type: "POST",
+                                    contentType: 'application/json; charset=UTF-8',
+                                    url: "http://enshelf.com/api/getItems",
+                                    data: JSON.stringify(token),
+                                    processData: true,
+                                    dataType: "json",
+                                    timeout: 5000
+                                }).done(getItemSuccessFn).fail(getItemErrorFn)
+                            };
 
                         } else {
                             Materialize.toast('Incorrect Username/Password', 4000);
@@ -468,13 +466,15 @@
                     // Ajax start global function
                     $(document).ajaxStart(function () {
                         $("#send-button").hide();
-                        $(".progress").show();
+                        $("#load").addClass("progress");
+                        $("#loader").addClass("indeterminate");
                         console.log("Ajax Request is Starting");
                     });
                     // Ajax stop global function
                     $(document).ajaxStop(function () {
                         $("#send-button").show();
-                        $(".progress").hide();
+                        $("#load").removeClass("progress");
+                        $("#loader").removeClass("indeterminate");
                         console.log("Ajax Request has ended");
                     });
                     // Ajax request
@@ -501,28 +501,24 @@
                             localStorage.setItem('libraryId', library[i].libraryId);
                             break;
                         }
-                        localStorage.setItem('token', response[5]);
+                        localStorage.setItem('token', response[4]);
                         localStorage.setItem('userId', response[0]);
-                         Materialize.toast('Login successful', 4000);
-                            setTimeout(function () {
-                                window.location.href = "home.html"; //will redirect to your blog page (an ex: blog.html)
-                            }, 2000);
                         //check if local files exist, if not pull files of the userfrom the server
                         //if there is no indexSaved(locally saved items) create an array to hold saved items on server
-                        // if (!localStorage.getObj("indexSaved")) {
-                        //     var token = {
-                        //         "token": localStorage.getItem("token")
-                        //     }
-                        //     $.ajax({
-                        //         type: "POST",
-                        //         contentType: 'application/json; charset=UTF-8',
-                        //         url: "http://enshelf.com/api/getItems",
-                        //         data: JSON.stringify(token),
-                        //         processData: true,
-                        //         dataType: "json",
-                        //         timeout: 5000
-                        //     }).done(getItemSuccessFn).fail(getItemErrorFn)
-                        //};
+                        if (!localStorage.getObj("indexSaved")) {
+                            var token = {
+                                "token": localStorage.getItem("token")
+                            }
+                            $.ajax({
+                                type: "POST",
+                                contentType: 'application/json; charset=UTF-8',
+                                url: "http://enshelf.com/api/getItems",
+                                data: JSON.stringify(token),
+                                processData: true,
+                                dataType: "json",
+                                timeout: 5000
+                            }).done(getItemSuccessFn).fail(getItemErrorFn)
+                        };
 
 
                     };

@@ -506,6 +506,8 @@
                         localStorage.setItem('userId', response[0]);
                         //check if local files exist, if not pull files of the userfrom the server
                         //if there is no indexSaved(locally saved items) create an array to hold saved items on server
+                       Materialize.toast('Running Ajax function for get items', 1000);
+                       
                         if (!localStorage.getObj("indexSaved")) {
                             var token = {
                                 "token": localStorage.getItem("token")
@@ -531,6 +533,10 @@
                 var itemsFromServer = result.items
                 if (itemsFromServer[0] == null) {
                     localStorage.setItem("noItems", "You no saved files on the server");
+                   Materialize.toast('Login successful', 4000);
+                    setTimeout(function () {
+                        window.location.href = "home.html"; //will redirect to home.html
+                    }, 2000);
                 } else {
                     for (var i = 0, len = itemsFromServer.length; i < len; i++) {
                         for (var j = 0, length = itemsFromServer[i].length; j < length; j++) {
@@ -541,7 +547,7 @@
                     localStorage.setObj('indexSaved', indexSaved);
                     Materialize.toast('Login successful', 4000);
                     setTimeout(function () {
-                        window.location.href = "home.html"; //will redirect to your blog page (an ex: blog.html)
+                        window.location.href = "home.html"; //will redirect to home.html
                     }, 2000);
                 }
 

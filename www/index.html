@@ -179,9 +179,9 @@
     <script type="text/javascript" src="cordova.js"></script>
     <script>
          
-        //document.addEventListener("deviceready", onDeviceReady, false);
+        document.addEventListener("deviceready", onDeviceReady, false);
 
-      // function onDeviceReady() {
+      function onDeviceReady() {
            var response = [];
            var libraryInfo = [];
             Materialize.toast("device is ready for use", 2000);
@@ -550,7 +550,7 @@
             function loginErrorFn(xhr,status, strErr) {
                 Materialize.toast('There was an error in connectiong to server ' + strErr + " "+ JSON.stringify(status)+" "+JSON.stringify(xhr), 5000);
             };
-         //  }
+           }
     </script>
 </body>
 

@@ -169,7 +169,6 @@
                 <button id="fb" style="margin-top:5px;"><div class="center">
                     Facebook</div></button>
                 <p class="message">Not registered? <a href="#">Create an account</a></p>
-                <p id="signOut"><a href="#">Sign out</a></p>
             </div>
         </div>
     </div>
@@ -180,9 +179,9 @@
     <script type="text/javascript" src="cordova.js"></script>
     <script>
          
-        document.addEventListener("deviceready", onDeviceReady, false);
+        //document.addEventListener("deviceready", onDeviceReady, false);
 
-       function onDeviceReady() {
+      // function onDeviceReady() {
            var response = [];
            var libraryInfo = [];
             Materialize.toast("device is ready for use", 2000);
@@ -211,7 +210,7 @@
                             },
                             function failure() {
                                 Materialize.toast("Could not fetch Facebook data",
-                                    20000);
+                                    2000);
                             });
                     } else {
                         facebookConnectPlugin.login(["email"],
@@ -265,15 +264,6 @@
 
             });
 
-            $("#signOut").click(function () {
-                facebookConnectPlugin.logout(function success() {
-                        localStorage.clear();
-                    },
-                    function failure() {
-                        Materialize.toast('Sorry the app could not log out of your facebook account', 3000);
-                    });
-
-            })
             //create prototype method for storing objects in localStorage   
             Storage.prototype.setObj = function (key, obj) {
                 return this.setItem(key, JSON.stringify(obj))
@@ -463,7 +453,6 @@
                         "authSource": "facebook",
                         "fb_location":obj.location
                     };
-                    Materialize.toast(JSON.stringify(data),3000);
                     // Ajax start global function
                     $(document).ajaxStart(function () {
                         $("#send-button").hide();
@@ -561,7 +550,7 @@
             function loginErrorFn(xhr,status, strErr) {
                 Materialize.toast('There was an error in connectiong to server ' + strErr + " "+ JSON.stringify(status)+" "+JSON.stringify(xhr), 5000);
             };
-           }
+         //  }
     </script>
 </body>
 

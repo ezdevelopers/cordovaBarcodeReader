@@ -1,4 +1,5 @@
-        var data = {
+       function logout(){
+           var data = {
             "token": localStorage.getItem("token")
         };
         $.ajax({
@@ -19,3 +20,4 @@
             Materialize.toast('There seems to be an Error in connection' + strErr, 4000);
         };
 
+    };

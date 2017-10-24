@@ -17,7 +17,7 @@
     </script>
 </head>
 
-<body onload="loaded()">
+<body>
     <ul id="slide-out" class="side-nav">
         <li>
             <div class="user-view">
@@ -47,16 +47,32 @@
             </div>
             <div class="nav-content">
                 <ul class="tabs tabs-transparent">
-                    <li class="tab"><a href="#testa">Find Books</a></li>
-                    <li class="tab"><a class="active" href="#testb">My library</a></li>
-                    <li class="tab"><a href="#testc">Loans</a></li>
+                    <li class="tab"><a href="#testa" class="active">MY LIBRARY</a></li>
+                    <li class="tab"><a  href="#testb">PUBLIC LIBRARY</a></li>
+                    <li class="tab"><a href="#testc">LOANS</a></li>
                 </ul>
             </div>
         </nav>
     </div>
     <div class="col s12">
         <form>
-            <div id="testa" class="col s12">
+            <div id="testa" class="col s12 test">
+                <div class="filter-p">
+                    <p id="pullDownAjax" class="ajaxFilter">Filter</p>
+                </div>
+                <!-- <div id="wrapper">
+                    <div>
+                        <div id="pullDown">
+                            <span class="pullDownIcon"></span>
+                            <p class="pullDownText">Pull down to refresh...</p>
+                        </div>
+
+                    </div>
+                </div> -->
+                <div id="booklist" class="col s12 m7"></div>
+
+            </div>
+            <div id="testb" class="col s12">
                 <p class="filter-p">Find Books</p>
                 <div class="row">
                     <div class="row">
@@ -91,31 +107,6 @@
                     </div>
                 </div>
             </div>
-
-
-
-            <div id="testb" class="col s12 test">
-                <div class="filter-p">
-                    <p id="pullDownAjax" class="ajaxFilter">Filter</p>
-                </div>
-                <div id="wrapper">
-                    <div>
-                        <div id="pullDown">
-                            <span class="pullDownIcon"></span>
-                            <p class="pullDownText">Pull down to refresh...</p>
-                        </div>
-                        <div id="booklist" class="col s12 m7"></div>
-                    </div>
-
-
-
-                    <!-- <div id="scroller">
-
-                    </div> -->
-                </div>
-
-            </div>
-
 
             <div id="testc" class="col s12 test">
                 <div class="row">
@@ -173,72 +164,72 @@
 
     <script src="js/jquery-3.2.1.min.js"></script>
     <script src="js/materialize.min.js"></script>
-    <script src="js/iscroll.js"></script>
+    <!-- <script src="js/iscroll.js"></script> -->
     <script type="text/javascript" src="cordova.js"></script>
     <script src="js/logout.js"></script>
     <script>
         //create prototype method for storing objects in localStorage 
 
-        var myScroll, pullDownEl, pullDownOffset;
+        // var myScroll, pullDownEl, pullDownOffset;
 
-        function pullDownAction() {
-            setTimeout(function () { // <-- Simulate network congestion, remove setTimeout from production!
-                ajaxRequest();
+        // function pullDownAction() {
+        //     setTimeout(function () { // <-- Simulate network congestion, remove setTimeout from production!
+        //         ajaxRequest();
 
-                myScroll.refresh(); // Remember to refresh when contents are loaded (ie: on ajax completion)
-            }, 1000); // <-- Simulate network congestion, remove setTimeout from production!
-        }
+        //         myScroll.refresh(); // Remember to refresh when contents are loaded (ie: on ajax completion)
+        //     }, 1000); // <-- Simulate network congestion, remove setTimeout from production!
+        // }
 
-        function loaded() {
-            pullDownEl = document.getElementById('pullDown');
-            pullDownOffset = pullDownEl.offsetHeight;
+        // function loaded() {
+        //     pullDownEl = document.getElementById('pullDown');
+        //     pullDownOffset = pullDownEl.offsetHeight;
 
 
-            myScroll = new iScroll('wrapper', {
-                // useTransition: true,
-                //tap: true,
-                //click: true,
-                vScrollbar: false,
-                topOffset: pullDownOffset,
-                onRefresh: function () {
-                    if (pullDownEl.className.match('load')) {
-                        pullDownEl.className = '';
-                        pullDownEl.querySelector('.pullDownText').innerHTML = 'Pull down to refresh...';
-                    }
-                },
-                onScrollMove: function () {
-                    if (this.y > 3 && !pullDownEl.className.match('flip')) {
-                        pullDownEl.className = 'flip';
-                        pullDownEl.querySelector('.pullDownText').innerHTML = 'Release to refresh...';
-                        this.minScrollY = 0;
-                    } else if (this.y < 3 && pullDownEl.className.match('flip')) {
-                        pullDownEl.className = '';
-                        pullDownEl.querySelector('.pullDownText').innerHTML = 'Pull down to refresh...';
-                        this.minScrollY = -pullDownOffset;
-                    }
-                },
-                onScrollEnd: function () {
-                    if (pullDownEl.className.match('flip')) {
-                        pullDownEl.className = 'load';
-                        pullDownEl.querySelector('.pullDownText').innerHTML = 'Loading...';
-                        pullDownAction(); // Execute custom function (ajax call?)
-                    }
-                }
-            });
+        //     myScroll = new iScroll('wrapper', {
+        //         // useTransition: true,
+        //         //tap: true,
+        //         //click: true,
+        //         vScrollbar: false,
+        //         topOffset: pullDownOffset,
+        //         onRefresh: function () {
+        //             if (pullDownEl.className.match('load')) {
+        //                 pullDownEl.className = '';
+        //                 pullDownEl.querySelector('.pullDownText').innerHTML = 'Pull down to refresh...';
+        //             }
+        //         },
+        //         onScrollMove: function () {
+        //             if (this.y > 3 && !pullDownEl.className.match('flip')) {
+        //                 pullDownEl.className = 'flip';
+        //                 pullDownEl.querySelector('.pullDownText').innerHTML = 'Release to refresh...';
+        //                 this.minScrollY = 0;
+        //             } else if (this.y < 3 && pullDownEl.className.match('flip')) {
+        //                 pullDownEl.className = '';
+        //                 pullDownEl.querySelector('.pullDownText').innerHTML = 'Pull down to refresh...';
+        //                 this.minScrollY = -pullDownOffset;
+        //             }
+        //         },
+        //         onScrollEnd: function () {
+        //             if (pullDownEl.className.match('flip')) {
+        //                 pullDownEl.className = 'load';
+        //                 pullDownEl.querySelector('.pullDownText').innerHTML = 'Loading...';
+        //                 pullDownAction(); // Execute custom function (ajax call?)
+        //             }
+        //         }
+        //     });
 
-            setTimeout(function () {
-                document.getElementById('wrapper').style.left = '0';
-            }, 800);
-        }
+        //     setTimeout(function () {
+        //         document.getElementById('wrapper').style.left = '0';
+        //     }, 800);
+        // }
 
-        document.addEventListener('touchmove', function (e) {
-            e.preventDefault();
-        }, false);
+        // document.addEventListener('touchmove', function (e) {
+        //     e.preventDefault();
+        // }, false);
 
-        document.addEventListener('DOMContentLoaded', function () {
-            setTimeout(loaded, 200);
-        }, false);
-
+        // document.addEventListener('DOMContentLoaded', function () {
+        //     setTimeout(loaded, 200);
+        // }, false);
+        
         Storage.prototype.setObj = function (key, obj) {
             return this.setItem(key, JSON.stringify(obj))
         };
@@ -359,7 +350,7 @@
         });
 
         //grab saved searches from the localStorage 'indexSaved' if it exists
-        if (localStorage.getObj("indexSaved") && !(localStorage.getObj("noItems"))) {
+        if (localStorage.getObj("indexSaved")) {
             insertBooks();
         } else {
             Materialize.toast('You have no saved items on the Server', 4000);
@@ -381,18 +372,7 @@
             $('.modal').modal();
             $('select').material_select();
         });
-        //for dropdown button to delete and loan books
-        var dropdownValue = {
-            inDuration: 300,
-            outDuration: 225,
-            constrainWidth: false, // Does not change width of dropdown to that of the activator
-            hover: false, // Activate on hover
-            gutter: 0, // Spacing from edge
-            belowOrigin: true, // Displays dropdown below the button
-            alignment: 'left', // Displays dropdown with edge aligned to the left of button
-            stopPropagation: false // Stops event propagation
-        };
-
+       
 
         //function ajax call for refresh function
         function ajaxRequest() {
@@ -453,58 +433,16 @@
             };
         }
 
-        //founction for deleting books
-        //Delete function
-        $(".delete").click(function () {
-            var dataAppend = localStorage.getObj("indexSaved");
-            var deleteId = $(this).parent().attr("id");
-            var index = -1;
-            // var data = {
-            //     "itemId": deleteId,
-            //     "token": localStorage.getItem("token")
-            // };
-            // console.log(data);
-            // $(document).ajaxStart(function () {
-            //     $(".ajaxFilter").addClass("black-loading");
-            //     console.log("Ajax Request is Starting");
-            // });
-            // // Ajax stop global function
-            // $(document).ajaxStop(function () {
-            //     $(".ajaxFilter").removeClass("black-loading");
-            //     console.log("Ajax Request has ended");
-            // });
-            // // Ajax request
-            // $.ajax({
-            //     type: "POST",
-            //     contentType: 'application/json; charset=UTF-8',
-            //     url: "http://enshelf.com/api/deleteItem",
-            //     data: JSON.stringify(data),
-            //     processData: true,
-            //     dataType: "json",
-            //     timeout: 10000
-            // }).done(successFn).fail(errorFn);
 
-            // function successFn() {
-            for (var i = 0, len = dataAppend.length; i < len; i++) {
-                if (dataAppend[i].itemId == deleteId) {
-                    index = i;
-                    dataAppend.splice(index, 1);
-                    localStorage.setObj("indexSaved", dataAppend);
-                    break;
-                }
+        function redirect() {
+            var contentPanelId = $('.redirect').attr("id");
+            console.log(contentPanelId);
+            alert(contentPanelId);
+            localStorage.setItem("editId", contentPanelId);
+            location.href = "view.html"
 
-            }
-            Materialize.toast('Delete Successfull', 4000);
-            $("#booklist").html("");
-            insertBooks();
-            // }
-
-            // function errorFn() {
-            //     Materialize.toast('We could not delete the item', 4000);
-            // }
-        })
-
-
+        }
+       
         //function to insert book to page and attach event handlers
         function insertBooks() {
             var dataAppend = localStorage.getObj("indexSaved");
@@ -533,7 +471,7 @@
                     '<div class="row bottom-margin"><div class="col s12"><div class="card horizontal "><div class="card-image"><img alt="Image" height="auto" src="' +
                     dataAppend[i].coverImageUrl + '\"></div><div class="card-stacked"><div class="card-content">' +
                     '<span  id="' + dataAppend[i].isbn +
-                    '" style="color:navy;font-weight:bold;font-size:14px;" class="card-title redirect">' +
+                    '" style="color:navy;font-weight:bold;font-size:14px;" onClick="redirect()" class="card-title redirect">' +
                     theTitle + '</span>' +
                     '<p style="color:brown;">Author: ' + theAuthor + '</p></div></div></div></div>' +
                     '<a class="dropper' + i +
@@ -547,30 +485,82 @@
                 //The values to the page
                 $("#booklist").prepend(booklist);
             }
-            $(".redirect").click(function (event) {
-                var contentPanelId = $(this).attr("id");
-                console.log(contentPanelId)
-                localStorage.setItem("editId", contentPanelId);
-                location.href = "view.html"
-            });
-            // The buttons will not work if there are no items in localStorage dropdown button
-            if (localStorage.getObj("indexSaved")) {
-                for (var i = 0, len = dataAppend.length; i < len; i++) {
-                    $('.dropper' + i).dropdown(dropdownValue);
-                    $(".dropper" + i).click(function (event) {
-                        console.log("Clicked dropper" + " " + event.target.id);
-                    })
-                };
+            //for dropdown button to delete and loan books
+            var dropdownValue = {
+                inDuration: 300,
+                outDuration: 225,
+                constrainWidth: false, // Does not change width of dropdown to that of the activator
+                hover: false, // Activate on hover
+                gutter: 0, // Spacing from edge
+                belowOrigin: true, // Displays dropdown below the button
+                alignment: 'left', // Displays dropdown with edge aligned to the left of button
+                stopPropagation: false // Stops event propagation
+            };
+             // The buttons will not work if there are no items in localStorage dropdown button
+                if (localStorage.getObj("indexSaved")) {
+                    var dataAppend = localStorage.getObj("indexSaved");
+                    for (var i = 0, len = dataAppend.length; i < len; i++) {
+                        $('.dropper' + i).dropdown(dropdownValue);
+                        // $(".dropper" + i).click(function (event) {
+                        //     console.log("Clicked dropper" + " " + event.target.id);
+                        // })
 
-            }
+                    };
+                }
+                //founction for deleting books
+                    //Delete function
+                    $(".delete").click(function (event) {
+                        var deleteId = $(".delete").parent().attr("id");
+                        console.log(event);
+                        var data = {
+                            "itemId": deleteId,
+                            "token": localStorage.getItem("token")
+                        };
+                        console.log(data);
+                        $(document).ajaxStart(function () {
+                            $(".ajaxFilter").addClass("black-loading");
+                            console.log("Ajax Request is Starting");
+                        });
+                        // Ajax stop global function
+                        $(document).ajaxStop(function () {
+                            $(".ajaxFilter").removeClass("black-loading");
+                            console.log("Ajax Request has ended");
+                        });
+                        // Ajax request
+                        $.ajax({
+                            type: "POST",
+                            contentType: 'application/json; charset=UTF-8',
+                            url: "http://enshelf.com/api/deleteItem",
+                            data: JSON.stringify(data),
+                            processData: true,
+                            dataType: "json",
+                            timeout: 10000
+                        }).done(successFn).fail(errorFn);
+
+                        function successFn() {
+                            for (var i = 0, len = dataAppend.length; i < len; i++) {
+                                if (dataAppend[i].itemId == deleteId) {
+                                    index = i;
+                                    dataAppend.splice(index, 1);
+                                    localStorage.setObj("indexSaved", dataAppend);
+                                    break;
+                                }
+
+                            }
+                            Materialize.toast('Delete Successfull', 1000);
+                            $("#booklist").html("");
+                            insertBooks();
+                        }
+
+                        function errorFn() {
+                            Materialize.toast('We could not delete the item', 4000);
+                        }
+                    });
+
 
         }
-        //redirect function to grab ISBN and store in localhost
-
-        //   [{"itemId":"38","biblioId":"0","libraryId":"12","isbn":"9780842362207 \\ 978068485
-
+        //   [{"itemId":"38","biblioId":"0","libraryId":"12","isbn":"9780842362207 \\ 9780684852867
         //     [{ "title": "First, break all the rules: what the world's greatest managers do differently", "authors": [{ "name": "Buckingham, Marcus", "id": "buckingham_marcus" }, { "id": "coffman_curt", "name": "Coffman, Curt" }], "isbn": "9780684852867", "publisher": "Simon & Schuster", "published": "New York : Simon & Schuster, c1999.", "physical_description": "271 p. ; 25 cm.", "summary": "", "subjects": "executive ability, management, executives attitudes, employees attitudes, employer attitude surveys, employee attitude surveys", "coverImageURL": "http://covers.openlibrary.org/b/isbn/9780684852867-M.jpg" }, { "title": "Spirit-Controlled Temperament", "authors": [{ "id": "lahaye_tim", "name": "LAHAYE, TIM" }], "isbn": "9780842362207", "publisher": "Tyndale House Publishers", "published": "Tyndale House Publishers", "physical_description": "5.3\"x8.2\"x0.7\"; 251 pages; 0.7 lb", "summary": "A superb treatment of the basic human temperaments and how God can use them, now revised with new chapters and questions for group study. Spanish available", "subjects": "amazon com religion spirituality christianity christian livi, amazon com religion spirituality christianity protesta aaaa4, amazon com religion spirituality authors a z l lahaye tim ge, amazon com religion spirituality authors a z l lahaye tim pa", "coverImageURL": "http://covers.openlibrary.org/b/isbn/9780842362207-M.jpg" }]
-
 
         // 2867","type":"book","title":"First, break all the rules: what the world's greatest managers do differently","authors":[{"name":"Buckingham, Marcus","id":"buckingham_marcus"},{"name":"Coffman, Curt","id":"coffman_curt"}],"publisher":"Simon & Schuster","published_date":"2012-05-18","description":"A story for the gods","subjects":"executive ability, management, executives attitudes, employees attitudes, employer attitude surveys,","isRead":"1","startDate":"2017-09-20","endDate":"2017-09-28","user_comments":"A must read!","date_added":"2017-09-29 17:04:19"}]
     </script>

@@ -179,21 +179,21 @@
     <script type="text/javascript" src="cordova.js"></script>
     <script>
          
-        document.addEventListener("deviceready", onDeviceReady, false);
+       document.addEventListener("deviceready", onDeviceReady, false);
 
       function onDeviceReady() {
            var response = [];
            var libraryInfo = [];
             Materialize.toast("device is ready for use", 2000);
             // Initialize Firebase
-            var config = {
-                apiKey: "AIzaSyBjtksPVatJX46Z1gTEseIpJgwn7BEbt6U",
-                authDomain: "enshelf.firebaseapp.com",
-                databaseURL: "https://enshelf.firebaseio.com",
-                projectId: "enshelf",
-                storageBucket: "enshelf.appspot.com",
-                messagingSenderId: "581315232250"
-            };
+            // var config = {
+            //     apiKey: "AIzaSyBjtksPVatJX46Z1gTEseIpJgwn7BEbt6U",
+            //     authDomain: "enshelf.firebaseapp.com",
+            //     databaseURL: "https://enshelf.firebaseio.com",
+            //     projectId: "enshelf",
+            //     storageBucket: "enshelf.appspot.com",
+            //     messagingSenderId: "581315232250"
+            // };
             firebase.initializeApp(config);
 
             $("#fb").click(function () {
@@ -217,13 +217,7 @@
                             function success(result) {
                                 //fetch the token from facebook
                                 Materialize.toast('Fetching your Facebook Infomation', 3000);
-
-                                var credential = firebase.auth.FacebookAuthProvider.credential(
-                                    result.authResponse.accessToken)
-                                firebase.auth().signInWithCredential(credential).then(function () {
-                                    Materialize.toast('Authenticating User', 3000);
-                                }).then(function () {
-                                    facebookConnectPlugin.getLoginStatus(function successful(
+                                facebookConnectPlugin.getLoginStatus(function successful(
                                         response) {
                                         //get user data from facebook via graph api
                                         facebookConnectPlugin.api("/" + response.authResponse
@@ -240,16 +234,23 @@
                                                     20000);
                                             });
                                     });
-                                }).catch(function (error) {
-                                    if (errorCode ===
-                                        'auth/account-exists-with-different-credential') {
-                                        Materialize.toast(
-                                            'Email already associated with another account.',
-                                            3000);
-                                    } else {
-                                        Materialize.toast(error, 3000);
-                                    }
-                                });
+
+                                // var credential = firebase.auth.FacebookAuthProvider.credential(
+                                //     result.authResponse.accessToken)
+                                // firebase.auth().signInWithCredential(credential).then(function () {
+                                //     Materialize.toast('Authenticating User', 3000);
+                                // }).then(function () {
+                                    
+                                // }).catch(function (error) {
+                                //     if (errorCode ===
+                                //         'auth/account-exists-with-different-credential') {
+                                //         Materialize.toast(
+                                //             'Email already associated with another account.',
+                                //             3000);
+                                //     } else {
+                                //         Materialize.toast(error, 3000);
+                                //     }
+                                // });
                             },
                             function failure() {
                                 Materialize.toast(
@@ -521,7 +522,6 @@
                 var indexSaved = [];
                 var itemsFromServer = result.items
                 if (itemsFromServer[0] == null) {
-                    localStorage.setItem("noItems", "You no saved files on the server");
                    Materialize.toast('Login successful', 4000);
                     setTimeout(function () {
                         window.location.href = "home.html"; //will redirect to home.html

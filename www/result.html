@@ -133,7 +133,7 @@
         $("#ISBN").attr("value", biblio.isbn);
         document.getElementById("desc").value = biblio.summary;
 
-        //build an object to send back to server when book is addee
+        //build an object to send back to server when book is added
         //{ "title":"First, break all the rules: what the world's greatest managers do differently", "authors":[{ "id": "buckingham_marcus", "name": "Buckingham, Marcus" }, { "name": "Coffman, Curt", "id": "coffman_curt" }], "isbn":"9780684852867", "publisher":"Simon & Schuster", "published":"New York : Simon & Schuster, c1999.", "physical_description":"271 p. ; 25 cm.", "summary":"", "subjects":"executive ability, management, executives attitudes, employees attitudes, employer attitude surveys, employee attitude surveys", "coverImageURL":"http://covers.openlibrary.org/b/isbn/9780684852867-M.jpg" }
         var bibliography = {
             "biblioId": 0,
@@ -176,6 +176,9 @@
                 //     alert("You already have this book in your library");
                 // } else {
                     //grabbing data from Biblio object
+                    biblio.itemId = result.itemId;
+                    biblio.description = biblio.summary;
+                    biblio.summary = "";
                     localStorage.setObj('biblioEdits', biblio);
                     /*In this code snippet below, I am trying to save a book for each unique search. Grabbing data from 
                     search and saving to local storage, while avoiding an override of the pre-exiting data when 
@@ -206,7 +209,9 @@
                // }
 
                 //redirect to homepage
-                location.href = "home.html";
+                     setTimeout(function () {
+                         window.location.href = "home.html"; //will redirect to home.html
+                     }, 2000);
             };
             //if there is an error in the ajax request display the error
             function errorFn(xhr, status, strErr) {

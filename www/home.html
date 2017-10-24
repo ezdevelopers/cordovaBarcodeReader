@@ -434,14 +434,13 @@
         }
 
 
-        function redirect() {
-            var contentPanelId = $('.redirect').attr("id");
-            console.log(contentPanelId);
-            alert(contentPanelId);
+         $('.redirect').click(function(event){
+              var contentPanelId =event.target.id
+             //console.log(event);
+             alert(contentPanelId);
             localStorage.setItem("editId", contentPanelId);
             location.href = "view.html"
-
-        }
+         });
        
         //function to insert book to page and attach event handlers
         function insertBooks() {
@@ -471,7 +470,7 @@
                     '<div class="row bottom-margin"><div class="col s12"><div class="card horizontal "><div class="card-image"><img alt="Image" height="auto" src="' +
                     dataAppend[i].coverImageUrl + '\"></div><div class="card-stacked"><div class="card-content">' +
                     '<span  id="' + dataAppend[i].isbn +
-                    '" style="color:navy;font-weight:bold;font-size:14px;" onClick="redirect()" class="card-title redirect">' +
+                    '" style="color:navy;font-weight:bold;font-size:14px;" class="card-title redirect">' +
                     theTitle + '</span>' +
                     '<p style="color:brown;">Author: ' + theAuthor + '</p></div></div></div></div>' +
                     '<a class="dropper' + i +
@@ -510,13 +509,12 @@
                 //founction for deleting books
                     //Delete function
                     $(".delete").click(function (event) {
-                        var deleteId = $(".delete").parent().attr("id");
-                        console.log(event);
+                        var deleteId = event.target.id;
                         var data = {
                             "itemId": deleteId,
                             "token": localStorage.getItem("token")
                         };
-                        console.log(data);
+                       console.log(data);
                         $(document).ajaxStart(function () {
                             $(".ajaxFilter").addClass("black-loading");
                             console.log("Ajax Request is Starting");

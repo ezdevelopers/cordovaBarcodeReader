@@ -169,7 +169,7 @@
                 <button id="fb" style="margin-top:5px;"><div class="center">
                     Facebook sign-in</div></button>
                 <p class="message">Not registered? <a href="#">Create an account</a></p>
-                <p class="signout"><a href="#">Sign out</a></p>
+                <!-- <p class="signout"><a href="#">Sign out</a></p> -->
             </div>
         </div>
     </div>
@@ -196,17 +196,17 @@
             };
             firebase.initializeApp(config);
 
-            $(".signout").click(function () {
-                facebookConnectPlugin.logout(function success() {
-                    Materialize.toast(
-                        "Sign out Successful",
-                        2000);
-                }, function failure() {
-                    Materialize.toast(
-                        "We could not sign you out of facebook",
-                        2000);
-                })
-            })
+            // $(".signout").click(function () {
+            //     facebookConnectPlugin.logout(function success() {
+            //         Materialize.toast(
+            //             "Sign out Successful",
+            //             2000);
+            //     }, function failure() {
+            //         Materialize.toast(
+            //             "We could not sign you out of facebook",
+            //             2000);
+            //     })
+            // })
 
             $("#fb").click(function () {
                 //get login status then call the graph api for user details

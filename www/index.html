@@ -167,8 +167,9 @@
                     login</div></button>
 
                 <button id="fb" style="margin-top:5px;"><div class="center">
-                    Facebook</div></button>
+                    Facebook sign-in</div></button>
                 <p class="message">Not registered? <a href="#">Create an account</a></p>
+                <p class="signout"><a href="#">Sign out</a></p>
             </div>
         </div>
     </div>
@@ -178,23 +179,34 @@
     <script src="https://www.gstatic.com/firebasejs/4.5.0/firebase-auth.js"></script>
     <script type="text/javascript" src="cordova.js"></script>
     <script>
-         
-       document.addEventListener("deviceready", onDeviceReady, false);
+        document.addEventListener("deviceready", onDeviceReady, false);
 
-      function onDeviceReady() {
-           var response = [];
-           var libraryInfo = [];
+        function onDeviceReady() {
+            var response = [];
+            var libraryInfo = [];
             Materialize.toast("device is ready for use", 2000);
-            // Initialize Firebase
-            // var config = {
-            //     apiKey: "AIzaSyBjtksPVatJX46Z1gTEseIpJgwn7BEbt6U",
-            //     authDomain: "enshelf.firebaseapp.com",
-            //     databaseURL: "https://enshelf.firebaseio.com",
-            //     projectId: "enshelf",
-            //     storageBucket: "enshelf.appspot.com",
-            //     messagingSenderId: "581315232250"
-            // };
-            //firebase.initializeApp(config);
+           // Initialize Firebase
+            var config = {
+                apiKey: "AIzaSyBjtksPVatJX46Z1gTEseIpJgwn7BEbt6U",
+                authDomain: "enshelf.firebaseapp.com",
+                databaseURL: "https://enshelf.firebaseio.com",
+                projectId: "enshelf",
+                storageBucket: "enshelf.appspot.com",
+                messagingSenderId: "581315232250"
+            };
+            firebase.initializeApp(config);
+
+            $(".signout").click(function () {
+                facebookConnectPlugin.logout(function success() {
+                    Materialize.toast(
+                        "Sign out Successful",
+                        2000);
+                }, function failure() {
+                    Materialize.toast(
+                        "We could not sign you out of facebook",
+                        2000);
+                })
+            })
 
             $("#fb").click(function () {
                 //get login status then call the graph api for user details
@@ -215,42 +227,37 @@
                     } else {
                         facebookConnectPlugin.login(["email"],
                             function success(result) {
-                                //fetch the token from facebook
-                                Materialize.toast('Fetching your Facebook Infomation', 3000);
-                                facebookConnectPlugin.getLoginStatus(function successful(
-                                        response) {
-                                        //get user data from facebook via graph api
-                                        facebookConnectPlugin.api("/" + response.authResponse
-                                            .userID +
-                                            "?fields=first_name,last_name,email,gender,age_range,is_verified,location", [
-                                                "user_location"
-                                            ],
-                                            function success(result) {
-                                                ajaxSocial(result);
-                                            },
-                                            function failure() {
-                                                Materialize.toast(
-                                                    "Could not fetch Facebook data",
-                                                    20000);
-                                            });
-                                    });
+                                //fetch the token from facebook                                
+                                 var credential = firebase.auth.FacebookAuthProvider.credential(
+                                    result.authResponse.accessToken)
+                                firebase.auth().signInWithCredential(credential).then(function () {
+                                    Materialize.toast('Authenticating User', 3000);
+                                }).then(function () {
+                                    //get user data from facebook via graph api
+                                    facebookConnectPlugin.api("/" + result.authResponse
+                                        .userID +
+                                        "?fields=first_name,last_name,email,gender,age_range,is_verified,location", [
+                                            "user_location"
+                                        ],
+                                        function success(result) {
+                                            ajaxSocial(result);
+                                        },
+                                        function failure() {
+                                            Materialize.toast(
+                                                "Could not fetch Facebook data",
+                                                20000);
+                                        });
 
-                                // var credential = firebase.auth.FacebookAuthProvider.credential(
-                                //     result.authResponse.accessToken)
-                                // firebase.auth().signInWithCredential(credential).then(function () {
-                                //     Materialize.toast('Authenticating User', 3000);
-                                // }).then(function () {
-                                    
-                                // }).catch(function (error) {
-                                //     if (errorCode ===
-                                //         'auth/account-exists-with-different-credential') {
-                                //         Materialize.toast(
-                                //             'Email already associated with another account.',
-                                //             3000);
-                                //     } else {
-                                //         Materialize.toast(error, 3000);
-                                //     }
-                                // });
+                                }).catch(function (error) {
+                                    if (errorCode ===
+                                        'auth/account-exists-with-different-credential') {
+                                        Materialize.toast(
+                                            'Email already associated with another account.',
+                                            3000);
+                                    } else {
+                                        Materialize.toast(error, 3000);
+                                    }
+                                });
                             },
                             function failure() {
                                 Materialize.toast(
@@ -441,88 +448,86 @@
 
             //social login function
             function ajaxSocial(obj) {
-                
-                    //store fields in object for use in the ajax request
-                    var data = {
-                        "fb_id":obj.id,
-                        "email": obj.email,
-                        "fname": obj.first_name,
-                        "lname": obj.last_name,
-                        "appKey": "4P3d7c3Hk091",
-                        "gender": obj.gender,
-                        "fb_is_verified":obj.is_verified,
-                        "authSource": "facebook",
-                        "fb_location":obj.location
-                    };
-                    // Ajax start global function
-                    $(document).ajaxStart(function () {
-                        $("#send-button").hide();
-                        $("#load").addClass("progress");
-                        $("#loader").addClass("indeterminate");
-                        console.log("Ajax Request is Starting");
-                    });
-                    // Ajax stop global function
-                    $(document).ajaxStop(function () {
-                        $("#send-button").show();
-                        $("#load").removeClass("progress");
-                        $("#loader").removeClass("indeterminate");
-                        console.log("Ajax Request has ended");
-                    });
-                    // Ajax request
-                    //login ajax call 
-                    $.ajax({
-                        type: "POST",
-                        crossDomain: true,
-                        contentType: 'application/json; charset=UTF-8',
-                        url: "http://enshelf.com/api/login_social",
-                        data: JSON.stringify(data),
-                        processData: true,
-                        dataType: "json",
-                        timeout: 10000
-                    }).done(loginSuccessFn).fail(loginErrorFn)
-                    //This function check the response from the server on logging inand looks 
-                    //for a token field, if token id found it stores the token in
-                    //local storage else it returns an error.      
-                    function loginSuccessFn(result) {
-                        for (var elm in result) {
-                            response.push(result[elm]);
-                        };
-                        var library = result.Libraries;
-                        for (var i = 0, len = library.length; i < len; i++) {
-                            localStorage.setItem('libraryId', library[i].libraryId);
-                            break;
-                        }
-                        localStorage.setItem('token', response[4]);
-                        localStorage.setItem('userId', response[0]);
-                        //check if local files exist, if not pull files of the userfrom the server
-                        //if there is no indexSaved(locally saved items) create an array to hold saved items on server
-                       Materialize.toast('Running Ajax function for get items', 1000);
-                       
-                        if (!localStorage.getObj("indexSaved")) {
-                            var token = {
-                                "token": localStorage.getItem("token")
-                            }
-                            $.ajax({
-                                type: "POST",
-                                contentType: 'application/json; charset=UTF-8',
-                                url: "http://enshelf.com/api/getItems",
-                                data: JSON.stringify(token),
-                                processData: true,
-                                dataType: "json",
-                                timeout: 5000
-                            }).done(getItemSuccessFn).fail(getItemErrorFn)
-                        };
 
-
-                    };
+                //store fields in object for use in the ajax request
+                var data = {
+                    "fb_id": obj.id,
+                    "email": obj.email,
+                    "fname": obj.first_name,
+                    "lname": obj.last_name,
+                    "appKey": "4P3d7c3Hk091",
+                    "gender": obj.gender,
+                    "fb_is_verified": obj.is_verified,
+                    "authSource": "facebook",
+                    "fb_location": obj.location
                 };
+                // Ajax start global function
+                $(document).ajaxStart(function () {
+                    $("#send-button").hide();
+                    $("#load").addClass("progress");
+                    $("#loader").addClass("indeterminate");
+                    console.log("Ajax Request is Starting");
+                });
+                // Ajax stop global function
+                $(document).ajaxStop(function () {
+                    $("#send-button").show();
+                    $("#load").removeClass("progress");
+                    $("#loader").removeClass("indeterminate");
+                    console.log("Ajax Request has ended");
+                });
+                // Ajax request
+                //login ajax call 
+                $.ajax({
+                    type: "POST",
+                    crossDomain: true,
+                    contentType: 'application/json; charset=UTF-8',
+                    url: "http://enshelf.com/api/login_social",
+                    data: JSON.stringify(data),
+                    processData: true,
+                    dataType: "json",
+                    timeout: 10000
+                }).done(loginSuccessFn).fail(loginErrorFn)
+                //This function check the response from the server on logging inand looks 
+                //for a token field, if token id found it stores the token in
+                //local storage else it returns an error.      
+                function loginSuccessFn(result) {
+                    for (var elm in result) {
+                        response.push(result[elm]);
+                    };
+                    var library = result.Libraries;
+                    for (var i = 0, len = library.length; i < len; i++) {
+                        localStorage.setItem('libraryId', library[i].libraryId);
+                        break;
+                    }
+                    localStorage.setItem('token', response[4]);
+                    localStorage.setItem('userId', response[0]);
+                    //check if local files exist, if not pull files of the userfrom the server
+                    //if there is no indexSaved(locally saved items) create an array to hold saved items on server
+                    if (!localStorage.getObj("indexSaved")) {
+                        var token = {
+                            "token": localStorage.getItem("token")
+                        }
+                        $.ajax({
+                            type: "POST",
+                            contentType: 'application/json; charset=UTF-8',
+                            url: "http://enshelf.com/api/getItems",
+                            data: JSON.stringify(token),
+                            processData: true,
+                            dataType: "json",
+                            timeout: 5000
+                        }).done(getItemSuccessFn).fail(getItemErrorFn)
+                    };
+
+
+                };
+            };
 
             //success function for get items from server
             function getItemSuccessFn(result) {
                 var indexSaved = [];
                 var itemsFromServer = result.items
                 if (itemsFromServer[0] == null) {
-                   Materialize.toast('Login successful', 4000);
+                    Materialize.toast('Login successful', 4000);
                     setTimeout(function () {
                         window.location.href = "home.html"; //will redirect to home.html
                     }, 2000);
@@ -543,14 +548,15 @@
             };
             //if there is an error in the ajax request display the error
             function getItemErrorFn(xhr, status, strErr) {
-                Materialize.toast('There was an error in fetching library '+ strErr , 1000);
+                Materialize.toast('There was an error in fetching library ' + strErr, 1000);
             };
 
             //if there is an error in the ajax request display the error
-            function loginErrorFn(xhr,status, strErr) {
-                Materialize.toast('There was an error in connectiong to server ' + strErr + " "+ JSON.stringify(status)+" "+JSON.stringify(xhr), 5000);
+            function loginErrorFn(xhr, status, strErr) {
+                Materialize.toast('There was an error in connectiong to server ' + strErr + " " + JSON.stringify(status) +
+                    " " + JSON.stringify(xhr), 5000);
             };
-           }
+        }
     </script>
 </body>
 

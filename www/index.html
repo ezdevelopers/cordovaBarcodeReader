@@ -213,30 +213,22 @@
                 facebookConnectPlugin.login(["email"],
                     function success(result) {
                         //fetch the token from facebook    
-                        Materialize.toast('Fetching your Facebook Information', 1000);
+                        Materialize.toast('Fetching your Facebook Information', 2000);
                         var credential = firebase.auth.FacebookAuthProvider.credential(
                             result.authResponse.accessToken)
                         firebase.auth().signInWithCredential(credential).then(function () {
-                            Materialize.toast('Authenticating User', 1000);
+                            Materialize.toast('Authenticating User', 800);
                         }).then(function () {
                             //get user data from facebook via graph api
                             facebookConnectPlugin.api("/" + result.authResponse
                                 .userID +
-                                "?fields=first_name,last_name,email,gender,age_range,is_verified,location", [
-                                    "user_location", "email"
+                                "?fields=first_name,last_name,email,gender,age_range,is_verified", [
+                                  "email"
                                 ],
                                 function success(result) {
                                     Materialize.toast(
-                                        "Welcome " + result.email,
+                                        "Welcome " + result.first_name +" "+ result.last_name,
                                         5000);
-                                    Materialize.toast(
-                                        "Welcome " + result.first_name,
-                                        5000);
-                                    Materialize.toast(
-                                        "Welcome " + JSON.stringify(result.location),
-                                        5000);
-
-
                                     //store fields in object for use in the ajax request
                                     var data = {
                                         "fb_id": result.id,
@@ -247,7 +239,7 @@
                                         "gender": result.gender,
                                         "fb_is_verified": result.is_verified,
                                         "authSource": "facebook",
-                                        "fb_location": result.location
+                                        "fb_location": "No location"
                                     };
                                     // Ajax start global function
                                     $(document).ajaxStart(function () {

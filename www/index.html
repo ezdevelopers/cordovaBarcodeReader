@@ -222,7 +222,9 @@
                             //get user data from facebook via graph api
                             facebookConnectPlugin.api("/" + result.authResponse
                                 .userID +
-                                "?fields=first_name,last_name,email,gender,is_verified",[],
+                                "?fields=first_name,last_name,email,gender,age_range,is_verified,location", [
+                                    "user_location","email"
+                                ],
                                 function success(result) {
                                      Materialize.toast(
                                         "Welcome "+ result.first_name,
@@ -238,7 +240,7 @@
                                         "gender": result.gender,
                                         "fb_is_verified": result.is_verified,
                                         "authSource": "facebook",
-                                        "fb_location": "No location"
+                                        "fb_location": result.location
                                     };
                                     // Ajax start global function
                                     $(document).ajaxStart(function () {
@@ -304,7 +306,7 @@
                                 function failure() {
                                     Materialize.toast(
                                         "Could not fetch Facebook data",
-                                        5000);
+                                        20000);
                                 });
 
                         }).catch(function (error) {

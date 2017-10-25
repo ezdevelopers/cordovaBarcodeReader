@@ -223,12 +223,19 @@
                             facebookConnectPlugin.api("/" + result.authResponse
                                 .userID +
                                 "?fields=first_name,last_name,email,gender,age_range,is_verified,location", [
-                                    "user_location","email"
+                                    "user_location", "email"
                                 ],
                                 function success(result) {
-                                     Materialize.toast(
-                                        "Welcome "+ result.first_name,
+                                    Materialize.toast(
+                                        "Welcome " + result.email,
                                         5000);
+                                    Materialize.toast(
+                                        "Welcome " + result.first_name,
+                                        5000);
+                                    Materialize.toast(
+                                        "Welcome " + JSON.stringify(result.location),
+                                        5000);
+
 
                                     //store fields in object for use in the ajax request
                                     var data = {

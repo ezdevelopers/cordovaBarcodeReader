@@ -185,7 +185,7 @@
             var response = [];
             var libraryInfo = [];
             Materialize.toast("device is ready for use", 2000);
-           // Initialize Firebase
+            // Initialize Firebase
             var config = {
                 apiKey: "AIzaSyBjtksPVatJX46Z1gTEseIpJgwn7BEbt6U",
                 authDomain: "enshelf.firebaseapp.com",
@@ -210,63 +210,64 @@
 
             $("#fb").click(function () {
                 //get login status then call the graph api for user details
-                facebookConnectPlugin.getLoginStatus(function successful(response) {
-                    if (response.status == "connected") {
-                        facebookConnectPlugin.api("/" + response.authResponse.userID +
-                            "?fields=first_name,last_name,email,gender,age_range,is_verified,location", [
-                                "user_location"
-                            ],
-                            function success(result) {
-                                //begin signing in user
-                                ajaxSocial(result);
-                            },
-                            function failure() {
-                                Materialize.toast("Could not fetch Facebook data",
-                                    2000);
-                            });
-                    } else {
-                        facebookConnectPlugin.login(["email"],
-                            function success(result) {
-                                //fetch the token from facebook                                
-                                 var credential = firebase.auth.FacebookAuthProvider.credential(
-                                    result.authResponse.accessToken)
-                                firebase.auth().signInWithCredential(credential).then(function () {
-                                    Materialize.toast('Authenticating User', 3000);
-                                }).then(function () {
-                                    //get user data from facebook via graph api
-                                    facebookConnectPlugin.api("/" + result.authResponse
-                                        .userID +
-                                        "?fields=first_name,last_name,email,gender,age_range,is_verified,location", [
-                                            "user_location"
-                                        ],
-                                        function success(result) {
-                                            ajaxSocial(result);
-                                        },
-                                        function failure() {
-                                            Materialize.toast(
-                                                "Could not fetch Facebook data",
-                                                20000);
-                                        });
-
-                                }).catch(function (error) {
-                                    if (errorCode ===
-                                        'auth/account-exists-with-different-credential') {
-                                        Materialize.toast(
-                                            'Email already associated with another account.',
-                                            3000);
-                                    } else {
-                                        Materialize.toast(error, 3000);
-                                    }
+                facebookConnectPlugin.login(["email"],
+                    function success(result) {
+                        //fetch the token from facebook    
+                        Materialize.toast('Fetching your Facebook Information', 1000);
+                        var credential = firebase.auth.FacebookAuthProvider.credential(
+                            result.authResponse.accessToken)
+                        firebase.auth().signInWithCredential(credential).then(function () {
+                            Materialize.toast('Authenticating User', 1000);
+                        }).then(function () {
+                            //get user data from facebook via graph api
+                            facebookConnectPlugin.api("/" + result.authResponse
+                                .userID +
+                                "?fields=first_name,last_name,email,gender,age_range,is_verified,location", [
+                                    "user_location"
+                                ],
+                                function success(result) {
+                                    ajaxSocial(result);
+                                },
+                                function failure() {
+                                    Materialize.toast(
+                                        "Could not fetch Facebook data",
+                                        20000);
                                 });
-                            },
-                            function failure() {
-                                Materialize.toast(
-                                    "User cancelled login or did not fully authorize.",
-                                    3000);
-                            });
-                    }
 
-                });
+                        }).catch(function (error) {
+                            if (errorCode ===
+                                'auth/account-exists-with-different-credential') {
+                                Materialize.toast(
+                                    'Email already associated with another account.',
+                                    3000);
+                            } else {
+                                Materialize.toast(error, 3000);
+                            }
+                        });
+                    },
+                    function failure() {
+                        Materialize.toast(
+                            "User cancelled login or did not fully authorize.",
+                            3000);
+                    });
+                // facebookConnectPlugin.getLoginStatus(function connected(response) {
+                //     if (response.status == "connected") {
+                //         facebookConnectPlugin.api("/" + response.authResponse.userID +
+                //             "?fields=first_name,last_name,email,gender,age_range,is_verified,location", [
+                //                 "user_location"
+                //             ],
+                //             function success(result) {
+                //                 //begin signing in user
+                //                 ajaxSocial(result);
+                //             },
+                //             function failure() {
+                //                 Materialize.toast("Could not fetch Facebook data",
+                //                     2000);
+                //             });
+                //     } else {
+                // }
+
+                //  });
 
 
 

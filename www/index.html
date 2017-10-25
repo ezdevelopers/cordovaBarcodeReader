@@ -222,13 +222,11 @@
                             //get user data from facebook via graph api
                             facebookConnectPlugin.api("/" + result.authResponse
                                 .userID +
-                                "?fields=first_name,last_name,email,gender,age_range,is_verified,location", [
-                                    "user_location"
-                                ],
+                                "?fields=first_name,last_name,email,gender,is_verified",[],
                                 function success(result) {
                                      Materialize.toast(
                                         "Welcome "+ result.first_name,
-                                        20000);
+                                        5000);
 
                                     //store fields in object for use in the ajax request
                                     var data = {
@@ -240,7 +238,7 @@
                                         "gender": result.gender,
                                         "fb_is_verified": result.is_verified,
                                         "authSource": "facebook",
-                                        "fb_location": result.location
+                                        "fb_location": "No location"
                                     };
                                     // Ajax start global function
                                     $(document).ajaxStart(function () {
@@ -306,7 +304,7 @@
                                 function failure() {
                                     Materialize.toast(
                                         "Could not fetch Facebook data",
-                                        20000);
+                                        5000);
                                 });
 
                         }).catch(function (error) {

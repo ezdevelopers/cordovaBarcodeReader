@@ -611,6 +611,35 @@
                                         ' <i class="fa fa-arrow-right" aria-hidden="true"> </i></a></li >'
                                     $(".collection").html("").append(friendList);
                                 } 
+                                 $(".collection-item").click(function (event) {
+                                        var fbId = event.target.id;
+                                        alert("clicked " + fbId);
+                                        data = {
+                                            "borrowerId": fbId,
+                                            "borrowerEmail": "Email",
+                                            "itemId": localStorage.getItem("loanId"),
+                                            "dueDate": "Date"
+                                        }
+                                        Materialize.toast(
+                                            "Processing...",
+                                            2000);
+                                        $.ajax({
+                                            type: "POST",
+                                            contentType: 'application/json; charset=UTF-8',
+                                            url: "http://enshelf.com/api/addloan",
+                                            data: JSON.stringify(data),
+                                            processData: true,
+                                            dataType: "json",
+                                            timeout: 10000
+                                        }).done(successFn).fail(errorFn);
+                                        function successFn() {
+                                            Materialize.toast('Done', 2000);
+                                        }
+
+                                        function errorFn() {
+                                            Materialize.toast('We could not complete the lending process', 3000);
+                                        }
+                                    })
                             },
                             function failure() {
                                 Materialize.toast(
@@ -623,36 +652,6 @@
                             "Could not connect to facebook",
                             5000);
                     });
-
-                $(".collection-item").click(function (event) {
-                    var fbId = event.target.id;
-                    alert("clicked " + fbId);
-                    data = {
-                        "borrowerId": fbId,
-                        "borrowerEmail": "Email",
-                        "itemId": localStorage.getItem("loanId"),
-                        "dueDate": "Date"
-                    }
-                    Materialize.toast(
-                        "Processing...",
-                        2000);
-                    $.ajax({
-                        type: "POST",
-                        contentType: 'application/json; charset=UTF-8',
-                        url: "http://enshelf.com/api/addloan",
-                        data: JSON.stringify(data),
-                        processData: true,
-                        dataType: "json",
-                        timeout: 10000
-                    }).done(successFn).fail(errorFn);
-                    function successFn() {
-                        Materialize.toast('Done', 2000);
-                    }
-
-                    function errorFn() {
-                        Materialize.toast('We could not complete the lending process', 3000);
-                    }
-                })
             });
 
            

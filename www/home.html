@@ -10,9 +10,10 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
     <style>
-        #modal1{
-            top:30% important;
+        #modal1 {
+            top: 30% important;
         }
+
         .navbar-fixed {
             height: 105px;
         }
@@ -176,31 +177,27 @@
     </div>
     <div id="modalLoan" class="modal">
         <div class="row" style="margin-bottom:0px;">
-                <div class="card horizontal ">
-                    <div class="card-image"><img alt="Image" class="loanImage" height="auto" src=""></div>
-                    <div class="card-stacked">
-                        <div class="card-content">
-                            <span id="" style="color:navy;font-weight:bold;font-size:14px;" class="card-title loanTitle"></span>
-                            <p style="color:brown;" class="loanAuthor"></p>
-                        </div>
+            <div class="card horizontal ">
+                <div class="card-image"><img alt="Image" class="loanImage" height="auto" src=""></div>
+                <div class="card-stacked">
+                    <div class="card-content">
+                        <span id="" style="color:navy;font-weight:bold;font-size:14px;" class="card-title loanTitle"></span>
+                        <p style="color:brown;" class="loanAuthor"></p>
                     </div>
                 </div>
+            </div>
         </div>
         <div class="col s12">
             <div class="row">
-                <p class="p-filter" style="padding-left:10px"> Select Friends</p>
+                <p class="p-filter" style="padding-left:10px"> Select Friends
+                    <div class="countFriends" style="font-style:italic"></div>
+                </p>
                 <ul class="collection">
-                    <li class="collection-item avatar">
-                        <img src="img/bg.jpg" alt="" class="circle">
-                        <span class="title">Name</span>
-                        <p>Email
-                        </p>
-                        <a href="#!" class="secondary-content"><i class="fa fa-arrow-right" aria-hidden="true"></i></a>
-                    </li>
+
                 </ul>
             </div>
         </div>
-        
+
         <div class="modal-footer">
             <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>
         </div>
@@ -578,12 +575,13 @@
                             authors += element.name + ". "
                         });
                         var authorTitle = "";
-                        if(authors.length > 30){
-                            authorTitle = authors.substring(0,30)+"..." 
-                        }else{
+                        if (authors.length > 30) {
+                            authorTitle = authors.substring(0, 30) + "..."
+                        } else {
                             authorTitle = authors
                         }
-                        $(".loanAuthor").html("").append("<div style=\"color:brown;\">" + authorTitle + "</div>");
+                        $(".loanAuthor").html("").append("<div style=\"color:brown;\">" + authorTitle +
+                            "</div>");
                         // $(".isbn").append("<div style=\"color:brown;\">" + biblio[i].isbn + "</div>").attr("id", biblio[i].isbn);
 
                         // $(".description").append("<p style=\"font-style:italic;\">" + biblio[i].description + "</p>");
@@ -591,26 +589,43 @@
                     }
                 };
                 facebookConnectPlugin.login(["user_friends"],
-                        function success(result){
-                             facebookConnectPlugin.api("/" + result.authResponse
-                                .userID + "/friends" +
-                                "?fields=id,name,email,picture", [
-                                    "email",
-                                ], function success(response) {
-                                    Materialize.toast(
+                    function success(result) {
+                        facebookConnectPlugin.api("/" + result.authResponse
+                            .userID + "/friends" +
+                            "?fields=id,name,email,picture", [
+                                "email",
+                            ],
+                            function success(response) {
+                                $(".countFriends").append(response.summary.total_count);
+                                for (var i = 0, len = response.data.length; i < len; i++) {
+                                    var friendList = '<li class="collection-item avatar"><img src="' +
+                                        response.data[i].picture.data.url +
+                                        '" alt = ""class = "circle">' +
+                                        '<span class = "title">' + response.data[i].name +
+                                        ' </span><p>' + response.data[i].email || "No email" +
+                                        '</p><a id=' + response.data[i].id +
+                                        'href = "#!" class = "secondary-content" >' +
+                                        ' <i class = "fa fa-arrow-right" aria-hidden = "true" > </i></a></li >'
+                                    $(".collection").append(friendList);
+                                }
+                                Materialize.toast(
                                         JSON.stringify(response),
-                                        2000);
-                                }, function failure() {
-                                    Materialize.toast(
-                                        "Could not fetch Facebook data",
-                                        5000);
-                                });
-                        },function failure(){
-                            Materialize.toast(
-                                "Could not connect to facebook",
-                                5000);
-                        })
-                
+                                        10000);
+                                    
+                                
+                            },
+                            function failure() {
+                                Materialize.toast(
+                                    "Could not fetch Facebook data",
+                                    5000);
+                            });
+                    },
+                    function failure() {
+                        Materialize.toast(
+                            "Could not connect to facebook",
+                            5000);
+                    });
+
                 //location.href = "loan.html";
             })
             //founction for deleting books

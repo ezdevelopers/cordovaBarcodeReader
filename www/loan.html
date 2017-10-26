@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,minimum-scale=1,maximum-scale=1">
+    <title>Barcode Reader</title>
+    <link rel="stylesheet" href="css/materialize.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+    <!-- <script>
+        if (!localStorage.getItem("token")) {
+            location.href = "index.html";
+        }
+    </script> -->
+    <style>
+        p {
+            font-size: 13px;
+        }
+    </style>
+</head>
+
+<body>
+    <ul id="slide-out" class="side-nav">
+        <li>
+            <div class="user-view">
+                <div class="background">
+                    <img src="img/bg.jpg">
+                </div>
+            </div>
+            <li><a class="waves-effect" href="home.html">Home</a></li>
+            <li><a class="waves-effect" href="contacts.html">Contacts</a></li>
+            <li><a class="waves-effect" onClick="logout()">Log Out</a></li>
+
+        </li>
+
+    </ul>
+    <div class="navbar-fixed">
+        <nav class="nav-extended">
+            <div class="nav-wrapper">
+                <a href="#" data-activates="slide-out" class="button-collapse"><i class="fa fa-bars" aria-hidden="true"></i></a>
+                <a href="#" class="">Library</a>
+                <ul id="nav-mobile" class="right">
+                    <li><a><i id="loanFile" class="fa fa-search" style="font-size:20px;" aria-hidden="true"></i></a></li>
+                </ul>
+
+            </div>
+        </nav>
+    </div>
+    <div class="filter-p" style="position:fixed;width:100%;">
+        <div class="row" style="margin-bottom:0px;">
+            <div class="col s12">
+                <div class="card horizontal ">
+                    <div class="card-image"><img alt="Image" class="loanImage" height="auto" src=""></div>
+                    <div class="card-stacked">
+                        <div class="card-content">
+                            <span id="" style="color:navy;font-weight:bold;font-size:14px;" class="card-title"></span>
+                            <p style="color:brown;" class="loanAuthor"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <ul class="collection">
+            <li class="collection-item avatar">
+                <img src="img/bg.jpg" alt="" class="circle">
+                <span class="title">Name</span>
+                <p>Email
+                </p>
+                <a href="#!" class="secondary-content"><i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+            </li>
+        </ul>
+
+    </div>
+
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="js/materialize.min.js"></script>
+    <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="js/index.js"></script>
+    <script>
+        // Initialize collapse button
+        $(".button-collapse").sideNav();
+        // Initialize collapsible (uncomment the line below if you use the dropdown variation)
+        //$('.collapsible').collapsible();
+        $(document).ready(function () {
+            $('.modal').modal();
+            $('select').material_select();
+        });
+
+        //Create a prototype function for storing objects in localStorage
+        Storage.prototype.setObj = function (key, obj) {
+            return this.setItem(key, JSON.stringify(obj))
+        };
+        //create a prototype function for retrieving objects in localStorage
+        Storage.prototype.getObj = function (key) {
+            return JSON.parse(this.getItem(key))
+        }
+
+        //parse the string of objects comming from the localStorage
+        var biblio = localStorage.getObj("indexSaved");
+        var loanId = localStorage.getItem("loanId");
+
+        //Loop through the objects and append in the value of page inputs
+        for (var i = 0; i < biblio.length; i++) {
+            if (loanId == biblio[i].itemId) {
+                var loanTitle = biblio[i].title;
+                var theloanTitle = "";
+                if (loanTitle.length > 30) {
+                    theloanTitle = loanTitle.substring(0, 30) + "..."
+                } else {
+                    theloanTitle = loanTitle
+                };
+                //Append object value in the value of page inputs
+                $(".loanTitle").append(theloanTitle);
+                $(".loanImage").attr("src", biblio[i].coverImageUrl);
+                var authors = "";
+                biblio[i].authors.forEach(function (element) {
+                    authors += element.name + ". "
+                });
+                $(".loanAuthor").append("<div style=\"color:brown;\">" + authors + "</div>");
+                // $(".isbn").append("<div style=\"color:brown;\">" + biblio[i].isbn + "</div>").attr("id", biblio[i].isbn);
+
+                // $(".description").append("<p style=\"font-style:italic;\">" + biblio[i].description + "</p>");
+                break;
+            }
+        }
+    </script>
+</body>
+
+</html>

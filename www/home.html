@@ -9,6 +9,20 @@
     <link rel="stylesheet" href="css/materialize.min.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+    <style>
+        #modal1{
+            top:30% important;
+        }
+        .navbar-fixed {
+            height: 105px;
+        }
+
+        .dropdown-content li>a {
+            font-size: 13px;
+            padding: 0;
+            color: #000;
+        }
+    </style>
 
     <script type="text/javascript">
         if (!localStorage.getItem("token")) {
@@ -48,7 +62,7 @@
             <div class="nav-content">
                 <ul class="tabs tabs-transparent">
                     <li class="tab"><a href="#testa" class="active">MY LIBRARY</a></li>
-                    <li class="tab"><a  href="#testb">PUBLIC LIBRARY</a></li>
+                    <li class="tab"><a href="#testb">PUBLIC LIBRARY</a></li>
                     <li class="tab"><a href="#testc">LOANS</a></li>
                 </ul>
             </div>
@@ -160,6 +174,37 @@
 
         </div>
     </div>
+    <div id="modalLoan" class="modal">
+        <div class="row" style="margin-bottom:0px;">
+                <div class="card horizontal ">
+                    <div class="card-image"><img alt="Image" class="loanImage" height="auto" src=""></div>
+                    <div class="card-stacked">
+                        <div class="card-content">
+                            <span id="" style="color:navy;font-weight:bold;font-size:14px;" class="card-title loanTitle"></span>
+                            <p style="color:brown;" class="loanAuthor"></p>
+                        </div>
+                    </div>
+                </div>
+        </div>
+        <div class="col s12">
+            <div class="row">
+                <p class="p-filter" style="padding-left:10px"> Select Friends</p>
+                <ul class="collection">
+                    <li class="collection-item avatar">
+                        <img src="img/bg.jpg" alt="" class="circle">
+                        <span class="title">Name</span>
+                        <p>Email
+                        </p>
+                        <a href="#!" class="secondary-content"><i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="modal-footer">
+            <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+        </div>
+    </div>
 
 
     <script src="js/jquery-3.2.1.min.js"></script>
@@ -229,7 +274,7 @@
         // document.addEventListener('DOMContentLoaded', function () {
         //     setTimeout(loaded, 200);
         // }, false);
-        
+
         Storage.prototype.setObj = function (key, obj) {
             return this.setItem(key, JSON.stringify(obj))
         };
@@ -372,7 +417,7 @@
             $('.modal').modal();
             $('select').material_select();
         });
-       
+
 
         //function ajax call for refresh function
         function ajaxRequest() {
@@ -434,14 +479,13 @@
         }
 
 
-         $('.redirect').click(function(event){
-              var contentPanelId =event.target.id
-             //console.log(event);
-             alert(contentPanelId);
+        $('.redirect').click(function (event) {
+            var contentPanelId = event.target.id
+            //console.log(event);
             localStorage.setItem("editId", contentPanelId);
             location.href = "view.html"
-         });
-       
+        });
+
         //function to insert book to page and attach event handlers
         function insertBooks() {
             var dataAppend = localStorage.getObj("indexSaved");
@@ -478,7 +522,8 @@
                     '"><i style="font-size:16px; color:navy;" class="fa fa-ellipsis-v"></i></a><ul id="' + dataAppend[i]
                     .itemId + '" class="dropdown-content"><li id="' +
                     dataAppend[i].itemId +
-                    '" class="loan">Lend Out</p></li><li  id="' + dataAppend[i].itemId +
+                    '" class="loan"><a class=" modal-trigger" href="#modalLoan">Lend Out</a></p></li><li  id="' +
+                    dataAppend[i].itemId +
                     '" class="delete">Delete</li></ul>' +
                     '</div>';
                 //The values to the page
@@ -495,65 +540,127 @@
                 alignment: 'left', // Displays dropdown with edge aligned to the left of button
                 stopPropagation: false // Stops event propagation
             };
-             // The buttons will not work if there are no items in localStorage dropdown button
-                if (localStorage.getObj("indexSaved")) {
-                    var dataAppend = localStorage.getObj("indexSaved");
-                    for (var i = 0, len = dataAppend.length; i < len; i++) {
-                        $('.dropper' + i).dropdown(dropdownValue);
-                        // $(".dropper" + i).click(function (event) {
-                        //     console.log("Clicked dropper" + " " + event.target.id);
-                        // })
+            // The buttons will not work if there are no items in localStorage dropdown button
+            if (localStorage.getObj("indexSaved")) {
+                var dataAppend = localStorage.getObj("indexSaved");
+                for (var i = 0, len = dataAppend.length; i < len; i++) {
+                    $('.dropper' + i).dropdown(dropdownValue);
+                    // $(".dropper" + i).click(function (event) {
+                    //     console.log("Clicked dropper" + " " + event.target.id);
+                    // })
 
-                    };
-                }
-                //founction for deleting books
-                    //Delete function
-                    $(".delete").click(function (event) {
-                        var deleteId = event.target.id;
-                        var data = {
-                            "itemId": deleteId,
-                            "token": localStorage.getItem("token")
+                };
+            }
+            //loan function
+            $(".loan").click(function (event) {
+                var loanId = event.currentTarget.id;
+                localStorage.setItem("loanId", loanId);
+
+                //parse the string of objects comming from the localStorage
+                var biblio = localStorage.getObj("indexSaved");
+                var loanId = localStorage.getItem("loanId");
+
+                //Loop through the objects and append in the value of page inputs
+                for (var i = 0; i < biblio.length; i++) {
+                    if (loanId == biblio[i].itemId) {
+                        var title = biblio[i].title;
+                        var theTitle = "";
+                        if (title.length > 30) {
+                            theTitle = title.substring(0, 30) + "..."
+                        } else {
+                            theTitle = title
                         };
-                       console.log(data);
-                        $(document).ajaxStart(function () {
-                            $(".ajaxFilter").addClass("black-loading");
-                            console.log("Ajax Request is Starting");
+                        //Append object value in the value of page inputs
+                        $(".loanTitle").html("").append(theTitle);
+                        $(".loanImage").attr("src", biblio[i].coverImageUrl);
+                        var authors = "";
+                        biblio[i].authors.forEach(function (element) {
+                            authors += element.name + ". "
                         });
-                        // Ajax stop global function
-                        $(document).ajaxStop(function () {
-                            $(".ajaxFilter").removeClass("black-loading");
-                            console.log("Ajax Request has ended");
-                        });
-                        // Ajax request
-                        $.ajax({
-                            type: "POST",
-                            contentType: 'application/json; charset=UTF-8',
-                            url: "http://enshelf.com/api/deleteItem",
-                            data: JSON.stringify(data),
-                            processData: true,
-                            dataType: "json",
-                            timeout: 10000
-                        }).done(successFn).fail(errorFn);
+                        var authorTitle = "";
+                        if(authors.length > 30){
+                            authorTitle = authors.substring(0,30)+"..." 
+                        }else{
+                            authorTitle = authors
+                        }
+                        $(".loanAuthor").html("").append("<div style=\"color:brown;\">" + authorTitle + "</div>");
+                        // $(".isbn").append("<div style=\"color:brown;\">" + biblio[i].isbn + "</div>").attr("id", biblio[i].isbn);
 
-                        function successFn() {
-                            for (var i = 0, len = dataAppend.length; i < len; i++) {
-                                if (dataAppend[i].itemId == deleteId) {
-                                    index = i;
-                                    dataAppend.splice(index, 1);
-                                    localStorage.setObj("indexSaved", dataAppend);
-                                    break;
-                                }
+                        // $(".description").append("<p style=\"font-style:italic;\">" + biblio[i].description + "</p>");
+                        break;
+                    }
+                };
+                facebookConnectPlugin.login(["user_friends"],
+                        function success(result){
+                             facebookConnectPlugin.api("/" + result.authResponse
+                                .userID + "/friends" +
+                                "?fields=id,name,email,picture", [
+                                    "email",
+                                ], function success(response) {
+                                    Materialize.toast(
+                                        response,
+                                        2000);
+                                }, function failure() {
+                                    Materialize.toast(
+                                        "Could not fetch Facebook data",
+                                        5000);
+                                });
+                        },function failure(){
+                            Materialize.toast(
+                                "Could not connect to facebook",
+                                5000);
+                        })
+                
+                //location.href = "loan.html";
+            })
+            //founction for deleting books
+            //Delete function
+            $(".delete").click(function (event) {
+                var deleteId = event.target.id;
+                var data = {
+                    "itemId": deleteId,
+                    "token": localStorage.getItem("token")
+                };
+                console.log(data);
+                $(document).ajaxStart(function () {
+                    $(".ajaxFilter").addClass("black-loading");
+                    console.log("Ajax Request is Starting");
+                });
+                // Ajax stop global function
+                $(document).ajaxStop(function () {
+                    $(".ajaxFilter").removeClass("black-loading");
+                    console.log("Ajax Request has ended");
+                });
+                // Ajax request
+                $.ajax({
+                    type: "POST",
+                    contentType: 'application/json; charset=UTF-8',
+                    url: "http://enshelf.com/api/deleteItem",
+                    data: JSON.stringify(data),
+                    processData: true,
+                    dataType: "json",
+                    timeout: 10000
+                }).done(successFn).fail(errorFn);
 
-                            }
-                            Materialize.toast('Delete Successfull', 1000);
-                            $("#booklist").html("");
-                            insertBooks();
+                function successFn() {
+                    for (var i = 0, len = dataAppend.length; i < len; i++) {
+                        if (dataAppend[i].itemId == deleteId) {
+                            index = i;
+                            dataAppend.splice(index, 1);
+                            localStorage.setObj("indexSaved", dataAppend);
+                            break;
                         }
 
-                        function errorFn() {
-                            Materialize.toast('We could not delete the item', 4000);
-                        }
-                    });
+                    }
+                    Materialize.toast('Delete Successfull', 1000);
+                    $("#booklist").html("");
+                    insertBooks();
+                }
+
+                function errorFn() {
+                    Materialize.toast('We could not delete the item', 4000);
+                }
+            });
 
 
         }

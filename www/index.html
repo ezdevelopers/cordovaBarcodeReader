@@ -222,9 +222,7 @@
                             //get user data from facebook via graph api
                             facebookConnectPlugin.api("/" + result.authResponse
                                 .userID +
-                                "?fields=first_name,last_name,email,gender,age_range,is_verified", [
-                                  "email"
-                                ],
+                                "?fields=first_name,last_name,email,gender,age_range,is_verified",[],
                                 function success(result) {
                                     Materialize.toast(
                                         "Welcome " + result.first_name +" "+ result.last_name,

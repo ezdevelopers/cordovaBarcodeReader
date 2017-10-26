@@ -483,35 +483,7 @@
             location.href = "view.html"
         });
 
-         $(".collection-item").click(function (event) {
-                var fbId = event.target.id;
-                alert("clicked "+ fbId);
-                data = {
-                    "borrowerId": fbId,
-                    "borrowerEmail": "Email",
-                    "itemId": localStorage.getItem("loanId"),
-                    "dueDate": "Date"
-                }
-                Materialize.toast(
-                    "Processing...",
-                    2000);
-                $.ajax({
-                    type: "POST",
-                    contentType: 'application/json; charset=UTF-8',
-                    url: "http://enshelf.com/api/addloan",
-                    data: JSON.stringify(data),
-                    processData: true,
-                    dataType: "json",
-                    timeout: 10000
-                }).done(successFn).fail(errorFn);
-                function successFn() {
-                    Materialize.toast('Done', 2000);
-                }
-
-                function errorFn() {
-                    Materialize.toast('We could not complete the lending process', 3000);
-                }
-            })
+         
 
         //function to insert book to page and attach event handlers
         function insertBooks() {
@@ -633,8 +605,8 @@
                                         ' class="collection-item avatar"><img src="' +
                                         response.data[i].picture.data.url +
                                         '" alt = ""class = "circle">' +
-                                        '<span class = "title">' + response.data[i].name +
-                                        ' </span><p>' + response.data[i].email || "No email" +
+                                        '<span class = "title">Name ' + response.data[i].name +
+                                        ' </span><p>Email- ' + response.data[i].email || "No email" +
                                         '</p><a href = "#!" class = "secondary-content" >' +
                                         ' <i class="fa fa-arrow-right" aria-hidden="true"> </i></a></li >'
                                     $(".collection").html("").append(friendList);
@@ -652,6 +624,35 @@
                             5000);
                     });
 
+                $(".collection-item").click(function (event) {
+                    var fbId = event.target.id;
+                    alert("clicked " + fbId);
+                    data = {
+                        "borrowerId": fbId,
+                        "borrowerEmail": "Email",
+                        "itemId": localStorage.getItem("loanId"),
+                        "dueDate": "Date"
+                    }
+                    Materialize.toast(
+                        "Processing...",
+                        2000);
+                    $.ajax({
+                        type: "POST",
+                        contentType: 'application/json; charset=UTF-8',
+                        url: "http://enshelf.com/api/addloan",
+                        data: JSON.stringify(data),
+                        processData: true,
+                        dataType: "json",
+                        timeout: 10000
+                    }).done(successFn).fail(errorFn);
+                    function successFn() {
+                        Materialize.toast('Done', 2000);
+                    }
+
+                    function errorFn() {
+                        Materialize.toast('We could not complete the lending process', 3000);
+                    }
+                })
             });
 
            

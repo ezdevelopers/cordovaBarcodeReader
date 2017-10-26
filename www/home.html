@@ -601,7 +601,7 @@
                             function success(response) {
                                 $(".countFriends").html("").append(response.summary.total_count);
                                 for (var i = 0, len = response.data.length; i < len; i++) {
-                                    var friendList = '<li  id=' + response.data[i].id +
+                                    var friendList = '<li id=' + response.data[i].id +
                                         ' class="collection-item avatar"><img src="' +
                                         response.data[i].picture.data.url +
                                         '" alt = ""class = "circle">' +
@@ -612,8 +612,8 @@
                                     $(".collection").html("").append(friendList);
                                 } 
                                  $(".collection-item").click(function (event) {
-                                        var fbId = event.target.id;
-                                        alert("clicked " + fbId);
+                                        var fbId = event.currentTarget.id;
+                                        alert("clicked "+ fbId);
                                         data = {
                                             "borrowerId": fbId,
                                             "borrowerEmail": "Email",

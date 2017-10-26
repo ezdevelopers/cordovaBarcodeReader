@@ -598,7 +598,7 @@
                                     "email",
                                 ], function success(response) {
                                     Materialize.toast(
-                                        response,
+                                        JSON.stringify(response),
                                         2000);
                                 }, function failure() {
                                     Materialize.toast(

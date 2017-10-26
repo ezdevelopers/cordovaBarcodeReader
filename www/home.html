@@ -552,6 +552,7 @@
             $(".loan").click(function (event) {
                 var loanId = event.currentTarget.id;
                 localStorage.setItem("loanId", loanId);
+                console.log(event);
 
                 //parse the string of objects comming from the localStorage
                 var biblio = localStorage.getObj("indexSaved");
@@ -596,17 +597,17 @@
                                 "email",
                             ],
                             function success(response) {
-                                $(".countFriends").append(response.summary.total_count);
+                                $(".countFriends").html("").append(response.summary.total_count);
                                 for (var i = 0, len = response.data.length; i < len; i++) {
-                                    var friendList = '<li class="collection-item avatar"><img src="' +
+                                    var friendList = '<li  id=' + response.data[i].id +
+                                        ' class="collection-item avatar"><img src="' +
                                         response.data[i].picture.data.url +
                                         '" alt = ""class = "circle">' +
                                         '<span class = "title">' + response.data[i].name +
                                         ' </span><p>' + response.data[i].email || "No email" +
-                                        '</p><a id=' + response.data[i].id +
-                                        'href = "#!" class = "secondary-content" >' +
-                                        ' <i class = "fa fa-arrow-right" aria-hidden = "true" > </i></a></li >'
-                                    $(".collection").append(friendList);
+                                        '</p><a href = "#!" class = "secondary-content" >' +
+                                        ' <i class="fa fa-arrow-right" aria-hidden="true"> </i></a></li >'
+                                    $(".collection").html("").append(friendList);
                                 }
                                 Materialize.toast(
                                         JSON.stringify(response),
@@ -626,7 +627,35 @@
                             5000);
                     });
 
-                //location.href = "loan.html";
+            });
+
+            $(".collection-item").click(function(event){
+                var fbId = event.target.id;
+                data = {
+                    "borrowerId": fbId,
+                    "borrowerEmail":"Email",
+                    "itemId":  localStorage.getItem("loanId"),
+                    "dueDate":"Date"
+                }
+                 Materialize.toast(
+                        "Processing...",
+                        2000);
+                $.ajax({
+                        type: "POST",
+                        contentType: 'application/json; charset=UTF-8',
+                        url: "http://enshelf.com/api/addloan",
+                        data: JSON.stringify(data),
+                        processData: true,
+                        dataType: "json",
+                        timeout: 10000
+                    }).done(successFn).fail(errorFn);
+                    function successFn() {
+                            Materialize.toast('Done', 2000);
+                        }
+
+                        function errorFn() {
+                            Materialize.toast('We could not complete the lending process', 3000);
+                        }
             })
             //founction for deleting books
             //Delete function

@@ -615,6 +615,7 @@
                                         var fbId = event.currentTarget.id;
                                         alert("clicked "+ fbId);
                                         data = {
+                                            "token": localStorage.getItem("token"),
                                             "borrowerId": fbId,
                                             "borrowerEmail": "Email",
                                             "itemId": localStorage.getItem("loanId"),

@@ -616,7 +616,7 @@
                                         alert("clicked "+ fbId);
                                         data = {
                                             "token": localStorage.getItem("token"),
-                                            "borrowerId": fbId,
+                                            "borrowerFBID": fbId,
                                             "borrowerEmail": "Email",
                                             "itemId": localStorage.getItem("loanId"),
                                             "dueDate": "Date"
@@ -627,7 +627,7 @@
                                         $.ajax({
                                             type: "POST",
                                             contentType: 'application/json; charset=UTF-8',
-                                            url: "http://enshelf.com/api/addloan",
+                                            url: "http://enshelf.com/api/addLoan",
                                             data: JSON.stringify(data),
                                             processData: true,
                                             dataType: "json",

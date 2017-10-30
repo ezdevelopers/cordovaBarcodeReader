@@ -90,19 +90,6 @@
     <script src="js/logout.js"></script>
     <script type="text/javascript" src="cordova.js"></script>
     <script>
-        // Initialise date picker
-        function datepicker() {
-            $('.datepicker').pickadate({
-                selectMonths: true, // Creates a dropdown to control month
-                selectYears: 15, // Creates a dropdown of 15 years to control year,
-                today: 'Today',
-                clear: 'Clear',
-                close: 'Ok',
-                closeOnSelect: false // Close upon selecting a date,
-            });
-        }
-
-
         $(document).ready(function () {
             $('.modal').modal();
             $('select').material_select();
@@ -174,8 +161,7 @@
                                     '</div>' +
                                     '<div class="collapsible-body"><label for="Return">Return Date</label><div class="col s8"><input type="text" class="datepicker"></div><div class="col s4"><a  id=' +
                                     response.data[i].id +
-                                    ' class="lend waves-effect waves-light btn right">Lend</a></div></div></li>';
-                                datepicker();
+                                    ' class="lend right"><i class="fa fa-chevron-right" style="font-size:15px;" aria-hidden="true"></i></a></div></div></li>';
                                 $(".f-collection").html("").append(friendList);
                             }
 
@@ -218,6 +204,15 @@
                                 }
 
                             })
+                            // Initialise date picker
+                                $('.datepicker').pickadate({
+                                    selectMonths: true, // Creates a dropdown to control month
+                                    selectYears: 15, // Creates a dropdown of 15 years to control year,
+                                    today: 'Today',
+                                    clear: 'Clear',
+                                    close: 'Ok',
+                                    closeOnSelect: false // Close upon selecting a date,
+                                });
 
                         },
                         function failure() {

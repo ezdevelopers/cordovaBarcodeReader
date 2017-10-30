@@ -59,6 +59,7 @@
 
         </p>
         <ul class="collection">
+            <li id="Eze" class="collection-item avatar waves-effect waves-light btn modal-trigger" href="#loan">Eze</li>
         </ul>
     </div>
     <div id="loan" class="modal">
@@ -76,15 +77,15 @@
     <script src="js/logout.js"></script>
     <script type="text/javascript" src="cordova.js"></script>
     <script>
-        //Initialise date picker
-        // $('.datepicker').pickadate({
-        //     selectMonths: true, // Creates a dropdown to control month
-        //     selectYears: 15, // Creates a dropdown of 15 years to control year,
-        //     today: 'Today',
-        //     clear: 'Clear',
-        //     close: 'Ok',
-        //     closeOnSelect: false // Close upon selecting a date,
-        // });
+        // Initialise date picker
+        $('.datepicker').pickadate({
+            selectMonths: true, // Creates a dropdown to control month
+            selectYears: 15, // Creates a dropdown of 15 years to control year,
+            today: 'Today',
+            clear: 'Clear',
+            close: 'Ok',
+            closeOnSelect: false // Close upon selecting a date,
+        });
 
         // Initialize collapse button
         $(".button-collapse").sideNav();
@@ -139,6 +140,9 @@
             }
         }
 
+        //grab facebook ID
+        var fbId = "";
+
         function fetchFriends() {
             Materialize.toast('Finding Friend List', 3000);
             facebookConnectPlugin.login(["user_friends"],
@@ -153,7 +157,7 @@
                             $(".countFriends").html("").append(response.summary.total_count);
                             for (var i = 0, len = response.data.length; i < len; i++) {
                                 var friendList = '<li id=' + response.data[i].id +
-                                    ' class="collection-item avatar waves-effect waves-light btn modal-trigger" style="color:#000" href="#loan"><img src="' +
+                                    ' class="collection-item avatar waves-effect waves-light btn modal-trigger"href="#loan" style="color:#000" ><img src="' +
                                     response.data[i].picture.data.url +
                                     '" alt = ""class = "circle">' +
                                     '<span class = "title">Name ' + response.data[i].name +
@@ -161,14 +165,14 @@
                                     '</p></li>'
                                 $(".collection").html("").append(friendList);
                             }
+                            $(".collection-item").click(function (event) {
+                                var fbId = event.target.id
+                            })
                             $(".modal-action").click(function (event) {
-                                var fbId = event.target.id;
                                 var date = $(".datepicker").val();
                                 if (date.length == 0) {
                                     Materialize.toast(
                                         'Please enter a date', 2000);
-
-
                                 } else {
                                     alert("clicked " + fbId);
                                     data = {
@@ -202,6 +206,7 @@
                                 }
 
                             })
+
                         },
                         function failure() {
                             Materialize.toast(

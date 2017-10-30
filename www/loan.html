@@ -63,7 +63,7 @@
         </div>
     </div>
 
-    <div class="row">
+    <div class="row" style="margin-top:120px">
         <p class="p-filter" style="padding-left:10px"> Select Friends
             <span class="countFriends" style="font-style:italic"></span>
         </p>
@@ -127,8 +127,7 @@
             }
         }
         $("document").ready(function () {
-             Materialize.toast('Finding Friend List', 3000);
-        
+            Materialize.toast('Finding Friend List', 3000);
             facebookConnectPlugin.login(["user_friends"],
                 function success(result) {
                     facebookConnectPlugin.api("/" + result.authResponse
@@ -137,6 +136,7 @@
                             "email",
                         ],
                         function success(response) {
+                            Materialize.toast('Found', 3000);
                             $(".countFriends").html("").append(response.summary.total_count);
                             for (var i = 0, len = response.data.length; i < len; i++) {
                                 var friendList = '<li id=' + response.data[i].id +

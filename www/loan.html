@@ -159,7 +159,7 @@
                                     response.data[i].picture.data.url +
                                     '" alt = "Profile" class = "circle"> Name: ' + response.data[i].name +
                                     '</div>' +
-                                    '<div class="collapsible-body"><div class="col s8"><label for="Return">Return Date</label><input type="text" class="datepicker"></div><div class="col s4"><a  id=' +
+                                    '<div class="collapsible-body"><div class="col s8"><input type="text" class="datepicker" placeholder="Return Date"></div><div class="col s4"><a  id=' +
                                     response.data[i].id +
                                     ' class="lend right"><i class="fa fa-chevron-right" style="font-size:15px;" aria-hidden="true"></i></a></div></div></li>';
                                 $(".f-collection").html("").append(friendList);
@@ -172,7 +172,7 @@
                                         'Please enter a date', 2000);
                                 } else {
                                     fbId = event.currentTarget.id;
-                                    alert("clicked " + fbId);
+                                    Materialize.toast("clicked " + fbId);
                                     data = {
                                         "token": localStorage.getItem("token"),
                                         "borrowerFBID": fbId,
@@ -180,9 +180,6 @@
                                         "itemId": localStorage.getItem("loanId"),
                                         "dueDate": date
                                     }
-                                    Materialize.toast(
-                                        "Processing...",
-                                        2000);
                                     $.ajax({
                                         type: "POST",
                                         contentType: 'application/json; charset=UTF-8',

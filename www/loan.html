@@ -18,6 +18,10 @@
         p {
             font-size: 13px;
         }
+
+        span.badge.new:after {
+            content: "";
+        }
     </style>
 </head>
 
@@ -53,21 +57,31 @@
     </div>
 
     <div class="row" style="margin-top:130px">
-        <p class="p-filter" style="padding-left:10px" onclick="fetchFriends()"> Select Friends
+        <p class="p-filter" style="padding:10px"> Select FB Friends
             <span class="countFriends" style="font-style:italic"></span>
-            <span class="right" style="padding-right:10px"><i style="font-size:20px" class="fa fa-refresh"></i></span>
+            <span class="new badge modal-trigger" href="#manual"> Add Manually</span>
+            <span class="new badge"> Invite Friends</span>
+            <span class="right" style="padding-right:10px" onclick="fetchFriends()"><i style="font-size:20px" class="fa fa-refresh"></i></span>
 
         </p>
-        <ul class="collection">
-       </ul>
+        <ul class="collapsible f-collection" data-collapsible="accordion">
+        </ul>
     </div>
-    <div id="loan" class="modal">
+    <div id="manual" class="modal">
         <div class="modal-content">
-            <label for="return">Return Date</label>
-            <input type="text" class="datepicker" placeholder="Return Date">
-        </div>
-        <div class="modal-footer">
-            <a class="modal-action modal-close waves-effect waves-green btn-flat">Ok</a>
+            <div class="input-field col s12">
+                <input id="name" type="text" class="validate">
+                <label for="name">Name</label>
+            </div>
+            <div class="input-field col s12">
+                <input id="email" type="text" class="validate">
+                <label for="email">Email</label>
+            </div>
+            <div class="input-field col s12">
+                <input type="text" class="validate">
+                <label for="return">Return Date</label>
+            </div>
+            <div class="col s12"><a id="add" class="waves-effect waves-light btn">Lend Book</a></div>
         </div>
     </div>
 
@@ -86,13 +100,11 @@
             closeOnSelect: false // Close upon selecting a date,
         });
 
-        // Initialize collapse button
-        $(".button-collapse").sideNav();
-        // Initialize collapsible (uncomment the line below if you use the dropdown variation)
-        //$('.collapsible').collapsible();
         $(document).ready(function () {
             $('.modal').modal();
             $('select').material_select();
+            $('.collapsible').collapsible();
+            $(".button-collapse").sideNav();
 
         });
 
@@ -140,8 +152,6 @@
         }
 
         //grab facebook ID
-        var fbId = "";
-
         function fetchFriends() {
             Materialize.toast('Finding Friend List', 3000);
             facebookConnectPlugin.login(["user_friends"],
@@ -155,24 +165,23 @@
                             Materialize.toast('Found', 3000);
                             $(".countFriends").html("").append(response.summary.total_count);
                             for (var i = 0, len = response.data.length; i < len; i++) {
-                                var friendList = '<li id=' + response.data[i].id +
-                                    ' class="collection-item avatar waves-effect waves-light btn modal-trigger"href="#loan" style="color:#000" ><img src="' +
+                                var friendList = '<li><div class="collapsible-header"><img src="' +
                                     response.data[i].picture.data.url +
-                                    '" alt = ""class = "circle">' +
-                                    '<span class = "title">Name ' + response.data[i].name +
-                                    ' </span><p>Email- ' + response.data[i].email || "No email" +
-                                    '</p></li>'
-                                $(".collection").html("").append(friendList);
+                                    '" alt = "Profile" class = "circle"> Name: ' + response.data[i].name +
+                                    '</div>' +
+                                    '<div class="collapsible-body"><label for="Return">Return Date</label><input type="text" class="datepicker"><a  id=' +
+                                    response.data[i].id +
+                                    ' class="lend waves-effect waves-light btn right">Lend</a></div></li>';
+                                $(".f-collection").html("").append(friendList);
                             }
-                            $(".collection-item").click(function (event) {
-                                var fbId = event.target.id
-                            })
-                            $(".modal-action").click(function (event) {
+
+                            $(".lend").click(function (event) {
                                 var date = $(".datepicker").val();
                                 if (date.length == 0) {
                                     Materialize.toast(
                                         'Please enter a date', 2000);
                                 } else {
+                                    fbId = event.target.id;
                                     alert("clicked " + fbId);
                                     data = {
                                         "token": localStorage.getItem("token"),

@@ -78,13 +78,13 @@
     <script>
         //Initialise date picker
         $('.datepicker').pickadate({
-                selectMonths: true, // Creates a dropdown to control month
-                selectYears: 15, // Creates a dropdown of 15 years to control year,
-                today: 'Today',
-                clear: 'Clear',
-                close: 'Ok',
-                closeOnSelect: false // Close upon selecting a date,
-            });
+            selectMonths: true, // Creates a dropdown to control month
+            selectYears: 15, // Creates a dropdown of 15 years to control year,
+            today: 'Today',
+            clear: 'Clear',
+            close: 'Ok',
+            closeOnSelect: false // Close upon selecting a date,
+        });
 
         // Initialize collapse button
         $(".button-collapse").sideNav();
@@ -164,35 +164,44 @@
                             }
                             $(".modal-action").click(function (event) {
                                 var fbId = event.currentTarget.id;
-                                alert("clicked " + fbId);
-                                data = {
-                                    "token": localStorage.getItem("token"),
-                                    "borrowerFBID": fbId,
-                                    "borrowerEmail": "Email",
-                                    "itemId": localStorage.getItem("loanId"),
-                                    "dueDate": $(".datepicker").val()
-                                }
-                                Materialize.toast(
-                                    "Processing...",
-                                    2000);
-                                $.ajax({
-                                    type: "POST",
-                                    contentType: 'application/json; charset=UTF-8',
-                                    url: "http://enshelf.com/api/addLoan",
-                                    data: JSON.stringify(data),
-                                    processData: true,
-                                    dataType: "json",
-                                    timeout: 10000
-                                }).done(successFn).fail(errorFn);
-
-                                function successFn() {
-                                    Materialize.toast('Done', 2000);
-                                }
-
-                                function errorFn() {
+                                var date = $(".datepicker").val();
+                                if (date.length == 0) {
                                     Materialize.toast(
-                                        'We could not complete the lending process', 3000);
+                                        'Please enter a date', 2000);
+
+
+                                } else {
+                                    alert("clicked " + fbId);
+                                    data = {
+                                        "token": localStorage.getItem("token"),
+                                        "borrowerFBID": fbId,
+                                        "borrowerEmail": "Email",
+                                        "itemId": localStorage.getItem("loanId"),
+                                        "dueDate": date
+                                    }
+                                    Materialize.toast(
+                                        "Processing...",
+                                        2000);
+                                    $.ajax({
+                                        type: "POST",
+                                        contentType: 'application/json; charset=UTF-8',
+                                        url: "http://enshelf.com/api/addLoan",
+                                        data: JSON.stringify(data),
+                                        processData: true,
+                                        dataType: "json",
+                                        timeout: 10000
+                                    }).done(successFn).fail(errorFn);
+
+                                    function successFn() {
+                                        Materialize.toast('Done', 2000);
+                                    }
+
+                                    function errorFn() {
+                                        Materialize.toast(
+                                            'We could not complete the lending process', 3000);
+                                    }
                                 }
+
                             })
                         },
                         function failure() {

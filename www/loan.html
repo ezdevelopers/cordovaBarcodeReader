@@ -32,10 +32,9 @@
             <li><a class="waves-effect" href="home.html">Home</a></li>
             <li><a class="waves-effect" href="contacts.html">Contacts</a></li>
             <li><a class="waves-effect" onClick="logout()">Log Out</a></li>
-
         </li>
-
     </ul>
+
     <div class="navbar-fixed">
         <nav class="nav-extended">
             <div class="nav-wrapper">
@@ -55,7 +54,7 @@
                     <div class="card-image"><img alt="Image" class="loanImage" height="auto" src=""></div>
                     <div class="card-stacked">
                         <div class="card-content">
-                            <span id="" style="color:navy;font-weight:bold;font-size:14px;" class="card-title"></span>
+                            <span id="" style="color:navy;font-weight:bold;font-size:14px;" class="card-title loanTitle"></span>
                             <p style="color:brown;" class="loanAuthor"></p>
                         </div>
                     </div>
@@ -67,14 +66,12 @@
     <div class="row">
         <ul class="collection">
             <li class="collection-item avatar">
-                <img src="img/bg.jpg" alt="" class="circle">
-                <span class="title">Name</span>
-                <p>Email
-                </p>
+                <img src="" alt="" class="circle">
+                <span class="title"></span>
+                <p></p>
                 <a href="#!" class="secondary-content"><i class="fa fa-arrow-right" aria-hidden="true"></i></a>
             </li>
         </ul>
-
     </div>
 
     <script src="js/jquery-3.2.1.min.js"></script>
@@ -121,13 +118,80 @@
                 biblio[i].authors.forEach(function (element) {
                     authors += element.name + ". "
                 });
-                $(".loanAuthor").append("<div style=\"color:brown;\">" + authors + "</div>");
+                var authorTitle = "";
+                if (authors.length > 30) {
+                    authorTitle = authors.substring(0, 30) + "..."
+                } else {
+                    authorTitle = authors
+                }
+                $(".loanAuthor").append("<div style=\"color:brown;\">" + authorTitle + "</div>");
                 // $(".isbn").append("<div style=\"color:brown;\">" + biblio[i].isbn + "</div>").attr("id", biblio[i].isbn);
-
                 // $(".description").append("<p style=\"font-style:italic;\">" + biblio[i].description + "</p>");
                 break;
             }
         }
+                        facebookConnectPlugin.login(["user_friends"],
+                                function success(result) {
+                                    facebookConnectPlugin.api("/" + result.authResponse
+                                        .userID + "/friends" +
+                                        "?fields=id,name,email,picture", [
+                                            "email",
+                                        ],
+                                        function success(response) {
+                                            $(".countFriends").html("").append(response.summary.total_count);
+                                            for (var i = 0, len = response.data.length; i < len; i++) {
+                                                var friendList = '<li id=' + response.data[i].id +
+                                                    ' class="collection-item avatar"><img src="' +
+                                                    response.data[i].picture.data.url +
+                                                    '" alt = ""class = "circle">' +
+                                                    '<span class = "title">Name ' + response.data[i].name +
+                                                    ' </span><p>Email- ' + response.data[i].email || "No email" +
+                                                    '</p><a href = "#!" class = "secondary-content" >' +
+                                                    ' <i class="fa fa-arrow-right" aria-hidden="true"> </i></a></li >'
+                                                $(".collection").html("").append(friendList);
+                                            }
+                                            $(".collection-item").click(function (event) {
+                                                var fbId = event.currentTarget.id;
+                                                alert("clicked " + fbId);
+                                                data = {
+                                                    "token": localStorage.getItem("token"),
+                                                    "borrowerFBID": fbId,
+                                                    "borrowerEmail": "Email",
+                                                    "itemId": localStorage.getItem("loanId"),
+                                                    "dueDate": "Date"
+                                                }
+                                                Materialize.toast(
+                                                    "Processing...",
+                                                    2000);
+                                                $.ajax({
+                                                    type: "POST",
+                                                    contentType: 'application/json; charset=UTF-8',
+                                                    url: "http://enshelf.com/api/addLoan",
+                                                    data: JSON.stringify(data),
+                                                    processData: true,
+                                                    dataType: "json",
+                                                    timeout: 10000
+                                                }).done(successFn).fail(errorFn);
+                                                function successFn() {
+                                                    Materialize.toast('Done', 2000);
+                                                }
+
+                                                function errorFn() {
+                                                    Materialize.toast('We could not complete the lending process', 3000);
+                                                }
+                                            })
+                                        },
+                                        function failure() {
+                                            Materialize.toast(
+                                                "Could not fetch Facebook data",
+                                                5000);
+                                        });
+                                },
+                                function failure() {
+                                    Materialize.toast(
+                                        "Could not connect to facebook",
+                                        5000);
+                                });
     </script>
 </body>
 

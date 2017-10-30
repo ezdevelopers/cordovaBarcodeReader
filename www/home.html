@@ -521,7 +521,7 @@
                     '"><i style="font-size:16px; color:navy;" class="fa fa-ellipsis-v"></i></a><ul id="' + dataAppend[i]
                     .itemId + '" class="dropdown-content"><li id="' +
                     dataAppend[i].itemId +
-                    '" class="loan"><a class=" modal-trigger" href="#modalLoan">Lend Out</a></p></li><li  id="' +
+                    '" class="loan"><a class=" modal-trigger" href="loan.html">Lend Out</a></p></li><li  id="' +
                     dataAppend[i].itemId +
                     '" class="delete">Delete</li></ul>' +
                     '</div>';
@@ -550,110 +550,50 @@
 
                 };
             }
+
             //loan function
-            $(".loan").click(function (event) {
-                var loanId = event.currentTarget.id;
-                localStorage.setItem("loanId", loanId);
-                console.log(event);
+            // $(".loan").click(function (event) {
+            //     var loanId = event.currentTarget.id;
+            //     localStorage.setItem("loanId", loanId);
+            //     console.log(event);
 
-                //parse the string of objects comming from the localStorage
-                var biblio = localStorage.getObj("indexSaved");
-                var loanId = localStorage.getItem("loanId");
+            //     //parse the string of objects comming from the localStorage
+            //     var biblio = localStorage.getObj("indexSaved");
+            //     var loanId = localStorage.getItem("loanId");
 
-                //Loop through the objects and append in the value of page inputs
-                for (var i = 0; i < biblio.length; i++) {
-                    if (loanId == biblio[i].itemId) {
-                        var title = biblio[i].title;
-                        var theTitle = "";
-                        if (title.length > 30) {
-                            theTitle = title.substring(0, 30) + "..."
-                        } else {
-                            theTitle = title
-                        };
-                        //Append object value in the value of page inputs
-                        $(".loanTitle").html("").append(theTitle);
-                        $(".loanImage").attr("src", biblio[i].coverImageUrl);
-                        var authors = "";
-                        biblio[i].authors.forEach(function (element) {
-                            authors += element.name + ". "
-                        });
-                        var authorTitle = "";
-                        if (authors.length > 30) {
-                            authorTitle = authors.substring(0, 30) + "..."
-                        } else {
-                            authorTitle = authors
-                        }
-                        $(".loanAuthor").html("").append("<div style=\"color:brown;\">" + authorTitle +
-                            "</div>");
-                        // $(".isbn").append("<div style=\"color:brown;\">" + biblio[i].isbn + "</div>").attr("id", biblio[i].isbn);
+            //     //Loop through the objects and append in the value of page inputs
+            //     for (var i = 0; i < biblio.length; i++) {
+            //         if (loanId == biblio[i].itemId) {
+            //             var title = biblio[i].title;
+            //             var theTitle = "";
+            //             if (title.length > 30) {
+            //                 theTitle = title.substring(0, 30) + "..."
+            //             } else {
+            //                 theTitle = title
+            //             };
+            //             //Append object value in the value of page inputs
+            //             $(".loanTitle").html("").append(theTitle);
+            //             $(".loanImage").attr("src", biblio[i].coverImageUrl);
+            //             var authors = "";
+            //             biblio[i].authors.forEach(function (element) {
+            //                 authors += element.name + ". "
+            //             });
+            //             var authorTitle = "";
+            //             if (authors.length > 30) {
+            //                 authorTitle = authors.substring(0, 30) + "..."
+            //             } else {
+            //                 authorTitle = authors
+            //             }
+            //             $(".loanAuthor").html("").append("<div style=\"color:brown;\">" + authorTitle +
+            //                 "</div>");
+            //             // $(".isbn").append("<div style=\"color:brown;\">" + biblio[i].isbn + "</div>").attr("id", biblio[i].isbn);
 
-                        // $(".description").append("<p style=\"font-style:italic;\">" + biblio[i].description + "</p>");
-                        break;
-                    }
-                };
-                facebookConnectPlugin.login(["user_friends"],
-                    function success(result) {
-                        facebookConnectPlugin.api("/" + result.authResponse
-                            .userID + "/friends" +
-                            "?fields=id,name,email,picture", [
-                                "email",
-                            ],
-                            function success(response) {
-                                $(".countFriends").html("").append(response.summary.total_count);
-                                for (var i = 0, len = response.data.length; i < len; i++) {
-                                    var friendList = '<li id=' + response.data[i].id +
-                                        ' class="collection-item avatar"><img src="' +
-                                        response.data[i].picture.data.url +
-                                        '" alt = ""class = "circle">' +
-                                        '<span class = "title">Name ' + response.data[i].name +
-                                        ' </span><p>Email- ' + response.data[i].email || "No email" +
-                                        '</p><a href = "#!" class = "secondary-content" >' +
-                                        ' <i class="fa fa-arrow-right" aria-hidden="true"> </i></a></li >'
-                                    $(".collection").html("").append(friendList);
-                                } 
-                                 $(".collection-item").click(function (event) {
-                                        var fbId = event.currentTarget.id;
-                                        alert("clicked "+ fbId);
-                                        data = {
-                                            "token": localStorage.getItem("token"),
-                                            "borrowerFBID": fbId,
-                                            "borrowerEmail": "Email",
-                                            "itemId": localStorage.getItem("loanId"),
-                                            "dueDate": "Date"
-                                        }
-                                        Materialize.toast(
-                                            "Processing...",
-                                            2000);
-                                        $.ajax({
-                                            type: "POST",
-                                            contentType: 'application/json; charset=UTF-8',
-                                            url: "http://enshelf.com/api/addLoan",
-                                            data: JSON.stringify(data),
-                                            processData: true,
-                                            dataType: "json",
-                                            timeout: 10000
-                                        }).done(successFn).fail(errorFn);
-                                        function successFn() {
-                                            Materialize.toast('Done', 2000);
-                                        }
+            //             // $(".description").append("<p style=\"font-style:italic;\">" + biblio[i].description + "</p>");
+            //             break;
+            //         }
+            //     };
 
-                                        function errorFn() {
-                                            Materialize.toast('We could not complete the lending process', 3000);
-                                        }
-                                    })
-                            },
-                            function failure() {
-                                Materialize.toast(
-                                    "Could not fetch Facebook data",
-                                    5000);
-                            });
-                    },
-                    function failure() {
-                        Materialize.toast(
-                            "Could not connect to facebook",
-                            5000);
-                    });
-            });
+            //});
 
            
             //founction for deleting books

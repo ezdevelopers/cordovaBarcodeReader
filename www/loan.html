@@ -64,11 +64,10 @@
     </div>
 
     <div class="row" style="margin-top:130px">
-        <p class="p-filter" style="padding-left:10px"> Select Friends
+        <p class="p-filter" style="padding-left:10px" onclick="fetchFriends()"> Select Friends
             <span class="countFriends" style="font-style:italic"></span>
         </p>
         <ul class="collection">
-            <script></script>
         </ul>
     </div>
 
@@ -130,7 +129,7 @@
             }
         }
         function fetchFriends(){
-             Materialize.toast('Finding Friend List', 3000);
+            Materialize.toast('Finding Friend List', 3000);
             facebookConnectPlugin.login(["user_friends"],
                 function success(result) {
                     facebookConnectPlugin.api("/" + result.authResponse

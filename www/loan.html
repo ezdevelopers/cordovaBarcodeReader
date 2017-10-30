@@ -63,16 +63,18 @@
         </div>
     </div>
 
-    <div class="row" style="margin-top:120px">
+    <div class="row" style="margin-top:130px">
         <p class="p-filter" style="padding-left:10px"> Select Friends
             <span class="countFriends" style="font-style:italic"></span>
         </p>
         <ul class="collection">
+            <script></script>
         </ul>
     </div>
 
     <script src="js/jquery-3.2.1.min.js"></script>
     <script src="js/materialize.min.js"></script>
+    <script src="js/logout.js"></script>
     <script type="text/javascript" src="cordova.js"></script>
     <script>
         // Initialize collapse button
@@ -82,6 +84,7 @@
         $(document).ready(function () {
             $('.modal').modal();
             $('select').material_select();
+            
         });
 
         //Create a prototype function for storing objects in localStorage
@@ -126,8 +129,8 @@
                 break;
             }
         }
-        $("document").ready(function () {
-            Materialize.toast('Finding Friend List', 3000);
+        function fetchFriends(){
+             Materialize.toast('Finding Friend List', 3000);
             facebookConnectPlugin.login(["user_friends"],
                 function success(result) {
                     facebookConnectPlugin.api("/" + result.authResponse
@@ -193,7 +196,8 @@
                         "Could not connect to facebook",
                         5000);
                 });
-        })
+        }
+        fetchFriends();
     </script>
 </body>
 

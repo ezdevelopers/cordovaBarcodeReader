@@ -64,20 +64,16 @@
     </div>
 
     <div class="row">
+        <p class="p-filter" style="padding-left:10px"> Select Friends
+            <span class="countFriends" style="font-style:italic"></span>
+        </p>
         <ul class="collection">
-            <li class="collection-item avatar">
-                <img src="" alt="" class="circle">
-                <span class="title"></span>
-                <p></p>
-                <a href="#!" class="secondary-content"><i class="fa fa-arrow-right" aria-hidden="true"></i></a>
-            </li>
         </ul>
     </div>
 
     <script src="js/jquery-3.2.1.min.js"></script>
     <script src="js/materialize.min.js"></script>
     <script type="text/javascript" src="cordova.js"></script>
-    <script type="text/javascript" src="js/index.js"></script>
     <script>
         // Initialize collapse button
         $(".button-collapse").sideNav();
@@ -130,68 +126,74 @@
                 break;
             }
         }
-                        facebookConnectPlugin.login(["user_friends"],
-                                function success(result) {
-                                    facebookConnectPlugin.api("/" + result.authResponse
-                                        .userID + "/friends" +
-                                        "?fields=id,name,email,picture", [
-                                            "email",
-                                        ],
-                                        function success(response) {
-                                            $(".countFriends").html("").append(response.summary.total_count);
-                                            for (var i = 0, len = response.data.length; i < len; i++) {
-                                                var friendList = '<li id=' + response.data[i].id +
-                                                    ' class="collection-item avatar"><img src="' +
-                                                    response.data[i].picture.data.url +
-                                                    '" alt = ""class = "circle">' +
-                                                    '<span class = "title">Name ' + response.data[i].name +
-                                                    ' </span><p>Email- ' + response.data[i].email || "No email" +
-                                                    '</p><a href = "#!" class = "secondary-content" >' +
-                                                    ' <i class="fa fa-arrow-right" aria-hidden="true"> </i></a></li >'
-                                                $(".collection").html("").append(friendList);
-                                            }
-                                            $(".collection-item").click(function (event) {
-                                                var fbId = event.currentTarget.id;
-                                                alert("clicked " + fbId);
-                                                data = {
-                                                    "token": localStorage.getItem("token"),
-                                                    "borrowerFBID": fbId,
-                                                    "borrowerEmail": "Email",
-                                                    "itemId": localStorage.getItem("loanId"),
-                                                    "dueDate": "Date"
-                                                }
-                                                Materialize.toast(
-                                                    "Processing...",
-                                                    2000);
-                                                $.ajax({
-                                                    type: "POST",
-                                                    contentType: 'application/json; charset=UTF-8',
-                                                    url: "http://enshelf.com/api/addLoan",
-                                                    data: JSON.stringify(data),
-                                                    processData: true,
-                                                    dataType: "json",
-                                                    timeout: 10000
-                                                }).done(successFn).fail(errorFn);
-                                                function successFn() {
-                                                    Materialize.toast('Done', 2000);
-                                                }
+        $("document").ready(function () {
+             Materialize.toast('Finding Friend List', 3000);
+        
+            facebookConnectPlugin.login(["user_friends"],
+                function success(result) {
+                    facebookConnectPlugin.api("/" + result.authResponse
+                        .userID + "/friends" +
+                        "?fields=id,name,email,picture", [
+                            "email",
+                        ],
+                        function success(response) {
+                            $(".countFriends").html("").append(response.summary.total_count);
+                            for (var i = 0, len = response.data.length; i < len; i++) {
+                                var friendList = '<li id=' + response.data[i].id +
+                                    ' class="collection-item avatar"><img src="' +
+                                    response.data[i].picture.data.url +
+                                    '" alt = ""class = "circle">' +
+                                    '<span class = "title">Name ' + response.data[i].name +
+                                    ' </span><p>Email- ' + response.data[i].email || "No email" +
+                                    '</p><a href = "#!" class = "secondary-content" >' +
+                                    ' <i class="fa fa-arrow-right" aria-hidden="true"> </i></a></li >'
+                                $(".collection").html("").append(friendList);
+                            }
+                            $(".collection-item").click(function (event) {
+                                var fbId = event.currentTarget.id;
+                                alert("clicked " + fbId);
+                                data = {
+                                    "token": localStorage.getItem("token"),
+                                    "borrowerFBID": fbId,
+                                    "borrowerEmail": "Email",
+                                    "itemId": localStorage.getItem("loanId"),
+                                    "dueDate": "Date"
+                                }
+                                Materialize.toast(
+                                    "Processing...",
+                                    2000);
+                                $.ajax({
+                                    type: "POST",
+                                    contentType: 'application/json; charset=UTF-8',
+                                    url: "http://enshelf.com/api/addLoan",
+                                    data: JSON.stringify(data),
+                                    processData: true,
+                                    dataType: "json",
+                                    timeout: 10000
+                                }).done(successFn).fail(errorFn);
 
-                                                function errorFn() {
-                                                    Materialize.toast('We could not complete the lending process', 3000);
-                                                }
-                                            })
-                                        },
-                                        function failure() {
-                                            Materialize.toast(
-                                                "Could not fetch Facebook data",
-                                                5000);
-                                        });
-                                },
-                                function failure() {
+                                function successFn() {
+                                    Materialize.toast('Done', 2000);
+                                }
+
+                                function errorFn() {
                                     Materialize.toast(
-                                        "Could not connect to facebook",
-                                        5000);
-                                });
+                                        'We could not complete the lending process', 3000);
+                                }
+                            })
+                        },
+                        function failure() {
+                            Materialize.toast(
+                                "Could not fetch Facebook data",
+                                5000);
+                        });
+                },
+                function failure() {
+                    Materialize.toast(
+                        "Could not connect to facebook",
+                        5000);
+                });
+        })
     </script>
 </body>
 

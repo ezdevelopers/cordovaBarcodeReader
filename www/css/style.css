@@ -98,8 +98,8 @@ nav .button-collapse{
     margin:0 10px;
 }
 
-nav a.library{
-    margin-left:-30px;
+a.logo{
+    font-size: 20px;
 }
 
 /* pullDown Style */

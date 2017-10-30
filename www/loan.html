@@ -58,7 +58,7 @@
 
     <div class="row" style="margin-top:130px">
         <p class="p-filter" style="padding:10px"> Select FB Friends
-            <span class="countFriends" style="font-style:italic"></span>
+            <span class="countFriends" style="font-style:italic; font-size:10px"></span>
             <span class="new badge modal-trigger" href="#manual"> Add Manually</span>
             <span class="new badge"> Invite Friends</span>
             <span class="right" style="padding-right:10px" onclick="fetchFriends()"><i style="font-size:20px" class="fa fa-refresh"></i></span>
@@ -91,14 +91,17 @@
     <script type="text/javascript" src="cordova.js"></script>
     <script>
         // Initialise date picker
-        $('.datepicker').pickadate({
-            selectMonths: true, // Creates a dropdown to control month
-            selectYears: 15, // Creates a dropdown of 15 years to control year,
-            today: 'Today',
-            clear: 'Clear',
-            close: 'Ok',
-            closeOnSelect: false // Close upon selecting a date,
-        });
+        function datepicker() {
+            $('.datepicker').pickadate({
+                selectMonths: true, // Creates a dropdown to control month
+                selectYears: 15, // Creates a dropdown of 15 years to control year,
+                today: 'Today',
+                clear: 'Clear',
+                close: 'Ok',
+                closeOnSelect: false // Close upon selecting a date,
+            });
+        }
+
 
         $(document).ready(function () {
             $('.modal').modal();
@@ -169,9 +172,10 @@
                                     response.data[i].picture.data.url +
                                     '" alt = "Profile" class = "circle"> Name: ' + response.data[i].name +
                                     '</div>' +
-                                    '<div class="collapsible-body"><label for="Return">Return Date</label><input type="text" class="datepicker"><a  id=' +
+                                    '<div class="collapsible-body"><label for="Return">Return Date</label><div class="col s8"><input type="text" class="datepicker"></div><div class="col s4"><a  id=' +
                                     response.data[i].id +
-                                    ' class="lend waves-effect waves-light btn right">Lend</a></div></li>';
+                                    ' class="lend waves-effect waves-light btn right">Lend</a></div></div></li>';
+                                datepicker();
                                 $(".f-collection").html("").append(friendList);
                             }
 

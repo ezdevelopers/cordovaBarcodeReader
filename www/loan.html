@@ -56,199 +56,201 @@
         </div>
     </div>
 
-    <div class="row" style="margin-top:130px">
+    <div class="row" style="margin-top:110px">
+        <div class="input-field col s12">
+            <input placeholder="Search" id="Search" type="text" class="validate">
+        </div>
         <p class="p-filter" style="padding:10px"> Select FB Friends
             <span class="countFriends" style="font-style:italic; font-size:10px"></span>
-            <span class="new badge modal-trigger" href="#manual"> Add Manually</span>
-            <span class="new badge share"> Invite Friends</span>
-            <span class="right" style="padding-right:10px"><i style="font-size:20px" class="fa fa-refresh"></i></span>
-            <script>
-                fetchFriends();
-            </script>
+            <span class="right" style="padding-right:10px" onclick="fetchFriends()"><i style="font-size:20px" class="fa fa-refresh"></i></span>
         </p>
         <ul class="collapsible f-collection" data-collapsible="accordion">
         </ul>
-    </div>
-    <div id="manual" class="modal">
-        <div class="modal-content">
-            <div class="input-field col s12">
-                <input id="name" type="text" class="validate">
-                <label for="name">Name</label>
-            </div>
-            <div class="input-field col s12">
-                <input id="email" type="text" class="validate">
-                <label for="email">Email</label>
-            </div>
-            <div class="input-field col s12">
-                <input type="text" class="validate">
-                <label for="return">Return Date</label>
-            </div>
-            <div class="col s12"><a id="add" class="waves-effect waves-light btn">Lend Book</a></div>
+        <p class="p-filter" style="padding:10px">Can't Find?
+            <span class="new badge modal-trigger" href="#manual"> Add Manually</span>
+            <span class="new badge share"> Invite Friends</span>
+        </p>
         </div>
-    </div>
+        <div id="manual" class="modal">
+            <div class="modal-content">
+                <div class="input-field col s12">
+                    <input id="name" type="text" class="validate">
+                    <label for="name">Name</label>
+                </div>
+                <div class="input-field col s12">
+                    <input id="email" type="text" class="validate">
+                    <label for="email">Email</label>
+                </div>
+                <div class="input-field col s12">
+                    <input type="text" class="validate">
+                    <label for="return">Return Date</label>
+                </div>
+                <div class="col s12"><a id="add" class="waves-effect waves-light btn">Lend Book</a></div>
+            </div>
+        </div>
 
-    <script src="js/jquery-3.2.1.min.js"></script>
-    <script src="js/materialize.min.js"></script>
-    <script src="js/logout.js"></script>
-    <script type="text/javascript" src="cordova.js"></script>
-    <script>
-        $(document).ready(function () {
-            $('.modal').modal();
-            $('select').material_select();
-            $('.collapsible').collapsible();
-            $(".button-collapse").sideNav();
+        <script src="js/jquery-3.2.1.min.js"></script>
+        <script src="js/materialize.min.js"></script>
+        <script src="js/logout.js"></script>
+        <script type="text/javascript" src="cordova.js"></script>
+        <script>
+            $(document).ready(function () {
+                $('.modal').modal();
+                $('select').material_select();
+                $('.collapsible').collapsible();
+                $(".button-collapse").sideNav();
 
-        });
+            });
 
-        //Create a prototype function for storing objects in localStorage
-        Storage.prototype.setObj = function (key, obj) {
-            return this.setItem(key, JSON.stringify(obj))
-        };
-        //create a prototype function for retrieving objects in localStorage
-        Storage.prototype.getObj = function (key) {
-            return JSON.parse(this.getItem(key))
-        }
+            //Create a prototype function for storing objects in localStorage
+            Storage.prototype.setObj = function (key, obj) {
+                return this.setItem(key, JSON.stringify(obj))
+            };
+            //create a prototype function for retrieving objects in localStorage
+            Storage.prototype.getObj = function (key) {
+                return JSON.parse(this.getItem(key))
+            }
 
-        //parse the string of objects comming from the localStorage
-        var biblio = localStorage.getObj("indexSaved");
-        var loanId = localStorage.getItem("loanId");
+            //parse the string of objects comming from the localStorage
+            var biblio = localStorage.getObj("indexSaved");
+            var loanId = localStorage.getItem("loanId");
 
-        //Loop through the objects and append in the value of page inputs
-        for (var i = 0; i < biblio.length; i++) {
-            if (loanId == biblio[i].itemId) {
-                var loanTitle = biblio[i].title;
-                var theloanTitle = "";
-                if (loanTitle.length > 30) {
-                    theloanTitle = loanTitle.substring(0, 30) + "..."
-                } else {
-                    theloanTitle = loanTitle
-                };
-                //Append object value in the value of page inputs
-                $(".loanTitle").append(theloanTitle);
-                $(".loanImage").attr("src", biblio[i].coverImageUrl);
-                var authors = "";
-                biblio[i].authors.forEach(function (element) {
-                    authors += element.name + ". "
-                });
-                var authorTitle = "";
-                if (authors.length > 30) {
-                    authorTitle = authors.substring(0, 30) + "..."
-                } else {
-                    authorTitle = authors
+            //Loop through the objects and append in the value of page inputs
+            for (var i = 0; i < biblio.length; i++) {
+                if (loanId == biblio[i].itemId) {
+                    var loanTitle = biblio[i].title;
+                    var theloanTitle = "";
+                    if (loanTitle.length > 30) {
+                        theloanTitle = loanTitle.substring(0, 30) + "..."
+                    } else {
+                        theloanTitle = loanTitle
+                    };
+                    //Append object value in the value of page inputs
+                    $(".loanTitle").append(theloanTitle);
+                    $(".loanImage").attr("src", biblio[i].coverImageUrl);
+                    var authors = "";
+                    biblio[i].authors.forEach(function (element) {
+                        authors += element.name + ". "
+                    });
+                    var authorTitle = "";
+                    if (authors.length > 30) {
+                        authorTitle = authors.substring(0, 30) + "..."
+                    } else {
+                        authorTitle = authors
+                    }
+                    $(".loanAuthor").append("<div style=\"color:brown;\">" + authorTitle + "</div>");
+                    // $(".isbn").append("<div style=\"color:brown;\">" + biblio[i].isbn + "</div>").attr("id", biblio[i].isbn);
+                    // $(".description").append("<p style=\"font-style:italic;\">" + biblio[i].description + "</p>");
+                    break;
                 }
-                $(".loanAuthor").append("<div style=\"color:brown;\">" + authorTitle + "</div>");
-                // $(".isbn").append("<div style=\"color:brown;\">" + biblio[i].isbn + "</div>").attr("id", biblio[i].isbn);
-                // $(".description").append("<p style=\"font-style:italic;\">" + biblio[i].description + "</p>");
-                break;
             }
-        }
-        $(".share").click(function () {
-            // this is the complete list of currently supported params you can pass to the plugin (all optional)
-            var options = {
-                message: 'Invite Friends to Library App', // not supported on some apps (Facebook, Instagram)
-                subject: 'Invite Friends to Library App', // fi. for email
-                //files: ['', ''], // an array of filenames either locally or remotely
-                url: 'https://github.com/ezdevelopers',
-                chooserTitle: 'Pick an app' // Android only, you can override the default share sheet title
-            }
+            $(".share").click(function () {
+                // this is the complete list of currently supported params you can pass to the plugin (all optional)
+                var options = {
+                    message: 'Invite Friends to Library App', // not supported on some apps (Facebook, Instagram)
+                    subject: 'Invite Friends to Library App', // fi. for email
+                    //files: ['', ''], // an array of filenames either locally or remotely
+                    url: 'https://github.com/ezdevelopers',
+                    chooserTitle: 'Pick an app' // Android only, you can override the default share sheet title
+                }
 
-            var onSuccess = function (result) {
-                //console.log("Share completed? " + result.completed); // On Android apps mostly return false even while it's true
-                //console.log("Shared to app: " + result.app); // On Android result.app is currently empty. On iOS it's empty when sharing is cancelled (result.completed=false)
-                Materialize.toast('Sharing done', 2000);
-            }
+                var onSuccess = function (result) {
+                    //console.log("Share completed? " + result.completed); // On Android apps mostly return false even while it's true
+                    //console.log("Shared to app: " + result.app); // On Android result.app is currently empty. On iOS it's empty when sharing is cancelled (result.completed=false)
+                    Materialize.toast('Sharing done', 2000);
+                }
 
-            var onError = function (msg) {
-                console.log("Sharing failed with message: " + msg);
-            }
+                var onError = function (msg) {
+                    console.log("Sharing failed with message: " + msg);
+                }
 
-            window.plugins.socialsharing.shareWithOptions(options, onSuccess, onError);
-        })
+                window.plugins.socialsharing.shareWithOptions(options, onSuccess, onError);
+            })
 
-        //grab facebook ID
-        function fetchFriends() {
-            Materialize.toast('Finding Friend List', 3000);
-            facebookConnectPlugin.login(["user_friends"],
-                function success(result) {
-                    facebookConnectPlugin.api("/" + result.authResponse
-                        .userID + "/friends" +
-                        "?fields=id,name,email,picture", [
-                            "email",
-                        ],
-                        function success(response) {
-                            Materialize.toast('Found', 3000);
-                            $(".countFriends").html("").append(response.summary.total_count);
-                            for (var i = 0, len = response.data.length; i < len; i++) {
-                                var friendList = '<li><div class="collapsible-header"><img src="' +
-                                    response.data[i].picture.data.url +
-                                    '" alt = "Profile" class = "circle"> Name: ' + response.data[i].name +
-                                    '</div>' +
-                                    '<div class="collapsible-body"><div class="col s8"><input type="text" class="datepicker"></div><div class="col s4"><a  id=' +
-                                    response.data[i].id +
-                                    ' class="lend right"><i class="fa fa-chevron-right" style="font-size:15px;" aria-hidden="true"></i></a></div></div></li>';
-                                $(".f-collection").html("").append(friendList);
-                            }
-
-                            $(".lend").click(function (event) {
-                                var date = $(".datepicker").val();
-                                if (date.length == 0) {
-                                    Materialize.toast(
-                                        'Please enter a date', 2000);
-                                } else {
-                                    fbId = event.currentTarget.id;
-                                    Materialize.toast("clicked " + fbId, 1000);
-                                    data = {
-                                        "token": localStorage.getItem("token"),
-                                        "borrowerFBID": fbId,
-                                        "borrowerEmail": "Email",
-                                        "itemId": localStorage.getItem("loanId"),
-                                        "dueDate": date
-                                    }
-                                    $.ajax({
-                                        type: "POST",
-                                        contentType: 'application/json; charset=UTF-8',
-                                        url: "http://enshelf.com/api/addLoan",
-                                        data: JSON.stringify(data),
-                                        processData: true,
-                                        dataType: "json",
-                                        timeout: 10000
-                                    }).done(successFn).fail(errorFn);
-
-                                    function successFn() {
-                                        Materialize.toast('Done', 2000);
-                                    }
-
-                                    function errorFn() {
-                                        Materialize.toast(
-                                            'We could not complete the lending process', 3000);
-                                    }
+            //grab facebook ID
+            function fetchFriends() {
+                Materialize.toast('Finding Friend List', 3000);
+                facebookConnectPlugin.login(["user_friends"],
+                    function success(result) {
+                        facebookConnectPlugin.api("/" + result.authResponse
+                            .userID + "/friends" +
+                            "?fields=id,name,email,picture", [
+                                "email",
+                            ],
+                            function success(response) {
+                                Materialize.toast('Found', 3000);
+                                $(".countFriends").html("").append(response.summary.total_count);
+                                for (var i = 0, len = response.data.length; i < len; i++) {
+                                    var friendList = '<li><div class="collapsible-header"><img src="' +
+                                        response.data[i].picture.data.url +
+                                        '" alt = "Profile" class = "circle"> Name: ' + response.data[i].name +
+                                        '</div>' +
+                                        '<div class="collapsible-body"><div class="col s8"><input type="text" class="datepicker"></div><div class="col s4"><a  id=' +
+                                        response.data[i].id +
+                                        ' class="lend right"><i class="fa fa-chevron-right" style="font-size:15px;" aria-hidden="true"></i></a></div></div></li>';
+                                    $(".f-collection").html("").append(friendList);
                                 }
 
-                            })
-                            // Initialise date picker
-                            $('.datepicker').pickadate({
-                                selectMonths: true, // Creates a dropdown to control month
-                                selectYears: 15, // Creates a dropdown of 15 years to control year,
-                                today: 'Today',
-                                clear: 'Clear',
-                                close: 'Ok',
-                                closeOnSelect: false // Close upon selecting a date,
-                            });
+                                $(".lend").click(function (event) {
+                                    var date = $(".datepicker").val();
+                                    if (date.length == 0) {
+                                        Materialize.toast(
+                                            'Please enter a date', 2000);
+                                    } else {
+                                        fbId = event.currentTarget.id;
+                                        Materialize.toast("clicked " + fbId, 1000);
+                                        data = {
+                                            "token": localStorage.getItem("token"),
+                                            "borrowerFBID": fbId,
+                                            "borrowerEmail": "Email",
+                                            "itemId": localStorage.getItem("loanId"),
+                                            "dueDate": date
+                                        }
+                                        $.ajax({
+                                            type: "POST",
+                                            contentType: 'application/json; charset=UTF-8',
+                                            url: "http://enshelf.com/api/addLoan",
+                                            data: JSON.stringify(data),
+                                            processData: true,
+                                            dataType: "json",
+                                            timeout: 10000
+                                        }).done(successFn).fail(errorFn);
 
-                        },
-                        function failure() {
-                            Materialize.toast(
-                                "Could not fetch Facebook data",
-                                5000);
-                        });
-                },
-                function failure() {
-                    Materialize.toast(
-                        "Could not connect to facebook",
-                        5000);
-                });
-        }
-    </script>
+                                        function successFn() {
+                                            Materialize.toast('Done', 2000);
+                                        }
+
+                                        function errorFn() {
+                                            Materialize.toast(
+                                                'We could not complete the lending process', 3000);
+                                        }
+                                    }
+
+                                })
+                                // Initialise date picker
+                                $('.datepicker').pickadate({
+                                    selectMonths: true, // Creates a dropdown to control month
+                                    selectYears: 15, // Creates a dropdown of 15 years to control year,
+                                    today: 'Today',
+                                    clear: 'Clear',
+                                    close: 'Ok',
+                                    closeOnSelect: false // Close upon selecting a date,
+                                });
+
+                            },
+                            function failure() {
+                                Materialize.toast(
+                                    "Could not fetch Facebook data",
+                                    5000);
+                            });
+                    },
+                    function failure() {
+                        Materialize.toast(
+                            "Could not connect to facebook",
+                            5000);
+                    });
+            }
+        </script>
 </body>
 
 </html>

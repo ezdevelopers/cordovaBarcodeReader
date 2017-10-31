@@ -60,7 +60,7 @@
         <p class="p-filter" style="padding:10px"> Select FB Friends
             <span class="countFriends" style="font-style:italic; font-size:10px"></span>
             <span class="new badge modal-trigger" href="#manual"> Add Manually</span>
-            <span class="new badge"> Invite Friends</span>
+            <span class="new badge share"> Invite Friends</span>
             <span class="right" style="padding-right:10px" onclick="fetchFriends()"><i style="font-size:20px" class="fa fa-refresh"></i></span>
 
         </p>
@@ -140,6 +140,28 @@
                 break;
             }
         }
+        $(".share").click(function () {
+            // this is the complete list of currently supported params you can pass to the plugin (all optional)
+            var options = {
+                message: 'Invite Friends to Library App', // not supported on some apps (Facebook, Instagram)
+                subject: 'Invite Friends to Library App', // fi. for email
+                //files: ['', ''], // an array of filenames either locally or remotely
+                url: 'https://github.com/ezdevelopers',
+                chooserTitle: 'Pick an app' // Android only, you can override the default share sheet title
+            }
+
+            var onSuccess = function (result) {
+                //console.log("Share completed? " + result.completed); // On Android apps mostly return false even while it's true
+                //console.log("Shared to app: " + result.app); // On Android result.app is currently empty. On iOS it's empty when sharing is cancelled (result.completed=false)
+                Materialize.toast('Sharing done', 2000);
+            }
+
+            var onError = function (msg) {
+                console.log("Sharing failed with message: " + msg);
+            }
+
+            window.plugins.socialsharing.shareWithOptions(options, onSuccess, onError);
+        })
 
         //grab facebook ID
         function fetchFriends() {
@@ -172,7 +194,7 @@
                                         'Please enter a date', 2000);
                                 } else {
                                     fbId = event.currentTarget.id;
-                                    Materialize.toast("clicked " + fbId ,2000);
+                                    Materialize.toast("clicked " + fbId, 1000);
                                     data = {
                                         "token": localStorage.getItem("token"),
                                         "borrowerFBID": fbId,
@@ -202,14 +224,14 @@
 
                             })
                             // Initialise date picker
-                                $('.datepicker').pickadate({
-                                    selectMonths: true, // Creates a dropdown to control month
-                                    selectYears: 15, // Creates a dropdown of 15 years to control year,
-                                    today: 'Today',
-                                    clear: 'Clear',
-                                    close: 'Ok',
-                                    closeOnSelect: false // Close upon selecting a date,
-                                });
+                            $('.datepicker').pickadate({
+                                selectMonths: true, // Creates a dropdown to control month
+                                selectYears: 15, // Creates a dropdown of 15 years to control year,
+                                today: 'Today',
+                                clear: 'Clear',
+                                close: 'Ok',
+                                closeOnSelect: false // Close upon selecting a date,
+                            });
 
                         },
                         function failure() {

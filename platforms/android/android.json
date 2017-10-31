@@ -67,6 +67,10 @@
                         {
                             "xml": "<preference name=\"android-minSdkVersion\" value=\"15\" />",
                             "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"SocialSharing\"><param name=\"android-package\" value=\"nl.xservices.plugins.SocialSharing\" /></feature>",
+                            "count": 1
                         }
                     ]
                 }
@@ -80,6 +84,10 @@
                         },
                         {
                             "xml": "<activity android:label=\"Share\" android:name=\"com.google.zxing.client.android.encode.EncodeActivity\" />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<provider android:authorities=\"${applicationId}.sharing.provider\" android:exported=\"false\" android:grantUriPermissions=\"true\" android:name=\"nl.xservices.plugins.FileProvider\"><meta-data android:name=\"android.support.FILE_PROVIDER_PATHS\" android:resource=\"@xml/sharing_paths\" /></provider>",
                             "count": 1
                         }
                     ],
@@ -108,6 +116,10 @@
                         },
                         {
                             "xml": "<uses-permission android:name=\"android.permission.GET_ACCOUNTS\" />",
+                            "count": 1
+                        },
+                        {
+                            "xml": "<uses-permission android:name=\"android.permission.WRITE_EXTERNAL_STORAGE\" />",
                             "count": 1
                         }
                     ],
@@ -174,6 +186,12 @@
         "cordova-plugin-facebook4": {
             "APP_ID": "1686989511333980",
             "APP_NAME": "libraryApp",
+            "PACKAGE_NAME": "com.example.com"
+        },
+        "es6-promise-plugin": {
+            "PACKAGE_NAME": "com.example.com"
+        },
+        "cordova-plugin-x-socialsharing": {
             "PACKAGE_NAME": "com.example.com"
         }
     },
@@ -320,6 +338,20 @@
             "clobbers": [
                 "facebookConnectPlugin"
             ]
+        },
+        {
+            "id": "es6-promise-plugin.Promise",
+            "file": "plugins/es6-promise-plugin/www/promise.js",
+            "pluginId": "es6-promise-plugin",
+            "runs": true
+        },
+        {
+            "id": "cordova-plugin-x-socialsharing.SocialSharing",
+            "file": "plugins/cordova-plugin-x-socialsharing/www/SocialSharing.js",
+            "pluginId": "cordova-plugin-x-socialsharing",
+            "clobbers": [
+                "window.plugins.socialsharing"
+            ]
         }
     ],
     "plugin_metadata": {
@@ -332,6 +364,8 @@
         "cordova-plugin-browsertab": "0.2.0",
         "cordova-plugin-inappbrowser": "1.7.1",
         "cordova-universal-links-plugin": "1.2.1",
-        "cordova-plugin-facebook4": "1.9.1"
+        "cordova-plugin-facebook4": "1.9.1",
+        "es6-promise-plugin": "4.1.0",
+        "cordova-plugin-x-socialsharing": "5.2.1"
     }
 }

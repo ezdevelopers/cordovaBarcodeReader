@@ -35,10 +35,16 @@
       "APP_ID": "1686989511333980",
       "APP_NAME": "libraryApp",
       "PACKAGE_NAME": "com.example.com"
+    },
+    "cordova-plugin-x-socialsharing": {
+      "PACKAGE_NAME": "com.example.com"
     }
   },
   "dependent_plugins": {
     "cordova-plugin-compat": {
+      "PACKAGE_NAME": "com.example.com"
+    },
+    "es6-promise-plugin": {
       "PACKAGE_NAME": "com.example.com"
     }
   }

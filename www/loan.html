@@ -180,7 +180,7 @@
                             function success(response) {
 
                                 Materialize.toast('Found', 3000);
-                                alert(JSON.strigify(response))
+                                alert(JSON.stringify(response));
                                 $(".countFriends").html("").append(response.summary.total_count);
                                 for (var i = 0, len = response.data.length; i < len; i++) {
                                     var friendList = '<li><div class="collapsible-header"><img src="' +

@@ -472,8 +472,7 @@
                         url: "http://enshelf.com/api/login",
                         data: JSON.stringify(data),
                         processData: true,
-                        dataType: "json",
-                        timeout: 10000
+                        dataType: "json"
                     }).done(loginSuccessFn).fail(loginErrorFn)
                     //This function check the response from the server on logging inand looks 
                     //for a token field, if token id found it stores the token in
